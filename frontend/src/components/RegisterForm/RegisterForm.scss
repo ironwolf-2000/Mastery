@@ -1,10 +1,19 @@
 .RegisterForm {
   height: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 
+  &-Heading {
+    margin-bottom: 2rem;
+  }
+
   &-Form {
-    width: 320px;
+    width: 24rem;
+  }
+
+  &-ErrorMessage {
+    color: var(--bs-danger);
   }
 }

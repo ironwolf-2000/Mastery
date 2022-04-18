@@ -16,14 +16,11 @@ export const App = (props: AppProps) => {
       <div className='App'>
         <Navbar />
         <Routes>
-          {/* <Route path='/login'>
-          <LoginForm {...props} />
-        </Route> */}
-          {/* <Route path='/signup' render={props => <RegisterForm {...props} />} /> */}
+          <Route path='/signup' element={<RegisterForm />} />
           <Route path='/login' element={<LoginForm />} />
           <Route path='/habits' element={<HabitsDashboard />} />
-          {/* <Route path='/skills' component={SkillsDashboard} />
-        <Route path='/mood' component={MoodDashboard} /> */}
+          <Route path='/skills' element={<SkillsDashboard />} />
+          <Route path='/mood' element={<MoodDashboard />} />
           <Route path='/not-found' element={<NotFound />} />
           {/* <Redirect from='/' to='/home' /> */}
           {/* <Redirect to='/not-found' /> */}

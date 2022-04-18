@@ -3,52 +3,30 @@ import { Link } from 'react-router-dom';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { Container, Nav, Navbar as BNavbar } from 'react-bootstrap';
-
-// import './Navbar.scss';
-
-const blk = cn('Navbar');
+import { Container, Nav, Navbar as BSNavbar } from 'react-bootstrap';
 
 export const Navbar = () => {
   return (
-    <BNavbar bg='dark' variant='dark'>
+    <BSNavbar bg='light' variant='light' fixed='top'>
       <Container>
-        <BNavbar.Brand href='#home'>Navbar</BNavbar.Brand>
-        <Nav className='me-auto'>
-          <Nav.Link href='#home'>Home</Nav.Link>
-          <Nav.Link href='#features'>Features</Nav.Link>
-          <Nav.Link href='#pricing'>Pricing</Nav.Link>
+        <BSNavbar.Brand as={Link} to='/home'>
+          Mastery
+        </BSNavbar.Brand>
+        <Nav>
+          <Nav.Link as={Link} to='/habits'>
+            Habits
+          </Nav.Link>
+          <Nav.Link as={Link} to='/skills'>
+            Skills
+          </Nav.Link>
+          <Nav.Link as={Link} to='/mood'>
+            Mood
+          </Nav.Link>
+          <Nav.Link as={Link} to='/signup' className='ms-2'>
+            Register <FontAwesomeIcon className='ms-1' icon={faCircleUser} size='lg' />
+          </Nav.Link>
         </Nav>
       </Container>
-    </BNavbar>
-    // <Navbar className={blk()}>
-    //   <Link className={blk('Logo')} to='/'>
-    //     Mastery
-    //   </Link>
-    //   <nav>
-    //     <ul className={blk('NavSections')}>
-    //       <li>
-    //         <Link className={blk('Link')} to='/habits'>
-    //           Habits
-    //         </Link>
-    //       </li>
-    //       <li>
-    //         <Link className={blk('Link')} to='/skills'>
-    //           Skills
-    //         </Link>
-    //       </li>
-    //       <li>
-    //         <Link className={blk('Link')} to='/mood'>
-    //           Mood
-    //         </Link>
-    //       </li>
-    //       <li>
-    //         <Link className={blk('Link', { last: true })} to='/login'>
-    //           Login <FontAwesomeIcon className={blk('LoginIcon')} icon={faCircleUser} size='lg' />
-    //         </Link>
-    //       </li>
-    //     </ul>
-    //   </nav>
-    // </Navbar>
+    </BSNavbar>
   );
 };
