@@ -1,0 +1,23 @@
+.Navbar {
+  &-Brand.navbar-brand {
+    font-size: 1.5rem;
+  }
+
+  &-NavElement {
+    margin-left: 0.5rem;
+  }
+
+  &-Dropdown {
+    left: 2rem;
+    display: flex;
+    align-items: center;
+  }
+
+  &-UserIcon {
+    color: var(--bs-gray-600);
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
