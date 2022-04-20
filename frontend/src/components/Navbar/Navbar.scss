@@ -1,16 +1,13 @@
 .Navbar {
+  height: 4rem;
+
   &-Brand.navbar-brand {
     font-size: 1.5rem;
   }
 
   &-NavElement {
     margin-left: 0.5rem;
-  }
-
-  &-Dropdown {
-    left: 2rem;
-    display: flex;
-    align-items: center;
+    font-size: 1.1rem;
   }
 
   &-UserIcon {
@@ -20,4 +17,24 @@
       cursor: pointer;
     }
   }
+}
+
+// TODO: make a reusable component with these styles
+div.Navbar-Dropdown {
+  left: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+div.Navbar-DropdownMenu {
+  padding: 0;
+}
+
+.Navbar-DropdownItem.dropdown-item {
+  padding: 0.5rem 1rem;
+}
+
+hr.Navbar-DropdownDivider {
+  margin: 0 0.5rem;
+  width: calc(100% - 1rem);
 }

@@ -23,7 +23,7 @@ export const LoginForm = (props: LoginFormProps) => {
           <Form.Control type='password' placeholder='Password' />
         </Form.Group>
         <Button variant='primary' type='submit'>
-          Submit
+          Login
         </Button>
       </Form>
     </div>

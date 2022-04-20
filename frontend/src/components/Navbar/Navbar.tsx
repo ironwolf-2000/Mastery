@@ -38,22 +38,24 @@ export const Navbar = (props: INavbarProps) => {
           </Nav.Link>
           <Dropdown className={blk('Dropdown')} drop='down' align='end'>
             <Dropdown.Toggle as={CustomToggle}></Dropdown.Toggle>
-            <Dropdown.Menu>
+            <Dropdown.Menu className={blk('DropdownMenu')}>
               {user ? (
                 <>
-                  <Dropdown.Item as={Link} to='/user/options'>
+                  <Dropdown.Item className={blk('DropdownItem')} as={Link} to='/user/options'>
                     Options
                   </Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                  <Dropdown.Divider className={blk('DropdownDivider')} />
+                  <Dropdown.Item className={blk('DropdownItem')} onClick={handleLogout}>
+                    Logout
+                  </Dropdown.Item>
                 </>
               ) : (
                 <>
-                  <Dropdown.Item as={Link} to='/login'>
+                  <Dropdown.Item className={blk('DropdownItem')} as={Link} to='/login'>
                     Login
                   </Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown.Item as={Link} to='/signup'>
+                  <Dropdown.Divider className={blk('DropdownDivider')} />
+                  <Dropdown.Item className={blk('DropdownItem')} as={Link} to='/signup'>
                     Register
                   </Dropdown.Item>
                 </>
