@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Container, Dropdown, Nav, Navbar as BSNavbar } from 'react-bootstrap';
 
 import { IUser } from '../RegisterForm/RegisterForm.types';
+import { logout } from '../../services/user.service';
 
 import './Navbar.scss';
 
@@ -16,8 +17,8 @@ export const Navbar = (props: INavbarProps) => {
 
   const handleLogout = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     e.preventDefault();
-    localStorage.setItem('currentUserEmail', '');
-    window.location.reload();
+    logout();
+    window.location.replace('/');
   };
 
   return (
@@ -27,15 +28,19 @@ export const Navbar = (props: INavbarProps) => {
           Mastery
         </BSNavbar.Brand>
         <Nav>
-          <Nav.Link className={blk('NavElement')} as={Link} to='/habits'>
-            Habits
-          </Nav.Link>
-          <Nav.Link className={blk('NavElement')} as={Link} to='/skills'>
-            Skills
-          </Nav.Link>
-          <Nav.Link className={blk('NavElement')} as={Link} to='/mood'>
-            Mood
-          </Nav.Link>
+          {user && (
+            <>
+              <Nav.Link className={blk('NavElement')} as={Link} to='/habits'>
+                Habits
+              </Nav.Link>
+              <Nav.Link className={blk('NavElement')} as={Link} to='/skills'>
+                Skills
+              </Nav.Link>
+              <Nav.Link className={blk('NavElement')} as={Link} to='/mood'>
+                Mood
+              </Nav.Link>
+            </>
+          )}
           <Dropdown className={blk('Dropdown')} drop='down' align='end'>
             <Dropdown.Toggle as={CustomToggle}></Dropdown.Toggle>
             <Dropdown.Menu className={blk('DropdownMenu')}>

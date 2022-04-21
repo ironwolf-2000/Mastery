@@ -1,17 +1,10 @@
-import { toast } from 'react-toastify';
-
 import { IUser } from '../components/RegisterForm/RegisterForm.types';
+import { ILoginUser } from '../components/LoginForm/LoginForm.types';
 
-export function register(user: IUser) {
-  // TODO: Backend API
-  const users: IUser[] = JSON.parse(localStorage.getItem('users') ?? '[]');
-  if (users.some(u => u.email === user.email)) {
-    toast.error('A user with this email already exists.');
-  } else {
-    localStorage.setItem('users', JSON.stringify([...users, user]));
-    localStorage.setItem('currentUserEmail', user.email);
-    toast.info('A new user has been registered.');
-  }
+// TODO: Replace localStorage with PostgreSQL / MySQL
+
+function getAllUsers(): IUser[] {
+  return JSON.parse(localStorage.getItem('users') ?? '[]');
 }
 
 export function getCurrentUser(): IUser | null {
@@ -20,6 +13,42 @@ export function getCurrentUser(): IUser | null {
     return null;
   }
 
-  const allUsers: IUser[] = JSON.parse(localStorage.getItem('users') ?? '[]');
-  return allUsers.find(u => u.email === currentUserEmail) ?? null;
+  const users = getAllUsers();
+  return users.find(u => u.email === currentUserEmail) ?? null;
+}
+
+export function register(user: IUser): ILoginReponse {
+  const users = getAllUsers();
+  if (users.some(u => u.email === user.email)) {
+    return { success: false, message: 'A user with this email already exists.' };
+  }
+
+  localStorage.setItem('users', JSON.stringify([...users, user]));
+  localStorage.setItem('currentUserEmail', user.email);
+  return { success: true, message: 'A new user has been registered.' };
+}
+
+export function login(loginUser: ILoginUser): ILoginReponse {
+  const users = getAllUsers();
+  const currUser = users.find(u => u.email === loginUser.email);
+
+  if (!currUser) {
+    return { success: false, message: 'A user with this email was not found.' };
+  }
+
+  if (currUser.password !== loginUser.password) {
+    return { success: false, message: 'Incorrect password' };
+  }
+
+  localStorage.setItem('currentUserEmail', currUser.email);
+  return { success: true, message: `Successfully logged in as ${currUser.firstName}.` };
+}
+
+export function logout() {
+  localStorage.setItem('currentUserEmail', '');
+}
+
+interface ILoginReponse {
+  success: boolean;
+  message: string;
 }

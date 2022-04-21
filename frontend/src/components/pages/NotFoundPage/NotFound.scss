@@ -1,0 +1,15 @@
+.NotFound {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &-ImageContainer {
+    max-width: 60vmin;
+  }
+
+  &-Image {
+    width: 100%;
+  }
+}

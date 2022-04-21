@@ -2,7 +2,7 @@ import { Formik, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { cn } from '@bem-react/classname';
 import { Button, Form as BSForm } from 'react-bootstrap';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 
 import { IRegisterFormProps, IUser } from './RegisterForm.types';
 import { register } from '../../services/user.service';
@@ -22,18 +22,27 @@ export const RegisterForm = (props: IRegisterFormProps) => {
 
   const validationSchema = Yup.object({
     firstName: Yup.string()
-      .max(15, 'First name must be 15 characters or less')
-      .required('First name cannot be empty'),
+      .max(15, 'First name must be 15 characters or less.')
+      .required('First name cannot be empty.'),
     lastName: Yup.string()
-      .max(20, 'Last name must be 20 characters or less')
-      .required('Last name cannot be empty'),
+      .max(20, 'Last name must be 20 characters or less.')
+      .required('Last name cannot be empty.'),
     email: Yup.string()
-      .email('This is not a valid email')
-      .required('Email address cannot be empty'),
+      .email('This is not a valid email.')
+      .required('Email address cannot be empty.'),
     password: Yup.string()
-      .min(6, 'Password must be at least 6 characters long')
-      .required('Password cannot be empty'),
+      .min(6, 'Password must be at least 6 characters long.')
+      .required('Password cannot be empty.'),
   });
+
+  const handleSubmit = (user: IUser) => {
+    const resp = register(user);
+    if (resp.success) {
+      window.location.replace('/home');
+    } else {
+      toast.error(resp.message);
+    }
+  };
 
   return (
     <>
@@ -42,10 +51,7 @@ export const RegisterForm = (props: IRegisterFormProps) => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={user => {
-            register(user);
-            window.location.replace('/');
-          }}
+          onSubmit={handleSubmit}
         >
           {({ values, errors, handleSubmit, getFieldProps }) => {
             const isSubmitDisabled =
