@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { cn } from '@bem-react/classname';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Container, Dropdown, Nav, Navbar as BSNavbar } from 'react-bootstrap';
 
+import { DefaultModal } from '../common';
 import { IUser } from '../RegisterForm/RegisterForm.types';
 import { logout } from '../../services/user.service';
 
@@ -13,63 +14,81 @@ import './Navbar.scss';
 const blk = cn('Navbar');
 
 export const Navbar = (props: INavbarProps) => {
+  const [logoutModalVisible, setLogoutModalVisible] = useState<boolean>(false);
+  const navigate = useNavigate();
+
   const { user } = props;
 
-  const handleLogout = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    e.preventDefault();
+  const handleLogout = () => {
     logout();
-    window.location.replace('/');
+    setLogoutModalVisible(false);
+    setTimeout(() => navigate('/', { replace: true }), 500);
   };
 
   return (
-    <BSNavbar bg='light' variant='light' fixed='top'>
-      <Container>
-        <BSNavbar.Brand className={blk('Brand')} as={Link} to='/home'>
-          Mastery
-        </BSNavbar.Brand>
-        <Nav>
-          {user && (
-            <>
-              <Nav.Link className={blk('NavElement')} as={Link} to='/habits'>
-                Habits
-              </Nav.Link>
-              <Nav.Link className={blk('NavElement')} as={Link} to='/skills'>
-                Skills
-              </Nav.Link>
-              <Nav.Link className={blk('NavElement')} as={Link} to='/mood'>
-                Mood
-              </Nav.Link>
-            </>
-          )}
-          <Dropdown className={blk('Dropdown')} drop='down' align='end'>
-            <Dropdown.Toggle as={CustomToggle}></Dropdown.Toggle>
-            <Dropdown.Menu className={blk('DropdownMenu')}>
-              {user ? (
-                <>
-                  <Dropdown.Item className={blk('DropdownItem')} as={Link} to='/user/options'>
-                    Options
-                  </Dropdown.Item>
-                  <Dropdown.Divider className={blk('DropdownDivider')} />
-                  <Dropdown.Item className={blk('DropdownItem')} onClick={handleLogout}>
-                    Logout
-                  </Dropdown.Item>
-                </>
-              ) : (
-                <>
-                  <Dropdown.Item className={blk('DropdownItem')} as={Link} to='/login'>
-                    Login
-                  </Dropdown.Item>
-                  <Dropdown.Divider className={blk('DropdownDivider')} />
-                  <Dropdown.Item className={blk('DropdownItem')} as={Link} to='/signup'>
-                    Register
-                  </Dropdown.Item>
-                </>
-              )}
-            </Dropdown.Menu>
-          </Dropdown>
-        </Nav>
-      </Container>
-    </BSNavbar>
+    <>
+      <BSNavbar bg='light' variant='light' fixed='top'>
+        <Container>
+          <BSNavbar.Brand className={blk('Brand')} as={Link} to='/home'>
+            Mastery
+          </BSNavbar.Brand>
+          <Nav>
+            {user && (
+              <>
+                <Nav.Link className={blk('NavElement')} as={Link} to='/habits'>
+                  Habits
+                </Nav.Link>
+                <Nav.Link className={blk('NavElement')} as={Link} to='/skills'>
+                  Skills
+                </Nav.Link>
+                <Nav.Link className={blk('NavElement')} as={Link} to='/mood'>
+                  Mood
+                </Nav.Link>
+              </>
+            )}
+            <Dropdown className={blk('Dropdown')} drop='down' align='end'>
+              <Dropdown.Toggle as={CustomToggle}></Dropdown.Toggle>
+              <Dropdown.Menu className={blk('DropdownMenu')}>
+                {user ? (
+                  <>
+                    <Dropdown.Item className={blk('DropdownItem')} as={Link} to='/user/options'>
+                      Options
+                    </Dropdown.Item>
+                    <Dropdown.Divider className={blk('DropdownDivider')} />
+                    <Dropdown.Item
+                      className={blk('DropdownItem')}
+                      onClick={e => {
+                        e.preventDefault();
+                        setLogoutModalVisible(true);
+                      }}
+                    >
+                      Logout
+                    </Dropdown.Item>
+                  </>
+                ) : (
+                  <>
+                    <Dropdown.Item className={blk('DropdownItem')} as={Link} to='/login'>
+                      Login
+                    </Dropdown.Item>
+                    <Dropdown.Divider className={blk('DropdownDivider')} />
+                    <Dropdown.Item className={blk('DropdownItem')} as={Link} to='/signup'>
+                      Register
+                    </Dropdown.Item>
+                  </>
+                )}
+              </Dropdown.Menu>
+            </Dropdown>
+          </Nav>
+        </Container>
+      </BSNavbar>
+      <DefaultModal
+        visible={logoutModalVisible}
+        handleCancel={() => setLogoutModalVisible(false)}
+        handleConfirm={handleLogout}
+        headingText='Log out?'
+        bodyText='Are you sure you want to log out?'
+      />
+    </>
   );
 };
 

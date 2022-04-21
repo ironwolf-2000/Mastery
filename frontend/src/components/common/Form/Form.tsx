@@ -1,6 +1,6 @@
 import { cn } from '@bem-react/classname';
 
-import './Form.scss';
+// import './Form.scss';
 
 const blk = cn('Form');
 

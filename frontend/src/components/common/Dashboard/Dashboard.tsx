@@ -1,6 +1,6 @@
 import { cn } from '@bem-react/classname';
 
-import './Dashboard.scss';
+// import './Dashboard.scss';
 
 const blk = cn('Dashboard');
 
