@@ -1,6 +1,9 @@
+import { Link } from 'react-router-dom';
 import { Formik, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { cn } from '@bem-react/classname';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRightToBracket } from '@fortawesome/free-solid-svg-icons';
 import { Button, Form as BSForm } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -105,9 +108,15 @@ export const RegisterForm = (props: IRegisterFormProps) => {
                   />
                   <small>Password must be at least 6 characters long</small>
                 </BSForm.Group>
-                <Button variant='primary' type='submit' disabled={isSubmitDisabled}>
-                  Register
-                </Button>
+                <div className={blk('BottomSection')}>
+                  <Button variant='primary' type='submit' disabled={isSubmitDisabled}>
+                    Register
+                  </Button>
+                  <Link to='/login' className={blk('SignInLabel')}>
+                    Sign in instead&nbsp;
+                    <FontAwesomeIcon icon={faArrowRightToBracket} />
+                  </Link>
+                </div>
               </BSForm>
             );
           }}

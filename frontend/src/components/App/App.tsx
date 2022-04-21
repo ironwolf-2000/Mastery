@@ -42,7 +42,7 @@ export const App = (props: AppProps) => {
         <Route path='/skills' element={<SkillsDashboard />} />
         <Route path='/mood' element={<MoodDashboard />} />
         <Route path='/not-found' element={<NotFound />} />
-        <Route path='*' element={<Navigate to='/not-found' />} />
+        <Route path='*' element={<Navigate to='/not-found' replace />} />
       </Routes>
     </main>
   );
