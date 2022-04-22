@@ -13,6 +13,7 @@ import { SkillsDashboard } from '../pages/SkillsPage';
 import { UserHomePage } from '../pages/UserHomePage';
 import { getCurrentUser } from '../../services/user.service';
 import { IUser } from '../RegisterForm/RegisterForm.types';
+import { ProtectedRoutes } from '../common';
 
 import 'react-toastify/dist/ReactToastify.css';
 import './App.scss';
@@ -34,13 +35,16 @@ export const App = (props: AppProps) => {
     <main className={blk('', { navbarVisible })}>
       {navbarVisible && <Navbar user={user} />}
       <Routes>
+        <Route element={<ProtectedRoutes />}>
+          <Route path='/home' element={<UserHomePage />} />
+          <Route path='/login' element={<LoginForm />} />
+          <Route path='/habits' element={<HabitsDashboard />} />
+          <Route path='/skills' element={<SkillsDashboard />} />
+          <Route path='/mood' element={<MoodDashboard />} />
+        </Route>
+
         <Route path='/' element={<LandingPage />} />
-        <Route path='/home' element={<UserHomePage />} />
         <Route path='/signup' element={<RegisterForm />} />
-        <Route path='/login' element={<LoginForm />} />
-        <Route path='/habits' element={<HabitsDashboard />} />
-        <Route path='/skills' element={<SkillsDashboard />} />
-        <Route path='/mood' element={<MoodDashboard />} />
         <Route path='/not-found' element={<NotFound />} />
         <Route path='*' element={<Navigate to='/not-found' replace />} />
       </Routes>
