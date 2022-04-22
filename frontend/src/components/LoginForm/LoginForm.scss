@@ -17,4 +17,17 @@
   &-ErrorMessage {
     color: var(--bs-danger);
   }
+
+  &-BottomSection {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &-SignInLabel {
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }

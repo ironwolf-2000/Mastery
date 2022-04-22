@@ -1,6 +1,9 @@
+import { Link } from 'react-router-dom';
 import { Formik, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { cn } from '@bem-react/classname';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { Button, Form as BSForm } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -74,9 +77,15 @@ export const LoginForm = (props: ILoginFormProps) => {
                     render={message => <small className={blk('ErrorMessage')}>{message}</small>}
                   />
                 </BSForm.Group>
-                <Button variant='primary' type='submit' disabled={isSubmitDisabled}>
-                  Login
-                </Button>
+                <div className={blk('BottomSection')}>
+                  <Button variant='primary' type='submit' disabled={isSubmitDisabled}>
+                    Login
+                  </Button>
+                  <Link to='/signup' className={blk('SignInLabel')}>
+                    Register instead&nbsp;
+                    <FontAwesomeIcon icon={faUserPlus} />
+                  </Link>
+                </div>
               </BSForm>
             );
           }}
