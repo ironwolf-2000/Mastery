@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { cn } from '@bem-react/classname';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Container, Dropdown, Nav, Navbar as BSNavbar } from 'react-bootstrap';
@@ -13,21 +13,18 @@ import './Navbar.scss';
 
 const blk = cn('Navbar');
 
-export const Navbar = (props: INavbarProps) => {
+export const Navbar = ({ user }: INavbarProps) => {
   const [logoutModalVisible, setLogoutModalVisible] = useState<boolean>(false);
-  const navigate = useNavigate();
-
-  const { user } = props;
 
   const handleLogout = () => {
     logout();
     setLogoutModalVisible(false);
-    setTimeout(() => navigate('/', { replace: true }), 500);
+    setTimeout(() => window.location.replace('/'), 500);
   };
 
   return (
     <>
-      <BSNavbar bg='light' variant='light' fixed='top'>
+      <BSNavbar bg='light' variant='light' fixed='top' className={blk()}>
         <Container>
           <BSNavbar.Brand className={blk('Brand')} as={Link} to='/home'>
             Mastery
@@ -35,13 +32,13 @@ export const Navbar = (props: INavbarProps) => {
           <Nav>
             {user && (
               <>
-                <Nav.Link className={blk('NavElement')} as={Link} to='/habits'>
+                <Nav.Link className={blk('NavElement')} as={NavLink} to='/habits'>
                   Habits
                 </Nav.Link>
-                <Nav.Link className={blk('NavElement')} as={Link} to='/skills'>
+                <Nav.Link className={blk('NavElement')} as={NavLink} to='/skills'>
                   Skills
                 </Nav.Link>
-                <Nav.Link className={blk('NavElement')} as={Link} to='/mood'>
+                <Nav.Link className={blk('NavElement')} as={NavLink} to='/mood'>
                   Mood
                 </Nav.Link>
               </>

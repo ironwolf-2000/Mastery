@@ -4,11 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeartPulse, faGraduationCap, faFaceSmile } from '@fortawesome/free-solid-svg-icons';
 import { Button } from 'react-bootstrap';
 
+import { IUser } from '../../RegisterForm/RegisterForm.types';
+
 import './LandingPage.scss';
 
 const blk = cn('LandingPage');
 
-export const LandingPage = (props: LandingPageProps) => {
+export const LandingPage = ({ user }: ILandingPageProps) => {
   const navigate = useNavigate();
 
   return (
@@ -20,24 +22,26 @@ export const LandingPage = (props: LandingPageProps) => {
       <div className={blk('IntroSections')}>
         <section className={blk('Section')}>
           <h2 className={blk('SectionHeading', ['h4'])}>Develop strong habits</h2>
-          <FontAwesomeIcon icon={faHeartPulse} size='6x' color='#06d6a0' />
+          <FontAwesomeIcon icon={faHeartPulse} size='6x' color='var(--color-habits)' />
         </section>
         <section className={blk('Section')}>
           <h2 className={blk('SectionHeading', ['h4'])}>Learn new skills</h2>
-          <FontAwesomeIcon icon={faGraduationCap} size='6x' color='#118ab2' />
+          <FontAwesomeIcon icon={faGraduationCap} size='6x' color='var(--color-skills)' />
         </section>
         <section className={blk('Section')}>
           <h2 className={blk('SectionHeading', ['h4'])}>Track how your feel</h2>
-          <FontAwesomeIcon icon={faFaceSmile} size='6x' color='#ef476f' />
+          <FontAwesomeIcon icon={faFaceSmile} size='6x' color='var(--color-mood)' />
         </section>
       </div>
       <div className={blk('RegisterSection')}>
         <Button type='button' variant='primary' size='lg' onClick={() => navigate('/signup')}>
-          Register Today
+          {user ? 'To my account' : 'Register Today'}
         </Button>
       </div>
     </div>
   );
 };
 
-interface LandingPageProps {}
+interface ILandingPageProps {
+  user: IUser | null;
+}

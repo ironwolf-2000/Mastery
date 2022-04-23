@@ -1,7 +1,15 @@
 .HabitsDashboard {
-  height: 100%;
-  background: lightyellow;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  padding-top: 1rem;
+
+  &-Heading {
+    font-size: 2rem;
+    font-weight: normal;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  &-Heatmap {
+    margin-left: auto;
+  }
 }

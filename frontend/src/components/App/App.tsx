@@ -23,9 +23,23 @@ const blk = cn('App');
 export const App = (props: AppProps) => {
   const location = useLocation();
   const [user, setUser] = useState<IUser | null>(null);
-  let [navbarVisible, setNavbarVisible] = useState<boolean>(false);
+  const [navbarVisible, setNavbarVisible] = useState<boolean>(false);
 
-  useEffect(() => setUser(getCurrentUser()), []);
+  const [heatmapState, setHeatmapState] = useState<number[][]>([]);
+
+  useEffect(() => {
+    setUser(getCurrentUser());
+
+    // TODO: Fetch habits data here
+    const arr = new Array(10);
+    for (let i = 0; i < 10; i++) {
+      arr[i] = [];
+      for (let j = 0; j < 10; j++) {
+        arr[i].push(Math.floor(Math.random() * 6));
+      }
+    }
+    setHeatmapState(arr);
+  }, []);
 
   useEffect(() => {
     setNavbarVisible(location.pathname !== '/' && location.pathname !== '/not-found');
@@ -37,14 +51,17 @@ export const App = (props: AppProps) => {
       <Routes>
         <Route element={<ProtectedRoutes />}>
           <Route path='/home' element={<UserHomePage />} />
-          <Route path='/login' element={<LoginForm />} />
-          <Route path='/habits' element={<HabitsDashboard />} />
+          <Route path='/habits' element={<HabitsDashboard heatmapState={heatmapState} />} />
           <Route path='/skills' element={<SkillsDashboard />} />
           <Route path='/mood' element={<MoodDashboard />} />
         </Route>
 
-        <Route path='/' element={<LandingPage />} />
-        <Route path='/signup' element={<RegisterForm />} />
+        <Route path='/' element={<LandingPage user={user} />} />
+        <Route
+          path='/signup'
+          element={!user ? <RegisterForm /> : <Navigate to='/home' replace />}
+        />
+        <Route path='/login' element={!user ? <LoginForm /> : <Navigate to='/home' replace />} />
         <Route path='/not-found' element={<NotFound />} />
         <Route path='*' element={<Navigate to='/not-found' replace />} />
       </Routes>
