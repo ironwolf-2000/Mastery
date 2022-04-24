@@ -1,5 +1,6 @@
 import { IUser } from '../components/RegisterForm/RegisterForm.types';
 import { ILoginUser } from '../components/LoginForm/LoginForm.types';
+import { ICRUDResponse } from './services.types';
 
 // TODO: Replace localStorage with PostgreSQL / MySQL
 
@@ -17,7 +18,7 @@ export function getCurrentUser(): IUser | null {
   return users.find(u => u.email === currentUserEmail) ?? null;
 }
 
-export function register(user: IUser): ILoginReponse {
+export function register(user: IUser): ICRUDResponse {
   const users = getAllUsers();
   if (users.some(u => u.email === user.email)) {
     return { success: false, message: 'A user with this email already exists.' };
@@ -28,7 +29,7 @@ export function register(user: IUser): ILoginReponse {
   return { success: true, message: 'A new user has been registered.' };
 }
 
-export function login(loginUser: ILoginUser): ILoginReponse {
+export function login(loginUser: ILoginUser): ICRUDResponse {
   const users = getAllUsers();
   const currUser = users.find(u => u.email === loginUser.email);
 
@@ -46,9 +47,4 @@ export function login(loginUser: ILoginUser): ILoginReponse {
 
 export function logout() {
   localStorage.setItem('currentUserEmail', '');
-}
-
-interface ILoginReponse {
-  success: boolean;
-  message: string;
 }

@@ -1,11 +1,11 @@
 export interface IHabitParams {
   name: string;
   motivation: string;
+  timePeriod: number;
   successRate: number;
+  heatmap: number[][];
 }
 
-export interface IHabitsDashboardProps {
-  habits: IHabitParams[];
-  currHeatmapState: number[][];
-  allHeatmapState: number[][];
+export interface IHabitsProps {
+  overallHeatmap: number[][];
 }

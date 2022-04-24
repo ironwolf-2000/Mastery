@@ -21,6 +21,7 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
   const initialValues: ICreateParams = {
     entityName: '',
     motivationTextarea: '',
+    masteryType: 'Beginner: 36 days',
     successRate: 100,
     type,
   };
@@ -33,6 +34,7 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
       20,
       'Your motivation message must be at least 20 characters long.'
     ),
+    masteryType: Yup.string(),
     successRate: Yup.number()
       .min(10, 'Success Rate must be at least 10%')
       .max(100, 'Success Rate cannot be greater than 100%'),
@@ -69,7 +71,10 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
 
               <BSForm.Group className={blk('MasteryTypeSection')}>
                 <BSForm.Label>Choose the mastery type</BSForm.Label>
-                <BSForm.Select className={blk('MasteryTypeSelect')}>
+                <BSForm.Select
+                  className={blk('MasteryTypeSelect')}
+                  {...getFieldProps('masteryType')}
+                >
                   <option>Beginner: 36 days</option>
                   <option>Amateur: 64 days</option>
                   <option>Mastery: 100 days</option>

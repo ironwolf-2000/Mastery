@@ -3,7 +3,8 @@ import { entityType } from '../../App/App.types';
 export interface ICreateParams {
   entityName: string;
   motivationTextarea: string;
-  successRate?: number;
+  masteryType: string;
+  successRate: number;
   type: entityType;
 }
 

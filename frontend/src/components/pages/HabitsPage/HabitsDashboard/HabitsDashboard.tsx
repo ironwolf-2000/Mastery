@@ -1,73 +1,56 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { cn } from '@bem-react/classname';
-import { toast } from 'react-toastify';
-import { Button, Container } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { Navigate, useParams } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import { Container } from 'react-bootstrap';
 
-import { Heatmap, CreateModal } from '../../../common';
-import { addHabit } from '../../../../services/habits.service';
-import { ICreateParams } from '../../../common/Forms/Forms.types';
-import { createParamsToHabitParams } from '../Habits.helpers';
+import { Heatmap } from '../../../common';
+import { getHabitByName, updateHabitProgress } from '../../../../services/habits.service';
+import { IHabitParams } from '../Habits.types';
 
 import './HabitsDashboard.scss';
-import { IHabitsDashboardProps } from '../Habits.types';
 
 const blk = cn('HabitsDashboard');
 
-export const HabitsDashboard = ({
-  habits,
-  currHeatmapState,
-  allHeatmapState,
-}: IHabitsDashboardProps) => {
-  const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
+export const HabitsDashboard = () => {
+  const { encodedName } = useParams();
+  const [habit, setHabit] = useState<IHabitParams | null>(null);
 
-  const handleAddHabit = (params: ICreateParams) => {
-    const resp = addHabit(createParamsToHabitParams(params));
+  const updateHabit = useCallback(() => {
+    if (encodedName == null) return;
 
-    if (resp.success) {
-      toast.success(resp.message);
+    const fetchedHabit = getHabitByName(decodeURIComponent(encodedName));
+    if (!fetchedHabit) {
+      toast.error('Failed to update habit data.');
     } else {
-      toast.error(resp.message);
+      setHabit(fetchedHabit);
     }
+  }, [encodedName]);
 
-    setCreateModalVisible(false);
+  useEffect(() => updateHabit(), [updateHabit]);
+
+  const handleHeatmapClick = (name: string, x: number, y: number) => {
+    updateHabitProgress(name, x, y, 2);
+    updateHabit();
   };
 
-  return (
+  return habit ? (
     <>
       <Container className={blk()}>
-        <header className={blk('Header')}>
-          <Button
-            className={blk('AddButton')}
-            variant='light'
-            onClick={() => setCreateModalVisible(true)}
-          >
-            <FontAwesomeIcon icon={faPlus} />
-          </Button>
-        </header>
-        <div className={blk('Heatmaps')}>
-          <section>
-            <h2 className={blk('SectionHeading')}>Current Habit</h2>
-            <Heatmap heatmapState={currHeatmapState} bgColor='var(--color-rgb-habits)' />
-          </section>
-          <section>
-            <h2 className={blk('SectionHeading')}>Your History</h2>
-            <Heatmap
-              heatmapState={allHeatmapState}
-              bgColor='var(--color-rgb-habits)'
-              cellSize='sm'
-            />
-          </section>
-        </div>
+        <section className={blk('SettingsSection')}>Some settings</section>
+        <section className={blk('HeatmapSection')}>
+          <h2 className={blk('SectionHeading')}>{habit.name}</h2>
+          <Heatmap
+            className={blk('Heatmap')}
+            heatmapState={habit.heatmap}
+            onClick={(x, y) => handleHeatmapClick(habit.name, x, y)}
+            bgColor='var(--color-rgb-habits)'
+          />
+        </section>
       </Container>
-      <CreateModal
-        type='habit'
-        title='Create a new habit'
-        visible={createModalVisible}
-        handleCancel={() => setCreateModalVisible(false)}
-        handleCreate={handleAddHabit}
-      />
+      <ToastContainer autoClose={2000} position='bottom-right' />
     </>
+  ) : (
+    <Navigate to='/not-found' replace />
   );
 };
