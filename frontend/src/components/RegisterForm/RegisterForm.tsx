@@ -122,7 +122,7 @@ export const RegisterForm = (props: IRegisterFormProps) => {
           }}
         </Formik>
       </div>
-      <ToastContainer autoClose={3000} position='bottom-right' />
+      <ToastContainer autoClose={2000} position='bottom-right' />
     </>
   );
 };

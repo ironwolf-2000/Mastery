@@ -5,7 +5,7 @@ export const DefaultModal = ({
   visible,
   handleCancel,
   handleConfirm,
-  headingText,
+  title,
   bodyText,
   cancelLabel = 'Cancel',
   confirmLabel = 'Confirm',
@@ -13,7 +13,7 @@ export const DefaultModal = ({
   return (
     <Modal show={visible} onHide={handleCancel}>
       <Modal.Header closeButton>
-        <Modal.Title>{headingText}</Modal.Title>
+        <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>{bodyText}</Modal.Body>
       <Modal.Footer>

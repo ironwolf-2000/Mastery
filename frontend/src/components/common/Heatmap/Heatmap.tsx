@@ -7,13 +7,13 @@ import './Heatmap.scss';
 
 export const blk = cn('Heatmap');
 
-export const Heatmap = ({ heatmapState, bgColor }: IHeatmapProps) => {
+export const Heatmap = ({ heatmapState, bgColor, cellSize }: IHeatmapProps) => {
   return (
     <div className={blk()}>
       {heatmapState.map((rowItems, xi) => (
         <Row key={xi}>
           {rowItems.map((val, yi) => (
-            <Cell key={yi} x={xi} y={yi} bgColor={bgColor} intensity={val} />
+            <Cell key={yi} x={xi} y={yi} bgColor={bgColor} cellSize={cellSize} intensity={val} />
           ))}
         </Row>
       ))}
@@ -21,8 +21,9 @@ export const Heatmap = ({ heatmapState, bgColor }: IHeatmapProps) => {
   );
 };
 
+//TODO: Add comments for each day
 interface IHeatmapProps {
-  heatmapState: number[][]; // opacity of each cell.
+  heatmapState: number[][];
   bgColor: string;
-  //TODO: Add comments for each day
+  cellSize?: 'sm' | 'm';
 }

@@ -1,0 +1,82 @@
+.CreateForm {
+  position: relative;
+
+  &-Form {
+    margin-bottom: 4rem;
+  }
+
+  &-FloatingLabel {
+    font-size: 0.9rem;
+  }
+
+  &-MotivationTextarea {
+    height: 6rem;
+  }
+
+  &-MasteryTypeSection {
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+  }
+
+  &-MasteryTypeSelect {
+    flex-basis: 40%;
+    margin-left: 1rem;
+  }
+
+  &-Checkbox {
+    cursor: pointer;
+  }
+
+  &-SRSection {
+    display: flex;
+    align-items: center;
+  }
+
+  &-SRIcon {
+    color: var(--bs-body-color);
+    opacity: 0.5;
+    transition: opacity 0.2s;
+    cursor: pointer;
+    margin-left: 0.5rem;
+
+    &_active,
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &-SRInputContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &-SRInputField {
+    flex-basis: 20%;
+    margin-left: 1rem;
+    text-align: center;
+  }
+
+  &-ErrorMessage {
+    color: var(--bs-danger);
+  }
+
+  &-FormFooter {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding-top: 30rem;
+    width: 100%;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0.75rem;
+    border-top: 1px solid #dee2e6;
+
+    > * {
+      margin: 0.25rem;
+    }
+  }
+}

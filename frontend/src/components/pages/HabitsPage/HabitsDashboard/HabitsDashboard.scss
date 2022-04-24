@@ -1,15 +1,24 @@
 .HabitsDashboard {
-  display: flex;
-  padding-top: 1rem;
+  padding-bottom: 4rem;
 
-  &-Heading {
+  &-Header {
+    padding-bottom: 2rem;
+  }
+
+  &-AddButton.btn {
+    border-radius: 100%;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  }
+
+  &-Heatmaps {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &-SectionHeading {
     font-size: 2rem;
     font-weight: normal;
     margin-bottom: 1rem;
     text-align: center;
-  }
-
-  &-Heatmap {
-    margin-left: auto;
   }
 }

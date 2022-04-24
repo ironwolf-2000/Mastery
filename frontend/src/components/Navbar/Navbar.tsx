@@ -82,7 +82,7 @@ export const Navbar = ({ user }: INavbarProps) => {
         visible={logoutModalVisible}
         handleCancel={() => setLogoutModalVisible(false)}
         handleConfirm={handleLogout}
-        headingText='Log out?'
+        title='Log out?'
         bodyText='Are you sure you want to log out?'
       />
     </>

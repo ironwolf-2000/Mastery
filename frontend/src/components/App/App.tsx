@@ -11,34 +11,52 @@ import { NotFound } from '../pages/NotFoundPage';
 import { RegisterForm } from '../RegisterForm';
 import { SkillsDashboard } from '../pages/SkillsPage';
 import { UserHomePage } from '../pages/UserHomePage';
-import { getCurrentUser } from '../../services/user.service';
-import { IUser } from '../RegisterForm/RegisterForm.types';
+
 import { ProtectedRoutes } from '../common';
+import { getCurrentUser } from '../../services/user.service';
+import { getAllHabits } from '../../services/habits.service';
+import { IUser } from '../RegisterForm/RegisterForm.types';
+import { IHabitParams } from '../pages/HabitsPage/Habits.types';
 
 import 'react-toastify/dist/ReactToastify.css';
 import './App.scss';
 
 const blk = cn('App');
 
-export const App = (props: AppProps) => {
+export const App = () => {
   const location = useLocation();
+
   const [user, setUser] = useState<IUser | null>(null);
+  const [habits, setHabits] = useState<IHabitParams[]>([]);
+
   const [navbarVisible, setNavbarVisible] = useState<boolean>(false);
 
-  const [heatmapState, setHeatmapState] = useState<number[][]>([]);
+  const [currHeatmapState, setCurrHeatmapState] = useState<number[][]>([]);
+  const [allHeatmapState, setAllHeatmapState] = useState<number[][]>([]);
 
   useEffect(() => {
     setUser(getCurrentUser());
+    setHabits(getAllHabits());
 
     // TODO: Fetch habits data here
-    const arr = new Array(10);
+    const curr = new Array(10);
     for (let i = 0; i < 10; i++) {
-      arr[i] = [];
+      curr[i] = [];
       for (let j = 0; j < 10; j++) {
-        arr[i].push(Math.floor(Math.random() * 6));
+        curr[i].push(Math.floor(Math.random() * 6));
       }
     }
-    setHeatmapState(arr);
+
+    const all = new Array(20);
+    for (let i = 0; i < 12; i++) {
+      all[i] = [];
+      for (let j = 0; j < 30; j++) {
+        all[i].push(Math.floor(Math.random() * 6));
+      }
+    }
+
+    setCurrHeatmapState(curr);
+    setAllHeatmapState(all);
   }, []);
 
   useEffect(() => {
@@ -51,7 +69,16 @@ export const App = (props: AppProps) => {
       <Routes>
         <Route element={<ProtectedRoutes />}>
           <Route path='/home' element={<UserHomePage />} />
-          <Route path='/habits' element={<HabitsDashboard heatmapState={heatmapState} />} />
+          <Route
+            path='/habits'
+            element={
+              <HabitsDashboard
+                habits={habits}
+                currHeatmapState={currHeatmapState}
+                allHeatmapState={allHeatmapState}
+              />
+            }
+          />
           <Route path='/skills' element={<SkillsDashboard />} />
           <Route path='/mood' element={<MoodDashboard />} />
         </Route>
@@ -68,5 +95,3 @@ export const App = (props: AppProps) => {
     </main>
   );
 };
-
-interface AppProps {}
