@@ -1,7 +1,18 @@
 .HabitsDashboard {
+  min-height: 100%;
   padding-bottom: 4rem;
   display: flex;
   justify-content: space-between;
+
+  &-SettingsSection {
+    display: flex;
+  }
+
+  &-ControlButtons {
+    display: flex;
+    gap: 1rem;
+    align-self: flex-end;
+  }
 
   &-HeatmapSection {
     display: inline-block;
@@ -10,7 +21,7 @@
   }
 
   &-SectionHeading {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: normal;
     margin-bottom: 1rem;
     text-align: center;

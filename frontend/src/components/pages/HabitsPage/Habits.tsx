@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { cn } from '@bem-react/classname';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
-import { Button, Container, Nav } from 'react-bootstrap';
+import { Button, Container } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
@@ -17,6 +17,8 @@ import './Habits.scss';
 const blk = cn('Habits');
 
 export const Habits = ({ overallHeatmap }: IHabitsProps) => {
+  const navigate = useNavigate();
+
   const [habits, setHabits] = useState<IHabitParams[]>([]);
   const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
 
@@ -46,19 +48,22 @@ export const Habits = ({ overallHeatmap }: IHabitsProps) => {
             <FontAwesomeIcon icon={faPlus} />
           </Button>
           {habits.length ? (
-            <Nav variant='pills' defaultActiveKey={`/habits/${encodeURIComponent(habits[0].name)}`}>
+            <div>
               {habits.map(habit => {
                 const encodedName = encodeURIComponent(habit.name);
 
                 return (
-                  <Nav.Item key={encodedName}>
-                    <Nav.Link as={Link} to={`/habits/${encodedName}`}>
-                      {habit.name}
-                    </Nav.Link>
-                  </Nav.Item>
+                  <Button
+                    key={encodedName}
+                    className={blk('HabitLink')}
+                    variant='link'
+                    onClick={() => navigate(`/habits/${encodedName}`)}
+                  >
+                    {habit.name}
+                  </Button>
                 );
               })}
-            </Nav>
+            </div>
           ) : (
             <p>You don't have any habits in progress.</p>
           )}

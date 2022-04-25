@@ -43,3 +43,31 @@ export function updateHabitProgress(
   localStorage.setItem('habits', JSON.stringify(allHabits));
   return { success: true, message: `Successully updated the habit progress.` };
 }
+
+export function deleteHabit(name: string) {
+  const newHabits = getAllHabits().filter(habit => habit.name !== name);
+  localStorage.setItem('habits', JSON.stringify(newHabits));
+}
+
+export function resetHabit(name: string) {
+  const allHabits = getAllHabits();
+  let reset = false;
+
+  for (let i = 0; i < allHabits.length && !reset; i++) {
+    if (allHabits[i].name === name) {
+      for (let x = 0; x < allHabits[i].heatmap.length; x++) {
+        for (let y = 0; y < allHabits[i].heatmap.length; y++) {
+          allHabits[i].heatmap[x][y] = 0;
+        }
+      }
+      reset = true;
+    }
+  }
+
+  if (!reset) {
+    return { success: false, message: `Couldn't find the habit by its name "${name}".` };
+  }
+
+  localStorage.setItem('habits', JSON.stringify(allHabits));
+  return { success: true, message: `Successully reset the habit progress.` };
+}

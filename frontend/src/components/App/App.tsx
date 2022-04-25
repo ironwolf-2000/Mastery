@@ -54,7 +54,7 @@ export const App = () => {
       {navbarVisible && <Navbar user={user} />}
       <Routes>
         <Route element={<ProtectedRoutes />}>
-          <Route path='/home' element={<UserHomePage />} />
+          <Route path='/home' element={<UserHomePage user={user} />} />
           <Route path='/habits/:encodedName' element={<HabitsDashboard />} />
           <Route path='/habits/' element={<Habits overallHeatmap={allHeatmapState} />} />
           <Route path='/skills' element={<SkillsDashboard />} />
