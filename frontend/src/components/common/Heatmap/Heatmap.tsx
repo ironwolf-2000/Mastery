@@ -3,12 +3,20 @@ import { cn } from '@bem-react/classname';
 
 import { Row } from './Row';
 import { Cell } from './Cell';
+import { IHeatmapProps } from './Heatmap.types';
 
 import './Heatmap.scss';
 
 export const blk = cn('Heatmap');
 
-export const Heatmap = ({ className, heatmapState, onClick, bgColor, cellSize }: IHeatmapProps) => {
+export const Heatmap = ({
+  className,
+  heatmapState,
+  onClick,
+  onClickPopover,
+  bgColor,
+  cellSize,
+}: IHeatmapProps) => {
   const isValidHeatmap = useMemo(() => heatmapState.every(Array.isArray), [heatmapState]);
 
   return isValidHeatmap ? (
@@ -21,6 +29,7 @@ export const Heatmap = ({ className, heatmapState, onClick, bgColor, cellSize }:
               x={xi}
               y={yi}
               onClick={onClick}
+              onClickPopover={onClickPopover}
               bgColor={bgColor}
               cellSize={cellSize}
               intensity={val}
@@ -31,12 +40,3 @@ export const Heatmap = ({ className, heatmapState, onClick, bgColor, cellSize }:
     </div>
   ) : null;
 };
-
-//TODO: Add comments for each day
-interface IHeatmapProps {
-  className?: string;
-  heatmapState: number[][];
-  onClick?: (x: number, y: number) => void;
-  bgColor: string;
-  cellSize?: 'sm' | 'm';
-}

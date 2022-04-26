@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { cn } from '@bem-react/classname';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Container } from 'react-bootstrap';
+import { Button, Container, Popover } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleCheck, faCircleMinus, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 
 import { DefaultModal, Heatmap } from '../../../common';
 import {
@@ -11,6 +13,7 @@ import {
   resetHabit,
 } from '../../../../services/habits.service';
 import { IHabitParams } from '../Habits.types';
+import { IHeatmapSquare } from '../../../common/Heatmap/Heatmap.types';
 import { IDefaultModalProps } from '../../../common/Modals/Modals.types';
 
 import './HabitsDashboard.scss';
@@ -28,6 +31,7 @@ export const HabitsDashboard = () => {
   const navigate = useNavigate();
   const { encodedName } = useParams();
 
+  const [currSquare, setCurrSquare] = useState<IHeatmapSquare | null>(null);
   const [habit, setHabit] = useState<IHabitParams | null>(null);
   const [modalParams, setModalParams] = useState<IDefaultModalProps>(defaultModalParams);
 
@@ -37,17 +41,22 @@ export const HabitsDashboard = () => {
     return getHabitByName(decodeURIComponent(encodedName));
   }, [encodedName]);
 
+  const handleHeatmapClick = useCallback(
+    (val: number) => {
+      if (habit && currSquare) {
+        updateHabitProgress(habit.name, currSquare.x, currSquare.y, val);
+        setHabit(fetchHabit());
+      }
+    },
+    [currSquare, fetchHabit, habit]
+  );
+
   useEffect(() => {
     const fetchedHabit = fetchHabit();
 
     if (!fetchedHabit) navigate('/not-found', { replace: true });
     else setHabit(fetchedHabit);
   }, [fetchHabit, navigate]);
-
-  const handleHeatmapClick = (name: string, x: number, y: number) => {
-    updateHabitProgress(name, x, y, 2);
-    setHabit(fetchHabit());
-  };
 
   const getWarningModalParams = useCallback(
     (habitName: string) => ({
@@ -79,6 +88,32 @@ export const HabitsDashboard = () => {
     []
   );
 
+  const heatmapCellPopover = (
+    <Popover className={blk('Popover')}>
+      <FontAwesomeIcon
+        icon={faCircleCheck}
+        className={blk('PopoverIcon')}
+        color='var(--bs-success)'
+        title='complete'
+        onClick={() => handleHeatmapClick(2)}
+      />
+      <FontAwesomeIcon
+        icon={faCircleMinus}
+        className={blk('PopoverIcon')}
+        color='var(--bs-warning)'
+        title='skip'
+        onClick={() => handleHeatmapClick(1)}
+      />
+      <FontAwesomeIcon
+        icon={faCircleXmark}
+        className={blk('PopoverIcon')}
+        color='var(--bs-danger)'
+        title='clear'
+        onClick={() => handleHeatmapClick(0)}
+      />
+    </Popover>
+  );
+
   return (
     habit && (
       <>
@@ -104,7 +139,8 @@ export const HabitsDashboard = () => {
             <Heatmap
               className={blk('Heatmap')}
               heatmapState={habit.heatmap}
-              onClick={(x, y) => handleHeatmapClick(habit.name, x, y)}
+              onClick={(x, y) => setCurrSquare({ x, y })}
+              onClickPopover={heatmapCellPopover}
               bgColor='var(--color-rgb-habits)'
             />
           </section>

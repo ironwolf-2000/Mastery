@@ -1,4 +1,7 @@
 .UserHomePage {
   display: flex;
-  justify-content: center;
+
+  &-UserLabel {
+    font-size: 1.5rem;
+  }
 }

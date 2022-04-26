@@ -10,9 +10,9 @@ const blk = cn('UserHomePage');
 export const UserHomePage = ({ user }: IUserHomePageProps) => {
   return (
     <Container className={blk()}>
-      <h2 className={blk('Heading', ['display-6'])}>
-        Welcome back{user ? `, ${user.firstName}` : ''}!
-      </h2>
+      {user && (
+        <span className={blk('UserLabel')}>{`${user.firstName} ${user.lastName}'s progress`}</span>
+      )}
     </Container>
   );
 };
