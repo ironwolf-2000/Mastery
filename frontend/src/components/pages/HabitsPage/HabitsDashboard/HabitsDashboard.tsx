@@ -15,6 +15,7 @@ import {
 import { IHabitParams } from '../Habits.types';
 import { IHeatmapSquare } from '../../../common/Heatmap/Heatmap.types';
 import { IDefaultModalProps } from '../../../common/Modals/Modals.types';
+import { getCurrentSuccessRate } from '../Habits.helpers';
 
 import './HabitsDashboard.scss';
 
@@ -90,27 +91,19 @@ export const HabitsDashboard = () => {
 
   const heatmapCellPopover = (
     <Popover className={blk('Popover')}>
-      <FontAwesomeIcon
-        icon={faCircleCheck}
-        className={blk('PopoverIcon')}
-        color='var(--bs-success)'
-        title='complete'
-        onClick={() => handleHeatmapClick(2)}
-      />
-      <FontAwesomeIcon
-        icon={faCircleMinus}
-        className={blk('PopoverIcon')}
-        color='var(--bs-warning)'
-        title='skip'
-        onClick={() => handleHeatmapClick(1)}
-      />
-      <FontAwesomeIcon
-        icon={faCircleXmark}
-        className={blk('PopoverIcon')}
-        color='var(--bs-danger)'
-        title='clear'
-        onClick={() => handleHeatmapClick(0)}
-      />
+      {[
+        { colorType: 'success', title: 'complete', val: 2, icon: faCircleCheck },
+        { colorType: 'warning', title: 'skip', val: 1, icon: faCircleMinus },
+        { colorType: 'danger', title: 'clear', val: 0, icon: faCircleXmark },
+      ].map(({ colorType, title, val, icon }) => (
+        <FontAwesomeIcon
+          icon={icon}
+          className={blk('PopoverIcon')}
+          color={`var(--bs-${colorType})`}
+          title={title}
+          onClick={() => handleHeatmapClick(val)}
+        />
+      ))}
     </Popover>
   );
 
@@ -118,7 +111,27 @@ export const HabitsDashboard = () => {
     habit && (
       <>
         <Container className={blk()}>
-          <section className={blk('SettingsSection')}>
+          <section className={blk('InfoSection')}>
+            <h2 className={blk('SectionHeading')}>Habit Info</h2>
+            <div className={blk('InfoSectionContent')}>
+              <section className={blk('InfoSubsection')}>
+                <h3 className={blk('SubsectionHeading')}>Start Date</h3>
+                {new Date(habit.startTime).toLocaleString('en-US', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </section>
+              <section className={blk('InfoSubsection')}>
+                <h3 className={blk('SubsectionHeading')}>Your Motivation</h3>
+                <p className={blk('SubsectionContent')}>{habit.motivation}</p>
+              </section>
+              <section className={blk('InfoSubsection')}>
+                <h3 className={blk('SubsectionHeading')}>Current Success Rate</h3>
+                <p className={blk('SubsectionContent')}>{getCurrentSuccessRate(habit)}</p>
+              </section>
+            </div>
             <div className={blk('ControlButtons')}>
               <Button
                 variant='warning'

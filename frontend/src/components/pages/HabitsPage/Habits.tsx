@@ -42,7 +42,7 @@ export const Habits = ({ overallHeatmap }: IHabitsProps) => {
         <header className={blk('Header')}>
           <Button
             className={blk('AddButton')}
-            variant='light'
+            variant='outline-primary'
             onClick={() => setCreateModalVisible(true)}
           >
             <FontAwesomeIcon icon={faPlus} />
@@ -56,7 +56,7 @@ export const Habits = ({ overallHeatmap }: IHabitsProps) => {
                   <Button
                     key={encodedName}
                     className={blk('HabitLink')}
-                    variant='link'
+                    variant='outline-secondary'
                     onClick={() => navigate(`/habits/${encodedName}`)}
                   >
                     {habit.name}
@@ -65,7 +65,7 @@ export const Habits = ({ overallHeatmap }: IHabitsProps) => {
               })}
             </div>
           ) : (
-            <p>You don't have any habits in progress.</p>
+            "You don't have any habits in progress. The heatmap below is just an example."
           )}
         </header>
 

@@ -92,11 +92,12 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
                   className={blk('SRIcon', { active: srTooltipVisible })}
                   forwardedRef={target}
                   icon={faCircleQuestion}
-                  onClick={() => setSRTooltipVisible(!srTooltipVisible)}
+                  onMouseEnter={() => setSRTooltipVisible(true)}
+                  onMouseLeave={() => setSRTooltipVisible(false)}
                 />
                 <Overlay target={target.current} show={srTooltipVisible} placement='bottom'>
                   {props => (
-                    <Tooltip {...props}>
+                    <Tooltip className={blk('SRTooltip')} {...props}>
                       Determine the percentage of successful days in case you don't want to stick to
                       the habit every day.
                     </Tooltip>

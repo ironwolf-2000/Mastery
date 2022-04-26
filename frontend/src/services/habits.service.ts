@@ -57,7 +57,7 @@ export function resetHabit(name: string) {
     if (allHabits[i].name === name) {
       for (let x = 0; x < allHabits[i].heatmap.length; x++) {
         for (let y = 0; y < allHabits[i].heatmap.length; y++) {
-          allHabits[i].heatmap[x][y] = 0;
+          allHabits[i].heatmap[x][y] = -1;
         }
       }
       reset = true;

@@ -4,6 +4,7 @@ export interface IHabitParams {
   timePeriod: number;
   successRate: number;
   heatmap: number[][];
+  startTime: number;
 }
 
 export interface IHabitsProps {

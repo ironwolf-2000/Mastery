@@ -38,7 +38,7 @@ export const App = () => {
     for (let i = 0; i < 12; i++) {
       all[i] = [];
       for (let j = 0; j < 30; j++) {
-        all[i].push(Math.floor(Math.random() * 6));
+        all[i].push(Math.floor(Math.random() * 4) - 1);
       }
     }
 

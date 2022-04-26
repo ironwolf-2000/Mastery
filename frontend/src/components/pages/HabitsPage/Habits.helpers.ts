@@ -7,7 +7,7 @@ export function createParamsToHabitParams(params: ICreateParams): IHabitParams {
 
   const heatmap = new Array(heatmapSize);
   for (let i = 0; i < heatmapSize; i++) {
-    heatmap[i] = new Array(heatmapSize).fill(0);
+    heatmap[i] = new Array(heatmapSize).fill(-1);
   }
 
   return {
@@ -16,5 +16,23 @@ export function createParamsToHabitParams(params: ICreateParams): IHabitParams {
     timePeriod,
     successRate: params.successRate,
     heatmap,
+    startTime: Date.now(),
   };
+}
+
+export function getCurrentSuccessRate(habit: IHabitParams): string {
+  let completed = 0;
+  let failed = 0;
+
+  for (const row of habit.heatmap) {
+    for (const cellVal of row) {
+      if (cellVal === 2) {
+        completed++;
+      } else if (cellVal === 0) {
+        failed++;
+      }
+    }
+  }
+
+  return completed === 0 ? '0' : (completed / (completed + failed)).toFixed(2);
 }

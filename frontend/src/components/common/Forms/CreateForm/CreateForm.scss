@@ -40,7 +40,6 @@
     cursor: pointer;
     margin-left: 0.5rem;
 
-    &_active,
     &:hover {
       opacity: 1;
     }
@@ -56,6 +55,10 @@
     flex-basis: 20%;
     margin-left: 1rem;
     text-align: center;
+  }
+
+  &-SRTooltip.tooltip.show {
+    opacity: 0.8;
   }
 
   &-ErrorMessage {

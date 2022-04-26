@@ -2,6 +2,7 @@
   &-Header {
     padding-bottom: 2rem;
     display: flex;
+    align-items: center;
   }
 
   &-HabitLink {
@@ -15,8 +16,7 @@
   }
 
   &-AddButton.btn {
-    border-radius: 100%;
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    border-radius: 25%;
     margin-right: 2rem;
   }
 }
