@@ -1,6 +1,8 @@
 import { IHabitParams } from '../components/pages/HabitsPage/Habits.types';
 import { ICRUDResponse } from './services.types';
 
+export const DEFAULT_HABIT_SUCCESS_RATE = 80;
+
 export function getAllHabits(): IHabitParams[] {
   return JSON.parse(localStorage.getItem('habits') ?? '[]');
 }
@@ -70,4 +72,23 @@ export function resetHabit(name: string) {
 
   localStorage.setItem('habits', JSON.stringify(allHabits));
   return { success: true, message: `Successully reset the habit progress.` };
+}
+
+export function getCurrentHabitSuccessRate(habit: IHabitParams | null): number {
+  if (habit === null) return DEFAULT_HABIT_SUCCESS_RATE;
+
+  let completed = 0;
+  let failed = 0;
+
+  for (const row of habit.heatmap) {
+    for (const cellVal of row) {
+      if (cellVal === 2) {
+        completed++;
+      } else if (cellVal === 0) {
+        failed++;
+      }
+    }
+  }
+
+  return completed && Number((completed / (completed + failed)).toFixed(2)) * 100;
 }

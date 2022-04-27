@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { cn } from '@bem-react/classname';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Container, Popover } from 'react-bootstrap';
+import { Badge, Button, Container, Popover } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faCircleMinus, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 
@@ -11,11 +11,11 @@ import {
   updateHabitProgress,
   deleteHabit,
   resetHabit,
+  getCurrentHabitSuccessRate,
 } from '../../../../services/habits.service';
 import { IHabitParams } from '../Habits.types';
 import { IHeatmapSquare } from '../../../common/Heatmap/Heatmap.types';
 import { IDefaultModalProps } from '../../../common/Modals/Modals.types';
-import { getCurrentSuccessRate } from '../Habits.helpers';
 
 import './HabitsDashboard.scss';
 
@@ -58,6 +58,8 @@ export const HabitsDashboard = () => {
     if (!fetchedHabit) navigate('/not-found', { replace: true });
     else setHabit(fetchedHabit);
   }, [fetchHabit, navigate]);
+
+  const currentSR = useMemo(() => getCurrentHabitSuccessRate(habit), [habit]);
 
   const getWarningModalParams = useCallback(
     (habitName: string) => ({
@@ -128,8 +130,20 @@ export const HabitsDashboard = () => {
                 <p className={blk('SubsectionContent')}>{habit.motivation}</p>
               </section>
               <section className={blk('InfoSubsection')}>
-                <h3 className={blk('SubsectionHeading')}>Current Success Rate</h3>
-                <p className={blk('SubsectionContent')}>{getCurrentSuccessRate(habit)}</p>
+                <h2 className={blk('SubsectionHeading')}>Success Rate</h2>
+                <div className={blk('SubsectionContent')}>
+                  <span className={blk('TargetSRLabel')}>
+                    Target <Badge bg='info'>{habit.successRate}</Badge>
+                  </span>
+                  <span>
+                    Current{' '}
+                    <Badge
+                      bg={currentSR > 0 && currentSR < habit.successRate ? 'danger' : 'success'}
+                    >
+                      {currentSR}
+                    </Badge>
+                  </span>
+                </div>
               </section>
             </div>
             <div className={blk('ControlButtons')}>

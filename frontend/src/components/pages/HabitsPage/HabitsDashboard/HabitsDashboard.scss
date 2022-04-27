@@ -24,7 +24,7 @@
   }
 
   &-SubsectionHeading {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     font-weight: normal;
     margin-bottom: 0.25rem;
   }
@@ -39,6 +39,10 @@
 
   &-SubsectionContent {
     font-style: italic;
+  }
+
+  &-TargetSRLabel {
+    margin-right: 0.75rem;
   }
 
   &-Popover {

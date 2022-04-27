@@ -19,20 +19,3 @@ export function createParamsToHabitParams(params: ICreateParams): IHabitParams {
     startTime: Date.now(),
   };
 }
-
-export function getCurrentSuccessRate(habit: IHabitParams): string {
-  let completed = 0;
-  let failed = 0;
-
-  for (const row of habit.heatmap) {
-    for (const cellVal of row) {
-      if (cellVal === 2) {
-        completed++;
-      } else if (cellVal === 0) {
-        failed++;
-      }
-    }
-  }
-
-  return completed === 0 ? '0' : (completed / (completed + failed)).toFixed(2);
-}
