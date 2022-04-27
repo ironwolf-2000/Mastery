@@ -1,3 +1,4 @@
+import { getInitializeHeatmap } from '../components/pages/HabitsPage/Habits.helpers';
 import { IHabitParams } from '../components/pages/HabitsPage/Habits.types';
 import { ICRUDResponse } from './services.types';
 
@@ -33,7 +34,7 @@ export function updateHabitProgress(
 
   for (let i = 0; i < allHabits.length && !updated; i++) {
     if (allHabits[i].name === name) {
-      allHabits[i].heatmap[x][y] = val;
+      allHabits[i].heatmap[x][y].intensity = val;
       updated = true;
     }
   }
@@ -57,11 +58,11 @@ export function resetHabit(name: string) {
 
   for (let i = 0; i < allHabits.length && !reset; i++) {
     if (allHabits[i].name === name) {
-      for (let x = 0; x < allHabits[i].heatmap.length; x++) {
-        for (let y = 0; y < allHabits[i].heatmap.length; y++) {
-          allHabits[i].heatmap[x][y] = -1;
-        }
-      }
+      allHabits[i].heatmap = getInitializeHeatmap({
+        size: allHabits[i].heatmap.length,
+        useTitle: true,
+        startTime: allHabits[i].startTime,
+      });
       reset = true;
     }
   }
@@ -81,14 +82,16 @@ export function getCurrentHabitSuccessRate(habit: IHabitParams | null): number {
   let failed = 0;
 
   for (const row of habit.heatmap) {
-    for (const cellVal of row) {
-      if (cellVal === 2) {
+    for (const { intensity } of row) {
+      if (intensity === 2) {
         completed++;
-      } else if (cellVal === 0) {
+      } else if (intensity === 0) {
         failed++;
       }
     }
   }
 
-  return completed && Number((completed / (completed + failed)).toFixed(2)) * 100;
+  return completed + failed === 0
+    ? -1
+    : Number((completed / (completed + failed)).toFixed(2)) * 100;
 }

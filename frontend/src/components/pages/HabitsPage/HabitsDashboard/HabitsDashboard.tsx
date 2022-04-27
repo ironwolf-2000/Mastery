@@ -16,6 +16,7 @@ import {
 import { IHabitParams } from '../Habits.types';
 import { IHeatmapSquare } from '../../../common/Heatmap/Heatmap.types';
 import { IDefaultModalProps } from '../../../common/Modals/Modals.types';
+import { getFormattedDate } from '../../../../utils';
 
 import './HabitsDashboard.scss';
 
@@ -99,6 +100,7 @@ export const HabitsDashboard = () => {
         { colorType: 'danger', title: 'clear', val: 0, icon: faCircleXmark },
       ].map(({ colorType, title, val, icon }) => (
         <FontAwesomeIcon
+          key={title}
           icon={icon}
           className={blk('PopoverIcon')}
           color={`var(--bs-${colorType})`}
@@ -118,12 +120,7 @@ export const HabitsDashboard = () => {
             <div className={blk('InfoSectionContent')}>
               <section className={blk('InfoSubsection')}>
                 <h3 className={blk('SubsectionHeading')}>Start Date</h3>
-                {new Date(habit.startTime).toLocaleString('en-US', {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
+                {getFormattedDate(habit.startTime)}
               </section>
               <section className={blk('InfoSubsection')}>
                 <h3 className={blk('SubsectionHeading')}>Your Motivation</h3>
@@ -138,9 +135,9 @@ export const HabitsDashboard = () => {
                   <span>
                     Current{' '}
                     <Badge
-                      bg={currentSR > 0 && currentSR < habit.successRate ? 'danger' : 'success'}
+                      bg={currentSR > -1 && currentSR < habit.successRate ? 'danger' : 'success'}
                     >
-                      {currentSR}
+                      {currentSR === -1 ? 0 : currentSR}
                     </Badge>
                   </span>
                 </div>

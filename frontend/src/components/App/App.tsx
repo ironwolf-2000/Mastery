@@ -16,6 +16,7 @@ import { UserHomePage } from '../pages/UserHomePage';
 import { ProtectedRoutes } from '../common';
 import { getCurrentUser } from '../../services/user.service';
 import { IUser } from '../RegisterForm/RegisterForm.types';
+import { IHeatmapCellParams } from '../common/Heatmap/Heatmap.types';
 
 import 'react-toastify/dist/ReactToastify.css';
 import './App.scss';
@@ -26,10 +27,8 @@ export const App = () => {
   const location = useLocation();
 
   const [user, setUser] = useState<IUser | null>(null);
-
   const [navbarVisible, setNavbarVisible] = useState<boolean>(false);
-
-  const [allHeatmapState, setAllHeatmapState] = useState<number[][]>([]);
+  const [allHeatmapState, setAllHeatmapState] = useState<IHeatmapCellParams[][]>([]);
 
   useEffect(() => {
     setUser(getCurrentUser());
@@ -38,7 +37,7 @@ export const App = () => {
     for (let i = 0; i < 12; i++) {
       all[i] = [];
       for (let j = 0; j < 30; j++) {
-        all[i].push(Math.floor(Math.random() * 4) - 1);
+        all[i].push({ intensity: Math.floor(Math.random() * 4) - 1 });
       }
     }
 
