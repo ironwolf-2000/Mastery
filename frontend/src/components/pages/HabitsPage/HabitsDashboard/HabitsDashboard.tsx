@@ -3,7 +3,12 @@ import { cn } from '@bem-react/classname';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Badge, Button, Container, Popover } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleCheck, faCircleMinus, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCircleCheck,
+  faCircleMinus,
+  faCircleXmark,
+  faArrowLeft,
+} from '@fortawesome/free-solid-svg-icons';
 
 import { DefaultModal, Heatmap } from '../../../common';
 import {
@@ -116,7 +121,17 @@ export const HabitsDashboard = () => {
       <>
         <Container className={blk()}>
           <section className={blk('InfoSection')}>
-            <h2 className={blk('SectionHeading')}>Habit Info</h2>
+            <header className={blk('InfoSectionHeader')}>
+              <Button
+                className={blk('BackButton')}
+                variant='outline-secondary'
+                size='sm'
+                onClick={() => navigate('/habits')}
+              >
+                <FontAwesomeIcon icon={faArrowLeft} />
+              </Button>
+              <h2 className={blk('SectionHeading')}>Habit Info</h2>
+            </header>
             <div className={blk('InfoSectionContent')}>
               <section className={blk('InfoSubsection')}>
                 <h3 className={blk('SubsectionHeading')}>Start Date</h3>

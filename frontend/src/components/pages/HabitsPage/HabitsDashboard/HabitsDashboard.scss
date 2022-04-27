@@ -4,6 +4,15 @@
   display: flex;
   justify-content: space-between;
 
+  &-InfoSectionHeader {
+    display: flex;
+    align-items: center;
+  }
+
+  &-BackButton {
+    margin-right: 2rem;
+  }
+
   &-ControlButtons {
     display: flex;
     gap: 1rem;
@@ -16,10 +25,14 @@
     border-radius: 0.5rem;
   }
 
+  &-Heatmap {
+    margin-top: 2rem;
+  }
+
   &-SectionHeading {
     font-size: 1.8rem;
     font-weight: normal;
-    margin-bottom: 1rem;
+    margin: 0;
     text-align: center;
   }
 

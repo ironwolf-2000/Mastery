@@ -33,7 +33,7 @@ export const App = () => {
   useEffect(() => {
     setUser(getCurrentUser());
 
-    const all = new Array(20);
+    const all = new Array(12);
     for (let i = 0; i < 12; i++) {
       all[i] = [];
       for (let j = 0; j < 30; j++) {
