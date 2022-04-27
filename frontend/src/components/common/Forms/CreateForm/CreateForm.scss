@@ -9,14 +9,14 @@
     font-size: 0.9rem;
   }
 
-  &-MotivationTextarea {
-    height: 6rem;
-  }
-
   &-MasteryTypeSection {
     margin: 1rem 0;
     display: flex;
     align-items: center;
+
+    > label {
+      margin-bottom: 0;
+    }
   }
 
   &-MasteryTypeSelect {
@@ -82,4 +82,9 @@
       margin: 0.25rem;
     }
   }
+}
+
+textarea.CreateForm-MotivationTextarea.form-control {
+  height: 6.2rem;
+  overflow: visible;
 }

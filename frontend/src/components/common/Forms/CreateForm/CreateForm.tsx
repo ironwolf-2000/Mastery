@@ -31,10 +31,9 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
     entityName: Yup.string()
       .max(15, 'The name must be 15 characters or less.')
       .required('The name cannot be empty.'),
-    motivationTextarea: Yup.string().min(
-      20,
-      'Your motivation message must be at least 20 characters long.'
-    ),
+    motivationTextarea: Yup.string()
+      .min(20, 'Your motivation message must be at least 20 characters long.')
+      .max(80, 'Your motivation message must not exceed 80 characters.'),
     masteryType: Yup.string(),
     successRate: Yup.number()
       .min(10, 'Success Rate must be at least 10%')
