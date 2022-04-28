@@ -1,4 +1,4 @@
-import { entityType } from '../../App/App.types';
+import { IEntityType } from '../../App/App.types';
 import { ICreateParams } from '../Forms/Forms.types';
 
 interface IBaseModalProps {
@@ -15,6 +15,6 @@ export interface IDefaultModalProps extends IBaseModalProps {
 }
 
 export interface ICreateModalProps extends IBaseModalProps {
-  type: entityType;
+  type: IEntityType;
   handleCreate: (params: ICreateParams) => void;
 }

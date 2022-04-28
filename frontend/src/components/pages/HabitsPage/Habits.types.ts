@@ -1,24 +1,8 @@
+import { IEntityParams } from '../../App/App.types';
 import { IHeatmapCellParams } from '../../common/Heatmap/Heatmap.types';
 
-export interface IHabitParams {
-  name: string;
-  motivation: string;
-  timePeriod: number;
-  successRate: number;
-  heatmap: IHeatmapCellParams[][];
-  startTime: number;
-}
+export type IHabitParams = IEntityParams;
 
 export interface IHabitsProps {
   overallHeatmap: IHeatmapCellParams[][];
 }
-
-export type IHeatmapInitializerProps = { size: number } & (
-  | {
-      useTitle: false;
-    }
-  | {
-      useTitle: true;
-      startTime: number;
-    }
-);

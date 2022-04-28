@@ -1,0 +1,77 @@
+.Dashboard {
+  min-height: 100%;
+  padding-bottom: 4rem;
+  display: flex;
+  justify-content: space-between;
+
+  &-InfoSectionHeader {
+    display: flex;
+    align-items: center;
+  }
+
+  &-BackButton {
+    margin-right: 2rem;
+  }
+
+  &-ControlButtons {
+    display: flex;
+    gap: 1rem;
+    align-self: flex-end;
+  }
+
+  &-HeatmapSection {
+    display: inline-block;
+    padding: 0 2rem 2rem;
+    border-radius: 0.5rem;
+  }
+
+  &-Heatmap {
+    margin-top: 2rem;
+  }
+
+  &-SectionHeading {
+    font-size: 1.8rem;
+    font-weight: normal;
+    margin: 0;
+    text-align: center;
+  }
+
+  &-SubsectionHeading {
+    font-size: 1.3rem;
+    font-weight: normal;
+    margin-bottom: 0.25rem;
+  }
+
+  &-InfoSectionContent {
+    padding: 2rem 0;
+  }
+
+  &-InfoSubsection {
+    margin-bottom: 2rem;
+  }
+
+  &-SubsectionContent {
+    font-style: italic;
+  }
+
+  &-TargetSRLabel {
+    margin-right: 0.75rem;
+  }
+
+  &-Popover {
+    padding: 0.4rem;
+  }
+
+  &-PopoverIcon {
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+    margin: 0 0.25rem;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

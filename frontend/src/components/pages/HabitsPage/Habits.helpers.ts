@@ -1,7 +1,7 @@
 import { getDateByDayDiff } from '../../../utils';
 import { ICreateParams } from '../../common/Forms/Forms.types';
-import { IHeatmapCellParams } from '../../common/Heatmap/Heatmap.types';
-import { IHabitParams, IHeatmapInitializerProps } from './Habits.types';
+import { IHeatmapCellParams, IHeatmapInitializerProps } from '../../common/Heatmap/Heatmap.types';
+import { IHabitParams } from './Habits.types';
 
 export function getInitializeHeatmap(props: IHeatmapInitializerProps): IHeatmapCellParams[][] {
   const { size, useTitle } = props;

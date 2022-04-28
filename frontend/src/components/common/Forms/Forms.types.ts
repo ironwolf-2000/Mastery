@@ -1,15 +1,15 @@
-import { entityType } from '../../App/App.types';
+import { IEntityType } from '../../App/App.types';
 
 export interface ICreateParams {
   entityName: string;
   motivationTextarea: string;
   masteryType: string;
   successRate: number;
-  type: entityType;
+  type: IEntityType;
 }
 
 export interface ICreateFormProps {
-  type: entityType;
+  type: IEntityType;
   handleCancel: () => void;
   handleSubmit: (params: ICreateParams) => void;
 }

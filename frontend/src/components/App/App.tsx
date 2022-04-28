@@ -37,7 +37,8 @@ export const App = () => {
     for (let i = 0; i < 12; i++) {
       all[i] = [];
       for (let j = 0; j < 30; j++) {
-        all[i].push({ intensity: Math.floor(Math.random() * 4) - 1 });
+        const choices = [-1, 0, 1, 4];
+        all[i].push({ intensity: choices[Math.floor(Math.random() * 4)] });
       }
     }
 

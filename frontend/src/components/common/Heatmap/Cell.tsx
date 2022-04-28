@@ -9,11 +9,6 @@ const sizeMap = {
   sm: 1,
 };
 
-const defaultColorMap: Record<string, string> = {
-  '-1': 'var(--bs-gray-100)',
-  '0': 'var(--color-red)',
-};
-
 export const Cell = React.memo(
   ({
     x,
@@ -27,9 +22,7 @@ export const Cell = React.memo(
   }: IHeatmapCellProps) => {
     const style: React.CSSProperties = {
       backgroundColor:
-        intensity < 1
-          ? defaultColorMap[intensity.toString()]
-          : `rgba(${bgColor}, ${intensity ** 2 * 0.25})`,
+        intensity < 1 ? 'var(--bs-gray-100)' : `rgba(${bgColor}, ${intensity * 0.25})`,
       width: `${sizeMap[cellSize]}rem`,
       height: `${sizeMap[cellSize]}rem`,
       borderRadius: `${sizeMap[cellSize] * 0.16}rem`,

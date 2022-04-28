@@ -36,3 +36,13 @@ export interface IHeatmapSquare {
   y: number;
   value?: string;
 }
+
+export type IHeatmapInitializerProps = { size: number } & (
+  | {
+      useTitle: false;
+    }
+  | {
+      useTitle: true;
+      startTime: number;
+    }
+);
