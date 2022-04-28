@@ -4,5 +4,5 @@ import { IHeatmapCellParams } from '../../common/Heatmap/Heatmap.types';
 export type IHabitParams = IEntityParams;
 
 export interface IHabitsProps {
-  overallHeatmap: IHeatmapCellParams[][];
+  entityHeatmap: IHeatmapCellParams[][];
 }

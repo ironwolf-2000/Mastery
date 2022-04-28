@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { cn } from '@bem-react/classname';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
-import { Button, Container } from 'react-bootstrap';
+import { Button, Container, Overlay, Tooltip } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
@@ -16,8 +16,11 @@ import './Habits.scss';
 
 const blk = cn('Habits');
 
-export const Habits = ({ overallHeatmap }: IHabitsProps) => {
+export const Habits = ({ entityHeatmap }: IHabitsProps) => {
   const navigate = useNavigate();
+
+  const addButtonRef = useRef(null);
+  const [tooltipVisible, setTooltipVisible] = useState<boolean>(false);
 
   const [habits, setHabits] = useState<IHabitParams[]>([]);
   const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
@@ -36,19 +39,37 @@ export const Habits = ({ overallHeatmap }: IHabitsProps) => {
     }
   };
 
+  const addButtonDisabled = habits.length === 7;
+
   return (
     <>
-      <Container>
-        <header className={blk('Header')}>
-          <Button
-            className={blk('AddButton')}
-            variant='outline-primary'
-            onClick={() => setCreateModalVisible(true)}
-          >
-            <FontAwesomeIcon icon={faPlus} />
-          </Button>
+      <Container className={blk()}>
+        <section className={blk('ManageHabitsSection')}>
+          <header className={blk('Header')}>
+            <span
+              ref={addButtonRef}
+              onMouseEnter={addButtonDisabled ? () => setTooltipVisible(true) : undefined}
+              onMouseLeave={addButtonDisabled ? () => setTooltipVisible(false) : undefined}
+            >
+              <Button
+                className={blk('AddButton')}
+                variant='outline-secondary'
+                onClick={() => setCreateModalVisible(true)}
+                disabled={addButtonDisabled}
+              >
+                <FontAwesomeIcon icon={faPlus} />
+              </Button>
+            </span>
+            <Overlay target={addButtonRef.current} show={tooltipVisible} placement='bottom'>
+              {props => (
+                <Tooltip className={blk('Tooltip')} {...props}>
+                  You cannot have more than 7 habits at once.
+                </Tooltip>
+              )}
+            </Overlay>
+          </header>
           {habits.length ? (
-            <div>
+            <div className={blk('HabitLinksBlock')}>
               {habits.map(habit => {
                 const encodedName = encodeURIComponent(habit.name);
 
@@ -65,11 +86,13 @@ export const Habits = ({ overallHeatmap }: IHabitsProps) => {
               })}
             </div>
           ) : (
-            "You don't have any habits in progress. The heatmap below is just an example."
+            "You don't have any habits in progress."
           )}
-        </header>
-
-        <Heatmap heatmapState={overallHeatmap} bgColor='var(--color-rgb-habits)' cellSize='sm' />
+        </section>
+        <section className={blk('HeatmapSection')}>
+          <h2 className={blk('HeatmapSectionHeading')}>Overall Progress</h2>
+          <Heatmap heatmapState={entityHeatmap} bgColor='var(--color-rgb-habits)' cellSize='sm' />
+        </section>
       </Container>
       <CreateModal
         type='habit'

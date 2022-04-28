@@ -1,13 +1,25 @@
 .Habits {
+  display: flex;
+  justify-content: space-between;
+
+  &-ManageHabitsSection {
+    max-width: 50%;
+  }
+
   &-Header {
     padding-bottom: 2rem;
     display: flex;
     align-items: center;
   }
 
+  &-Tooltip.tooltip.show {
+    opacity: 0.8;
+  }
+
   &-HabitLink {
-    margin: 0 1rem;
-    color: var(--color-habits);
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    white-space: nowrap;
     transition: color 0.2s;
 
     &:hover {
@@ -16,6 +28,13 @@
   }
 
   &-AddButton.btn {
-    margin-right: 2rem;
+    border-radius: 25%;
+  }
+
+  &-HeatmapSectionHeading {
+    font-size: 1.5rem;
+    font-weight: normal;
+    text-align: center;
+    margin-bottom: 2rem;
   }
 }

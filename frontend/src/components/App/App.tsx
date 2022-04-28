@@ -33,10 +33,10 @@ export const App = () => {
   useEffect(() => {
     setUser(getCurrentUser());
 
-    const all = new Array(12);
-    for (let i = 0; i < 12; i++) {
+    const all = new Array(20);
+    for (let i = 0; i < 20; i++) {
       all[i] = [];
-      for (let j = 0; j < 30; j++) {
+      for (let j = 0; j < 20; j++) {
         const choices = [-1, 0, 1, 4];
         all[i].push({ intensity: choices[Math.floor(Math.random() * 4)] });
       }
@@ -56,7 +56,7 @@ export const App = () => {
         <Route element={<ProtectedRoutes />}>
           <Route path='/home' element={<UserHomePage user={user} />} />
           <Route path='/habits/:encodedName' element={<HabitsDashboard />} />
-          <Route path='/habits/' element={<Habits overallHeatmap={allHeatmapState} />} />
+          <Route path='/habits/' element={<Habits entityHeatmap={allHeatmapState} />} />
           <Route path='/skills' element={<SkillsDashboard />} />
           <Route path='/mood' element={<MoodDashboard />} />
         </Route>
