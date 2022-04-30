@@ -8,7 +8,7 @@ import { FloatingLabel, Form as BSForm, Button, Overlay, Tooltip } from 'react-b
 
 import { MyErrorMessage } from '../ErrorMessage';
 import { ICreateFormProps, ICreateParams } from '../Forms.types';
-import { DEFAULT_HABIT_SUCCESS_RATE } from '../../../../services/habits.service';
+import { DEFAULT_SUCCESS_RATE } from '../../../../services/entities.service';
 
 import './CreateForm.scss';
 
@@ -23,7 +23,7 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
     entityName: '',
     motivationTextarea: '',
     masteryType: 'Beginner: 36 days',
-    successRate: DEFAULT_HABIT_SUCCESS_RATE,
+    successRate: DEFAULT_SUCCESS_RATE,
     type,
   };
 

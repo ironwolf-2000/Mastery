@@ -4,6 +4,7 @@ export type IEntityType = 'habit' | 'skill';
 
 export interface IEntityParams {
   name: string;
+  userEmail: string;
   motivation: string;
   timePeriod: number;
   successRate: number;

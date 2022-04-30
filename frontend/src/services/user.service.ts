@@ -8,8 +8,12 @@ function getAllUsers(): IUser[] {
   return JSON.parse(localStorage.getItem('users') ?? '[]');
 }
 
+export function getCurrentUserEmail(): string | null {
+  return localStorage.getItem('currentUserEmail');
+}
+
 export function getCurrentUser(): IUser | null {
-  const currentUserEmail = localStorage.getItem('currentUserEmail');
+  const currentUserEmail = getCurrentUserEmail();
   if (!currentUserEmail) {
     return null;
   }

@@ -8,6 +8,7 @@ import { getInitializedHeatmap } from '../components/pages/HabitsPage/Habits.hel
 import { IHabitParams } from '../components/pages/HabitsPage/Habits.types';
 import { getDateByDayDiff, msToDays } from '../utils';
 import { ICRUDResponse } from './services.types';
+import { getCurrentUserEmail } from './user.service';
 
 export const DEFAULT_SUCCESS_RATE = 80;
 const entityMapper: Record<IEntityType, string> = {
@@ -26,9 +27,19 @@ export function getAllEntities(type: IEntityType): IEntityParams[] {
   return JSON.parse(localStorage.getItem(entityMapper[type]) ?? '[]');
 }
 
+export function getAllUserEntities(type: IEntityType): IEntityParams[] {
+  const userEmail = getCurrentUserEmail();
+
+  return JSON.parse(localStorage.getItem(entityMapper[type]) ?? '[]').filter(
+    (el: IEntityParams) => el.userEmail === userEmail
+  );
+}
+
 export function addEntity(type: IEntityType, item: IEntityParams): ICRUDResponse {
+  const userEmail = getCurrentUserEmail();
   const entities = getAllEntities(type);
-  if (entities.some(u => u.name === item.name)) {
+
+  if (entities.some(u => u.userEmail === userEmail && u.name === item.name)) {
     return { success: false, message: `A ${type} with this name already exists.` };
   }
 
@@ -37,7 +48,7 @@ export function addEntity(type: IEntityType, item: IEntityParams): ICRUDResponse
 }
 
 export function getEntityByName(type: IEntityType, name: string): IHabitParams | null {
-  const entities = getAllEntities(type);
+  const entities = getAllUserEntities(type);
   return entities.find(item => item.name === name) ?? null;
 }
 
@@ -48,7 +59,7 @@ export function updateEntityHeatmap(
   y: number,
   value: IHeatmapIntensityValues
 ): ICRUDResponse {
-  const allEntities = getAllEntities(type);
+  const allEntities = getAllUserEntities(type);
   let updated = false;
 
   for (let i = 0; i < allEntities.length && !updated; i++) {
@@ -63,16 +74,20 @@ export function updateEntityHeatmap(
   }
 
   localStorage.setItem(entityMapper[type], JSON.stringify(allEntities));
-  return { success: true, message: `Successully updated the habit progress.` };
+  return { success: true, message: `Successully updated the ${type} progress.` };
 }
 
 export function deleteEntity(type: IEntityType, name: string) {
-  const newHabits = getAllEntities(type).filter(item => item.name !== name);
-  localStorage.setItem(entityMapper[type], JSON.stringify(newHabits));
+  const userEmail = getCurrentUserEmail();
+  const newEntities = getAllEntities(type).filter(
+    el => el.userEmail !== userEmail || el.name !== name
+  );
+
+  localStorage.setItem(entityMapper[type], JSON.stringify(newEntities));
 }
 
 export function resetEntity(type: IEntityType, name: string) {
-  const allEntities = getAllEntities(type);
+  const allEntities = getAllUserEntities(type);
   let reset = false;
 
   for (let i = 0; i < allEntities.length && !reset; i++) {
@@ -117,7 +132,7 @@ export function getCurrentEntitySuccessRate(item: IEntityParams | null): number 
 
 // FIXME: get an overall heatmap for different periods of time
 export function getOverallEntityHeatmap(type: IEntityType) {
-  const allEntities = getAllEntities(type);
+  const allEntities = getAllUserEntities(type);
   let [startTime, endTime] = [Infinity, -Infinity];
   const intensities: Record<IHeatmapIntensityNames, IHeatmapIntensityValues>[] = [];
 

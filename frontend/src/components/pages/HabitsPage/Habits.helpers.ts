@@ -1,3 +1,4 @@
+import { getCurrentUserEmail } from '../../../services/user.service';
 import { getDateByDayDiff } from '../../../utils';
 import { ICreateParams } from '../../common/Forms/Forms.types';
 import { IHeatmapCellParams, IHeatmapInitializerProps } from '../../common/Heatmap/Heatmap.types';
@@ -25,10 +26,12 @@ export function createParamsToHabitParams(params: ICreateParams): IHabitParams {
   const timePeriod = Number(params.masteryType.match(/\d+/)?.[0] ?? '36');
   const heatmapSize = Math.sqrt(timePeriod);
 
+  const userEmail = getCurrentUserEmail() ?? 'anonymous@email.com';
   const startTime = Date.now();
 
   return {
     name: params.entityName,
+    userEmail,
     motivation: params.motivationTextarea,
     timePeriod,
     successRate: params.successRate,
