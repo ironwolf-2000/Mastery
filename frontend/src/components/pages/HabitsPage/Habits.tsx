@@ -6,26 +6,32 @@ import { Button, Container, Overlay, Tooltip } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
-import { addHabit, getAllHabits } from '../../../services/habits.service';
-import { createParamsToHabitParams } from './Habits.helpers';
 import { Heatmap, CreateModal } from '../../common';
 import { ICreateParams } from '../../common/Forms/Forms.types';
-import { IHabitParams, IHabitsProps } from './Habits.types';
+import { IHeatmapCellParams } from '../../common/Heatmap/Heatmap.types';
+import { createParamsToHabitParams } from './Habits.helpers';
+import { IHabitParams } from './Habits.types';
+import { addHabit, getAllHabits } from '../../../services/habits.service';
+import { getOverallEntityHeatmap } from '../../../services/entities.service';
 
 import './Habits.scss';
 
 const blk = cn('Habits');
 
-export const Habits = ({ entityHeatmap }: IHabitsProps) => {
+export const Habits = () => {
   const navigate = useNavigate();
 
   const addButtonRef = useRef(null);
   const [tooltipVisible, setTooltipVisible] = useState<boolean>(false);
 
   const [habits, setHabits] = useState<IHabitParams[]>([]);
+  const [overallHabitsHeatmap, setOverallHabitsHeatmap] = useState<IHeatmapCellParams[][]>([]);
   const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
 
-  useEffect(() => setHabits(getAllHabits()), []);
+  useEffect(() => {
+    setHabits(getAllHabits());
+    // setOverallHabitsHeatmap(getOverallEntityHeatmap('habit'));
+  }, []);
 
   const handleAddHabit = (params: ICreateParams) => {
     const resp = addHabit(createParamsToHabitParams(params));
@@ -91,7 +97,11 @@ export const Habits = ({ entityHeatmap }: IHabitsProps) => {
         </section>
         <section className={blk('HeatmapSection')}>
           <h2 className={blk('HeatmapSectionHeading')}>Overall Progress</h2>
-          <Heatmap heatmapState={entityHeatmap} bgColor='var(--color-rgb-habits)' cellSize='sm' />
+          <Heatmap
+            heatmapState={overallHabitsHeatmap}
+            bgColor='var(--color-rgb-habits)'
+            cellSize='m'
+          />
         </section>
       </Container>
       <CreateModal

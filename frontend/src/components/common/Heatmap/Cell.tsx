@@ -22,7 +22,7 @@ export const Cell = React.memo(
   }: IHeatmapCellProps) => {
     const style: React.CSSProperties = {
       backgroundColor:
-        intensity < 1 ? 'var(--bs-gray-100)' : `rgba(${bgColor}, ${intensity * 0.25})`,
+        intensity === -1 ? 'var(--bs-gray-100)' : `rgba(${bgColor}, ${(intensity + 1) * 0.1})`,
       width: `${sizeMap[cellSize]}rem`,
       height: `${sizeMap[cellSize]}rem`,
       borderRadius: `${sizeMap[cellSize] * 0.16}rem`,

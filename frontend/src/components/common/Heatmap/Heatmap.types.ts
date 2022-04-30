@@ -12,7 +12,7 @@ export interface IHeatmapCellProps {
   onClickPopover?: OverlayChildren;
   bgColor: string;
   cellSize?: 'sm' | 'm';
-  intensity: -1 | 0 | 3 | 9;
+  intensity: IHeatmapIntensityValues;
 }
 
 export interface IHeatmapCellParams {

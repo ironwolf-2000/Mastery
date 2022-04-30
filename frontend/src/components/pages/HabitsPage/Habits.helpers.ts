@@ -3,7 +3,7 @@ import { ICreateParams } from '../../common/Forms/Forms.types';
 import { IHeatmapCellParams, IHeatmapInitializerProps } from '../../common/Heatmap/Heatmap.types';
 import { IHabitParams } from './Habits.types';
 
-export function getInitializeHeatmap(props: IHeatmapInitializerProps): IHeatmapCellParams[][] {
+export function getInitializedHeatmap(props: IHeatmapInitializerProps): IHeatmapCellParams[][] {
   const { size, useTitle } = props;
 
   const heatmap: IHeatmapCellParams[][] = new Array(size);
@@ -12,7 +12,7 @@ export function getInitializeHeatmap(props: IHeatmapInitializerProps): IHeatmapC
 
     for (let j = 0; j < size; j++) {
       const title = useTitle && getDateByDayDiff(props.startTime, i * size + j);
-      const params = title ? { intensity: -1, title } : { intensity: -1 };
+      const params = title ? ({ intensity: -1, title } as const) : ({ intensity: -1 } as const);
 
       heatmap[i].push(params);
     }
@@ -32,7 +32,7 @@ export function createParamsToHabitParams(params: ICreateParams): IHabitParams {
     motivation: params.motivationTextarea,
     timePeriod,
     successRate: params.successRate,
-    heatmap: getInitializeHeatmap({ size: heatmapSize, useTitle: true, startTime }),
+    heatmap: getInitializedHeatmap({ size: heatmapSize, useTitle: true, startTime }),
     startTime,
   };
 }

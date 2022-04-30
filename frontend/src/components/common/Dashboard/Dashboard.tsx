@@ -19,7 +19,7 @@ import {
   getCurrentEntitySuccessRate,
 } from '../../../services/entities.service';
 import { IDashboardProps } from './Dashboard.types';
-import { IHeatmapSquare } from '../Heatmap/Heatmap.types';
+import { IHeatmapIntensityValues, IHeatmapSquare } from '../Heatmap/Heatmap.types';
 import { IDefaultModalProps } from '../Modals/Modals.types';
 import { IEntityParams } from '../../App/App.types';
 import { getFormattedDate } from '../../../utils';
@@ -57,7 +57,7 @@ export const Dashboard = ({
   }, [encodedName, entityType]);
 
   const handleHeatmapClick = useCallback(
-    (val: number) => {
+    (val: IHeatmapIntensityValues) => {
       if (entity && currSquare) {
         updateEntityHeatmap(entityType, entity.name, currSquare.x, currSquare.y, val);
         setEntity(fetchEntity());
@@ -108,9 +108,9 @@ export const Dashboard = ({
   const heatmapCellPopover = (
     <Popover className={blk('Popover')}>
       {[
-        { colorType: 'success', title: 'complete', val: 4, icon: faCircleCheck },
-        { colorType: 'warning', title: 'skip', val: 1, icon: faCircleMinus },
-        { colorType: 'danger', title: 'clear', val: 0, icon: faCircleXmark },
+        { colorType: 'success', title: 'complete', val: 9, icon: faCircleCheck } as const,
+        { colorType: 'warning', title: 'skip', val: 3, icon: faCircleMinus } as const,
+        { colorType: 'danger', title: 'fail', val: 0, icon: faCircleXmark } as const,
       ].map(({ colorType, title, val, icon }) => (
         <FontAwesomeIcon
           key={title}

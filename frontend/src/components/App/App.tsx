@@ -12,11 +12,10 @@ import { NotFound } from '../pages/NotFoundPage';
 import { RegisterForm } from '../RegisterForm';
 import { SkillsDashboard } from '../pages/SkillsPage';
 import { UserHomePage } from '../pages/UserHomePage';
-
 import { ProtectedRoutes } from '../common';
+
 import { getCurrentUser } from '../../services/user.service';
 import { IUser } from '../RegisterForm/RegisterForm.types';
-import { IHeatmapCellParams } from '../common/Heatmap/Heatmap.types';
 
 import 'react-toastify/dist/ReactToastify.css';
 import './App.scss';
@@ -28,21 +27,9 @@ export const App = () => {
 
   const [user, setUser] = useState<IUser | null>(null);
   const [navbarVisible, setNavbarVisible] = useState<boolean>(false);
-  const [allHeatmapState, setAllHeatmapState] = useState<IHeatmapCellParams[][]>([]);
 
   useEffect(() => {
     setUser(getCurrentUser());
-
-    const all = new Array(20);
-    for (let i = 0; i < 20; i++) {
-      all[i] = [];
-      for (let j = 0; j < 20; j++) {
-        const choices = [-1, 0, 1, 4];
-        all[i].push({ intensity: choices[Math.floor(Math.random() * 4)] });
-      }
-    }
-
-    setAllHeatmapState(all);
   }, []);
 
   useEffect(() => {
@@ -56,7 +43,7 @@ export const App = () => {
         <Route element={<ProtectedRoutes />}>
           <Route path='/home' element={<UserHomePage user={user} />} />
           <Route path='/habits/:encodedName' element={<HabitsDashboard />} />
-          <Route path='/habits/' element={<Habits entityHeatmap={allHeatmapState} />} />
+          <Route path='/habits/' element={<Habits />} />
           <Route path='/skills' element={<SkillsDashboard />} />
           <Route path='/mood' element={<MoodDashboard />} />
         </Route>

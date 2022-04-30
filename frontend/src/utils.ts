@@ -7,6 +7,18 @@ export function getFormattedDate(dateOrMs: Date | number) {
   });
 }
 
-export function getDateByDayDiff(ms: number, days: number) {
-  return getFormattedDate(ms + 24 * 60 * 60 * 1000 * days);
+export function getDateByDayDiff(ms: number, days: number, rtype: 'number'): number;
+export function getDateByDayDiff(ms: number, days: number, rtype?: 'string'): string;
+export function getDateByDayDiff(ms: number, days: number, rtype: 'number' | 'string' = 'string') {
+  const result = ms + daysToMs(days);
+
+  return rtype === 'number' ? result : getFormattedDate(result);
+}
+
+export function msToDays(ms: number) {
+  return Math.ceil(ms / 1000 / 60 / 60 / 24);
+}
+
+export function daysToMs(days: number) {
+  return days * 24 * 60 * 60 * 1000;
 }
