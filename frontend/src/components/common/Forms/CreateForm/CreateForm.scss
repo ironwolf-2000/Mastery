@@ -9,7 +9,7 @@
     font-size: 0.9rem;
   }
 
-  &-MasteryTypeSection {
+  &-EntityFrequencySection {
     margin: 1rem 0;
     display: flex;
     align-items: center;
@@ -19,8 +19,26 @@
     }
   }
 
-  &-MasteryTypeSelect {
-    flex-basis: 40%;
+  &-RequirementsSection {
+    margin: 1rem 0;
+  }
+
+  &-RequirementsControlFields {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    > input:first-child {
+      flex-basis: 80%;
+    }
+
+    > input:last-child {
+      flex-basis: 15%;
+    }
+  }
+
+  &-EntityFrequencySelect {
+    flex-basis: 20%;
     margin-left: 1rem;
   }
 
@@ -33,18 +51,6 @@
     align-items: center;
   }
 
-  &-SRIcon {
-    color: var(--bs-body-color);
-    opacity: 0.5;
-    transition: opacity 0.2s;
-    cursor: pointer;
-    margin-left: 0.5rem;
-
-    &:hover {
-      opacity: 1;
-    }
-  }
-
   &-SRInputContainer {
     display: flex;
     justify-content: space-between;
@@ -52,13 +58,9 @@
   }
 
   &-SRInputField {
-    flex-basis: 20%;
+    flex-basis: 15%;
     margin-left: 1rem;
     text-align: center;
-  }
-
-  &-SRTooltip.tooltip.show {
-    opacity: 0.8;
   }
 
   &-ErrorMessage {

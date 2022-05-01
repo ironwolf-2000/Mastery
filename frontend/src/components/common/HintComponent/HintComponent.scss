@@ -1,0 +1,17 @@
+.HintComponent {
+  &-QuestionIcon {
+    color: var(--bs-body-color);
+    cursor: pointer;
+    margin-left: 0.5rem;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &-Tooltip.tooltip.show {
+    opacity: 0.8;
+  }
+}

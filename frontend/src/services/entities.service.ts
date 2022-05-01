@@ -1,16 +1,14 @@
 import { IEntityType, IEntityParams } from '../components/App/App.types';
 import {
-  IHeatmapCellParams,
   IHeatmapIntensityNames,
   IHeatmapIntensityValues,
 } from '../components/common/Heatmap/Heatmap.types';
 import { getInitializedHeatmap } from '../components/pages/HabitsPage/Habits.helpers';
 import { IHabitParams } from '../components/pages/HabitsPage/Habits.types';
-import { getDateByDayDiff, msToDays } from '../utils';
 import { ICRUDResponse } from './services.types';
 import { getCurrentUserEmail } from './user.service';
 
-export const DEFAULT_SUCCESS_RATE = 80;
+export const DEFAULT_SUCCESS_RATE = 100;
 const entityMapper: Record<IEntityType, string> = {
   habit: 'habits',
   skill: 'skills',
@@ -92,10 +90,13 @@ export function resetEntity(type: IEntityType, name: string) {
 
   for (let i = 0; i < allEntities.length && !reset; i++) {
     if (allEntities[i].name === name) {
+      const { heatmap, startTime, entityFrequency } = allEntities[i];
+
       allEntities[i].heatmap = getInitializedHeatmap({
-        size: allEntities[i].heatmap.length,
+        size: heatmap.length,
         useTitle: true,
-        startTime: allEntities[i].startTime,
+        startTime,
+        entityFrequency,
       });
       reset = true;
     }
@@ -131,48 +132,48 @@ export function getCurrentEntitySuccessRate(item: IEntityParams | null): number 
 }
 
 // FIXME: get an overall heatmap for different periods of time
-export function getOverallEntityHeatmap(type: IEntityType) {
-  const allEntities = getAllUserEntities(type);
-  let [startTime, endTime] = [Infinity, -Infinity];
-  const intensities: Record<IHeatmapIntensityNames, IHeatmapIntensityValues>[] = [];
+// export function getOverallEntityHeatmap(type: IEntityType) {
+//   const allEntities = getAllUserEntities(type);
+//   let [startTime, endTime] = [Infinity, -Infinity];
+//   const intensities: Record<IHeatmapIntensityNames, IHeatmapIntensityValues>[] = [];
 
-  allEntities.forEach(entity => {
-    startTime = Math.min(startTime, entity.startTime);
-    endTime = Math.max(endTime, getDateByDayDiff(entity.startTime, entity.timePeriod, 'number'));
+//   allEntities.forEach(entity => {
+//     startTime = Math.min(startTime, entity.startTime);
+//     endTime = Math.max(endTime, getDateByDayDiff(entity.startTime, entity.timePeriod, 'number'));
 
-    const [m, n] = [entity.heatmap.length, entity.heatmap[0].length];
+//     const [m, n] = [entity.heatmap.length, entity.heatmap[0].length];
 
-    for (let i = 0; i < m; i++) {
-      for (let j = 0; j < n; j++) {
-        const currInd = i * n + j;
+//     for (let i = 0; i < m; i++) {
+//       for (let j = 0; j < n; j++) {
+//         const currInd = i * n + j;
 
-        if (currInd >= intensities.length) {
-          intensities.push({
-            blank: 0,
-            failed: 0,
-            skipped: 0,
-            completed: 0,
-          });
-        }
-      }
-    }
-  });
+//         if (currInd >= intensities.length) {
+//           intensities.push({
+//             blank: 0,
+//             failed: 0,
+//             skipped: 0,
+//             completed: 0,
+//           });
+//         }
+//       }
+//     }
+//   });
 
-  const daysTotal = msToDays(endTime - startTime);
-  const k = Math.ceil(Math.sqrt(daysTotal / 6));
-  const [m, n] = [k * 2, k * 3];
+//   const daysTotal = msToDays(endTime - startTime);
+//   const k = Math.ceil(Math.sqrt(daysTotal / 6));
+//   const [m, n] = [k * 2, k * 3];
 
-  const heatmap: IHeatmapCellParams[][] = new Array(m);
+//   const heatmap: IHeatmapCellParams[][] = new Array(m);
 
-  for (let i = 0; i < m; i++) {
-    heatmap[i] = [];
+//   for (let i = 0; i < m; i++) {
+//     heatmap[i] = [];
 
-    for (let j = 0; j < n; j++) {
-      const title = getDateByDayDiff(startTime, i * n + j);
-      const params = { title, intensity: -1 } as const;
-      heatmap[i].push(params);
-    }
-  }
+//     for (let j = 0; j < n; j++) {
+//       const title = getDateByDayDiff(startTime, i * n + j);
+//       const params = { title, intensity: -1 } as const;
+//       heatmap[i].push(params);
+//     }
+//   }
 
-  return heatmap;
-}
+//   return heatmap;
+// }

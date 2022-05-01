@@ -22,20 +22,39 @@ export function getInitializedHeatmap(props: IHeatmapInitializerProps): IHeatmap
   return heatmap;
 }
 
-export function createParamsToHabitParams(params: ICreateParams): IHabitParams {
-  const timePeriod = Number(params.masteryType.match(/\d+/)?.[0] ?? '36');
-  const heatmapSize = Math.sqrt(timePeriod);
+function frequencyToHeatmapSizeMapper(frequency: number) {
+  const minMapper = [
+    [80, 2],
+    [60, 3],
+    [40, 4],
+    [20, 5],
+    [9, 6],
+    [7, 7],
+    [5, 8],
+    [3, 9],
+  ];
 
+  for (const [freq, size] of minMapper) {
+    if (frequency >= freq) {
+      return size;
+    }
+  }
+
+  return 10;
+}
+
+export function createParamsToHabitParams(params: ICreateParams): IHabitParams {
   const userEmail = getCurrentUserEmail() ?? 'anonymous@email.com';
   const startTime = Date.now();
+  const { entityName: name, entityFrequency, motivationTextarea: motivation, successRate } = params;
 
-  return {
-    name: params.entityName,
-    userEmail,
-    motivation: params.motivationTextarea,
-    timePeriod,
-    successRate: params.successRate,
-    heatmap: getInitializedHeatmap({ size: heatmapSize, useTitle: true, startTime }),
+  const heatmapSize = frequencyToHeatmapSizeMapper(entityFrequency);
+  const heatmap = getInitializedHeatmap({
+    size: heatmapSize,
+    useTitle: true,
     startTime,
-  };
+    entityFrequency,
+  });
+
+  return { name, userEmail, motivation, entityFrequency, successRate, heatmap, startTime };
 }

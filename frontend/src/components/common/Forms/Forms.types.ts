@@ -1,11 +1,13 @@
 import { IEntityType } from '../../App/App.types';
 
 export interface ICreateParams {
+  type: IEntityType;
   entityName: string;
   motivationTextarea: string;
-  masteryType: string;
+  entityFrequency: number;
+  requirementsShortDescription: string;
+  requirementsUnits: number;
   successRate: number;
-  type: IEntityType;
 }
 
 export interface ICreateFormProps {

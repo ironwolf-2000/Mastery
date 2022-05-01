@@ -6,7 +6,9 @@ export interface IEntityParams {
   name: string;
   userEmail: string;
   motivation: string;
-  timePeriod: number;
+  entityFrequency: number;
+  requirementsShortDescription: string;
+  requirementsUnits: number;
   successRate: number;
   heatmap: IHeatmapCellParams[][];
   startTime: number;

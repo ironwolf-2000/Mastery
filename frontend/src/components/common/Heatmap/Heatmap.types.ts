@@ -47,5 +47,6 @@ export type IHeatmapInitializerProps = { size: number } & (
   | {
       useTitle: true;
       startTime: number;
+      entityFrequency: number;
     }
 );
