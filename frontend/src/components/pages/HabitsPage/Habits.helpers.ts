@@ -12,10 +12,17 @@ export function getInitializedHeatmap(props: IHeatmapInitializerProps): IHeatmap
     heatmap[i] = [];
 
     for (let j = 0; j < size; j++) {
-      const title = useTitle && getDateByDayDiff(props.startTime, i * size + j);
-      const params = title ? ({ intensity: -1, title } as const) : ({ intensity: -1 } as const);
-
-      heatmap[i].push(params);
+      if (useTitle) {
+        const { startTime, entityFrequency } = props;
+        const title =
+          `${getDateByDayDiff(startTime, entityFrequency * (i * size + j))}` +
+          (entityFrequency > 1
+            ? ` - ${getDateByDayDiff(startTime, entityFrequency * (i * size + j + 1) - 1)}`
+            : '');
+        heatmap[i].push({ intensity: -1, title } as const);
+      } else {
+        heatmap[i].push({ intensity: -1 });
+      }
     }
   }
 
@@ -46,7 +53,14 @@ function frequencyToHeatmapSizeMapper(frequency: number) {
 export function createParamsToHabitParams(params: ICreateParams): IHabitParams {
   const userEmail = getCurrentUserEmail() ?? 'anonymous@email.com';
   const startTime = Date.now();
-  const { entityName: name, entityFrequency, motivationTextarea: motivation, successRate } = params;
+  const {
+    entityName: name,
+    entityFrequency,
+    motivationTextarea: motivation,
+    requirementsShortDescription,
+    requirementsUnits,
+    successRate,
+  } = params;
 
   const heatmapSize = frequencyToHeatmapSizeMapper(entityFrequency);
   const heatmap = getInitializedHeatmap({
@@ -56,5 +70,15 @@ export function createParamsToHabitParams(params: ICreateParams): IHabitParams {
     entityFrequency,
   });
 
-  return { name, userEmail, motivation, entityFrequency, successRate, heatmap, startTime };
+  return {
+    name,
+    userEmail,
+    motivation,
+    entityFrequency,
+    requirementsShortDescription,
+    requirementsUnits,
+    successRate,
+    heatmap,
+    startTime,
+  };
 }
