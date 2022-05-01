@@ -11,7 +11,7 @@ export interface IHeatmapCellProps {
   onClick?: (x: number, y: number) => void;
   onClickPopover?: OverlayChildren;
   bgColor: string;
-  cellSize?: 'sm' | 'm';
+  cellSize: number;
   intensity: IHeatmapIntensityValues;
 }
 
@@ -27,7 +27,6 @@ export interface IHeatmapProps {
   onClick?: (x: number, y: number) => void;
   onClickPopover?: OverlayChildren;
   bgColor: string;
-  cellSize?: 'sm' | 'm';
 }
 
 export interface IHeatmapRowProps {

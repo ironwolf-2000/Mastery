@@ -4,28 +4,14 @@ import { OverlayTrigger } from 'react-bootstrap';
 import { blk } from './Heatmap';
 import { IHeatmapCellProps } from './Heatmap.types';
 
-const sizeMap = {
-  m: 1.5,
-  sm: 1,
-};
-
 export const Cell = React.memo(
-  ({
-    x,
-    y,
-    onClick,
-    bgColor,
-    onClickPopover,
-    cellSize = 'm',
-    intensity,
-    title,
-  }: IHeatmapCellProps) => {
+  ({ x, y, onClick, bgColor, cellSize, onClickPopover, intensity, title }: IHeatmapCellProps) => {
     const style: React.CSSProperties = {
       backgroundColor:
         intensity === -1 ? 'var(--bs-gray-100)' : `rgba(${bgColor}, ${(intensity + 1) * 0.1})`,
-      width: `${sizeMap[cellSize]}rem`,
-      height: `${sizeMap[cellSize]}rem`,
-      borderRadius: `${sizeMap[cellSize] * 0.16}rem`,
+      width: `${cellSize}rem`,
+      height: `${cellSize}rem`,
+      borderRadius: `${cellSize * 0.16}rem`,
     };
 
     const contentProps: Record<string, any> = { style };

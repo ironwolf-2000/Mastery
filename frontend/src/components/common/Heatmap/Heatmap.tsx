@@ -9,13 +9,30 @@ import './Heatmap.scss';
 
 export const blk = cn('Heatmap');
 
+const cellSizeMapper = (heatmapSize: number) => {
+  const sizeMapper = [
+    [2, 2.5],
+    [4, 2.25],
+    [6, 2],
+    [8, 1.75],
+    [10, 1.5],
+  ];
+
+  for (const [hmLength, size] of sizeMapper) {
+    if (heatmapSize <= hmLength) {
+      return size;
+    }
+  }
+
+  return 1;
+};
+
 export const Heatmap = ({
   className,
   heatmapState,
   onClick,
   onClickPopover,
   bgColor,
-  cellSize,
 }: IHeatmapProps) => {
   const isValidHeatmap = useMemo(() => heatmapState.every(Array.isArray), [heatmapState]);
 
@@ -24,7 +41,9 @@ export const Heatmap = ({
       {heatmapState.map((rowItems, xi) => (
         <Row key={xi}>
           {rowItems.map(({ intensity, title }, yi) => {
-            const props = { title, onClick, onClickPopover, bgColor, cellSize, intensity };
+            const cellSize = cellSizeMapper(heatmapState.length);
+            const props = { title, onClick, onClickPopover, bgColor, intensity, cellSize };
+
             return <Cell key={yi} x={xi} y={yi} {...props} />;
           })}
         </Row>

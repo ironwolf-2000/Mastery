@@ -96,11 +96,7 @@ export const Habits = () => {
         </section>
         <section className={blk('HeatmapSection')}>
           <h2 className={blk('HeatmapSectionHeading')}>Overall Progress</h2>
-          <Heatmap
-            heatmapState={overallHabitsHeatmap}
-            bgColor='var(--color-rgb-habits)'
-            cellSize='m'
-          />
+          <Heatmap heatmapState={overallHabitsHeatmap} bgColor='var(--color-rgb-habits)' />
         </section>
       </Container>
       <CreateModal
