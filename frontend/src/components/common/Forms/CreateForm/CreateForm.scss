@@ -28,12 +28,9 @@
     justify-content: space-between;
     align-items: center;
 
-    > input:first-child {
-      flex-basis: 80%;
-    }
-
     > input:last-child {
-      flex-basis: 15%;
+      flex-basis: 20%;
+      margin-left: 1rem;
     }
   }
 
@@ -53,14 +50,12 @@
 
   &-SRInputContainer {
     display: flex;
-    justify-content: space-between;
     align-items: center;
   }
 
   &-SRInputField {
-    flex-basis: 15%;
+    flex-basis: 16%;
     margin-left: 1rem;
-    text-align: center;
   }
 
   &-ErrorMessage {

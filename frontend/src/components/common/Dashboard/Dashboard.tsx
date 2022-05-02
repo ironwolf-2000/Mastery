@@ -22,7 +22,7 @@ import { IDashboardProps } from './Dashboard.types';
 import { IHeatmapIntensityValues, IHeatmapSquare } from '../Heatmap/Heatmap.types';
 import { IDefaultModalProps } from '../Modals/Modals.types';
 import { IEntityParams } from '../../App/App.types';
-import { getFormattedDate } from '../../../utils';
+import { getFormattedDate, numberWithSpaces } from '../../../utils';
 import { DefaultModal } from '../Modals';
 import { Heatmap } from '..';
 
@@ -49,6 +49,7 @@ export const Dashboard = ({
   const [currSquare, setCurrSquare] = useState<IHeatmapSquare | null>(null);
   const [entity, setEntity] = useState<IEntityParams | null>(null);
   const [modalParams, setModalParams] = useState<IDefaultModalProps>(defaultModalParams);
+  const [requirementsValue, setRequirementsValue] = useState('');
 
   const fetchEntity = useCallback(() => {
     if (encodedName == null) return null;
@@ -108,15 +109,30 @@ export const Dashboard = ({
   const heatmapCellPopover = (
     <Popover className={blk('Popover')}>
       {[
-        { colorType: 'success', title: 'complete', val: 9, icon: faCircleCheck } as const,
-        { colorType: 'warning', title: 'skip', val: 3, icon: faCircleMinus } as const,
-        { colorType: 'danger', title: 'fail', val: 0, icon: faCircleXmark } as const,
-      ].map(({ colorType, title, val, icon }) => (
+        {
+          color: `var(--color-${entityType}s)`,
+          title: 'complete',
+          val: 9,
+          icon: faCircleCheck,
+        } as const,
+        {
+          color: `rgba(var(--color-rgb-${entityType}s), 0.5)`,
+          title: 'skip',
+          val: 3,
+          icon: faCircleMinus,
+        } as const,
+        {
+          color: `rgba(var(--color-rgb-${entityType}s), 0.25)`,
+          title: 'fail',
+          val: 0,
+          icon: faCircleXmark,
+        } as const,
+      ].map(({ color, title, val, icon }) => (
         <FontAwesomeIcon
           key={title}
           icon={icon}
           className={blk('PopoverIcon')}
-          color={`var(--bs-${colorType})`}
+          color={color}
           title={title}
           onClick={() => handleHeatmapClick(val)}
         />
@@ -145,9 +161,31 @@ export const Dashboard = ({
                 <h3 className={blk('SubsectionHeading')}>Start Date</h3>
                 {getFormattedDate(entity.startTime)}
               </section>
+              {entity.motivation && (
+                <section className={blk('InfoSubsection')}>
+                  <h3 className={blk('SubsectionHeading')}>Your Motivation</h3>
+                  <p className={blk('SubsectionContent')}>{entity.motivation}</p>
+                </section>
+              )}
               <section className={blk('InfoSubsection')}>
-                <h3 className={blk('SubsectionHeading')}>Your Motivation</h3>
-                <p className={blk('SubsectionContent')}>{entity.motivation}</p>
+                <h3 className={blk('SubsectionHeading')}>
+                  Required Value{' '}
+                  <Badge bg='info' className='ms-1'>
+                    {numberWithSpaces(entity.requirementsUnits)}
+                  </Badge>
+                </h3>
+                {entity.requirementsShortDescription && (
+                  <span className={blk('SubsectionContent')}>
+                    {entity.requirementsShortDescription}
+                  </span>
+                )}
+                {entity.requirementsShortDescription.length > 15 && <br />}
+                <input
+                  className={blk('RequirementsInputField')}
+                  type='number'
+                  value={requirementsValue}
+                  onChange={e => setRequirementsValue(e.target.value.slice(0, 6))}
+                />
               </section>
               <section className={blk('InfoSubsection')}>
                 <h2 className={blk('SubsectionHeading')}>Success Rate</h2>

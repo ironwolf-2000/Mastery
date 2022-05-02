@@ -29,17 +29,20 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
 
   const validationSchema = Yup.object({
     entityName: Yup.string()
-      .max(15, 'The name must be 15 characters or less.')
+      .max(30, 'The name must be 15 characters or less.')
       .required('The name cannot be empty.'),
     motivationTextarea: Yup.string()
       .min(10, 'Your motivation message must be at least 10 characters long.')
       .max(80, 'Your motivation message must not exceed 80 characters.'),
     entityFrequency: Yup.number(),
-    requirementsShortDescription: Yup.string(),
+    requirementsShortDescription: Yup.string().max(
+      40,
+      'The requirements message must not exceed 40 characters.'
+    ),
     requirementsUnits: Yup.number()
       .required('You must specify the minimum value for your requirements.')
       .min(0, 'The specified value is too small.')
-      .max(1_000_000, 'The specified value is too big.'),
+      .max(999_999, 'The specified value is too big.'),
     successRate: Yup.number()
       .min(10, 'Success Rate must be at least 10%')
       .max(100, 'Success Rate cannot be greater than 100%'),
@@ -103,6 +106,7 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
                     {...getFieldProps('requirementsUnits')}
                   />
                 </div>
+                <MyErrorMessage name='requirementsShortDescription' />
                 <MyErrorMessage name='requirementsUnits' />
               </BSForm.Group>
 
@@ -126,7 +130,7 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
                     <BSForm.Control
                       className={blk('SRInputField')}
                       type='number'
-                      placeholder='e.g. 90%'
+                      placeholder='e.g. 90'
                       {...getFieldProps('successRate')}
                     />
                   </div>
