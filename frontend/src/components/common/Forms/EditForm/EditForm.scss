@@ -1,4 +1,4 @@
-.CreateForm {
+.EditForm {
   position: relative;
 
   &-Form {
@@ -32,30 +32,6 @@
       flex-basis: 20%;
       margin-left: 1rem;
     }
-  }
-
-  &-EntityFrequencySelect {
-    flex-basis: 20%;
-    margin-left: 1rem;
-  }
-
-  &-Checkbox {
-    cursor: pointer;
-  }
-
-  &-SRSection {
-    display: flex;
-    align-items: center;
-  }
-
-  &-SRInputContainer {
-    display: flex;
-    align-items: center;
-  }
-
-  &-SRInputField {
-    flex-basis: 16%;
-    margin-left: 1rem;
   }
 
   &-FormFooter {

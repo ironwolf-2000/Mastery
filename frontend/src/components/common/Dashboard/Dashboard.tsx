@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { cn } from '@bem-react/classname';
 import _ from 'lodash';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { Badge, Button, Container, Popover } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -9,6 +10,7 @@ import {
   faCircleMinus,
   faCircleXmark,
   faArrowLeft,
+  faPenToSquare,
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -17,14 +19,17 @@ import {
   deleteEntity,
   resetEntity,
   getCurrentEntitySuccessRate,
+  editEntity,
 } from '../../../services/entities.service';
 import { IDashboardProps } from './Dashboard.types';
 import { IHeatmapIntensityValues, IHeatmapSquare } from '../Heatmap/Heatmap.types';
 import { IDefaultModalProps } from '../Modals/Modals.types';
 import { IEntityParams } from '../../App/App.types';
 import { getFormattedDate, numberWithSpaces } from '../../../utils';
-import { DefaultModal } from '../Modals';
+import { CreateEditModal as EditModal, DefaultModal } from '../Modals';
 import { Heatmap } from '..';
+import { editParamsToEntityParams } from '../../helpers';
+import { IEditParams } from '../Forms/Forms.types';
 
 import './Dashboard.scss';
 
@@ -46,6 +51,7 @@ export const Dashboard = ({
   const navigate = useNavigate();
   const { encodedName } = useParams();
 
+  const [editModalVisible, setEditModalVisible] = useState<boolean>(false);
   const [currSquare, setCurrSquare] = useState<IHeatmapSquare | null>(null);
   const [entity, setEntity] = useState<IEntityParams | null>(null);
   const [modalParams, setModalParams] = useState<IDefaultModalProps>(defaultModalParams);
@@ -140,6 +146,28 @@ export const Dashboard = ({
     </Popover>
   );
 
+  const handleEditEntity = (params: IEditParams) => {
+    if (!entity) {
+      // Entity Edit Modal can only be triggered from the entity page itself, so this 'return' should never happen.
+      return;
+    }
+
+    const resp = editEntity(entityType, entity.name, editParamsToEntityParams(entity, params));
+
+    if (resp.success) {
+      setEditModalVisible(false);
+      setTimeout(() => {
+        if (params.name !== entity.name) {
+          navigate(`/habits/${encodeURIComponent(params.name)}`, { replace: true });
+        } else {
+          window.location.reload();
+        }
+      }, 500);
+    } else {
+      toast.error(resp.message);
+    }
+  };
+
   return (
     entity && (
       <>
@@ -171,15 +199,13 @@ export const Dashboard = ({
                 <h3 className={blk('SubsectionHeading')}>
                   Required Value{' '}
                   <Badge bg='info' className='ms-1'>
-                    {numberWithSpaces(entity.requirementsUnits)}
+                    {numberWithSpaces(entity.requirementsMinValue)}
                   </Badge>
                 </h3>
-                {entity.requirementsShortDescription && (
-                  <span className={blk('SubsectionContent')}>
-                    {entity.requirementsShortDescription}
-                  </span>
+                {entity.requirementsText && (
+                  <span className={blk('SubsectionContent')}>{entity.requirementsText}</span>
                 )}
-                {entity.requirementsShortDescription.length > 15 && <br />}
+                {entity.requirementsText.length > 15 && <br />}
                 <input
                   className={blk('RequirementsInputField')}
                   type='number'
@@ -220,7 +246,15 @@ export const Dashboard = ({
             </div>
           </section>
           <section className={blk('HeatmapSection')}>
-            <h2 className={blk('SectionHeading')}>{entity.name}</h2>
+            <header className={blk('HeatmapSectionHeader')}>
+              <h2 className={blk('SectionHeading')}>{entity.name}</h2>
+              <FontAwesomeIcon
+                icon={faPenToSquare}
+                className={blk('EditIcon')}
+                size='lg'
+                onClick={() => setEditModalVisible(true)}
+              />
+            </header>
             <Heatmap
               className={blk('Heatmap')}
               heatmapState={entity.heatmap}
@@ -231,6 +265,15 @@ export const Dashboard = ({
           </section>
         </Container>
         {modalParams && <DefaultModal {...modalParams} />}
+        <EditModal
+          entityType='habit'
+          entity={entity}
+          modalType='edit'
+          title={`Edit a ${entityType}`}
+          visible={editModalVisible}
+          handleCancel={() => setEditModalVisible(false)}
+          handleEdit={handleEditEntity}
+        />
       </>
     )
   );

@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { Button, Form as BSForm } from 'react-bootstrap';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 import { ILoginFormProps, ILoginUser } from './LoginForm.types';
 import { login } from '../../services/user.service';
@@ -91,7 +91,6 @@ export const LoginForm = (props: ILoginFormProps) => {
           }}
         </Formik>
       </div>
-      <ToastContainer autoClose={2000} position='bottom-right' />
     </>
   );
 };

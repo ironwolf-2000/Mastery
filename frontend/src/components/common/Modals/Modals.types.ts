@@ -1,5 +1,5 @@
-import { IEntityType } from '../../App/App.types';
-import { ICreateParams } from '../Forms/Forms.types';
+import { IEntityParams, IEntityType } from '../../App/App.types';
+import { ICreateParams, IEditParams } from '../Forms/Forms.types';
 
 interface IBaseModalProps {
   visible: boolean;
@@ -14,7 +14,17 @@ export interface IDefaultModalProps extends IBaseModalProps {
   handleConfirm: () => void;
 }
 
-export interface ICreateModalProps extends IBaseModalProps {
-  type: IEntityType;
+export interface ICreateOnlyModalProps {
+  modalType: 'create';
   handleCreate: (params: ICreateParams) => void;
 }
+
+export interface IEditOnlyModalProps {
+  modalType: 'edit';
+  entity: IEntityParams;
+  handleEdit: (params: IEditParams) => void;
+}
+
+export type ICreateEditModalProps = IBaseModalProps & {
+  entityType: IEntityType;
+} & (ICreateOnlyModalProps | IEditOnlyModalProps);

@@ -26,8 +26,10 @@
     align-items: center;
   }
 
-  &-Heatmap {
-    margin-top: 2rem;
+  &-HeatmapSectionHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
   }
 
   &-SectionHeading {
@@ -59,7 +61,7 @@
   }
 
   &-RequirementsInputField {
-    width: 6rem;
+    width: 5rem;
     border: 0.1rem solid rgba(0, 0, 0, 0.4);
     outline: none;
     border-radius: 0.25rem;
@@ -68,7 +70,7 @@
 
     &:focus,
     &:active {
-      border-color: rgba(0, 0, 0, 0.8);
+      border-color: var(--color-elements-black);
     }
   }
 
@@ -92,5 +94,11 @@
     &:hover {
       opacity: 1;
     }
+  }
+
+  &-EditIcon {
+    margin-left: 1rem;
+    cursor: pointer;
+    color: var(--color-elements-black);
   }
 }

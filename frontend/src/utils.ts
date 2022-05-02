@@ -22,6 +22,6 @@ export function daysToMs(days: number) {
   return days * 24 * 60 * 60 * 1000;
 }
 
-export function numberWithSpaces(n: number) {
-  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+export function numberWithSpaces(n?: number) {
+  return n !== undefined ? n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '';
 }

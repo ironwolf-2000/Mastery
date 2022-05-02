@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { cn } from '@bem-react/classname';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -9,50 +9,44 @@ import { MyErrorMessage } from '../ErrorMessage';
 import { ICreateFormProps, ICreateParams } from '../Forms.types';
 import { HintComponent } from '../../HintComponent/HintComponent';
 import { DEFAULT_SUCCESS_RATE } from '../../../../services/entities.service';
+import { editValidationSchema } from '../EditForm/EditForm';
 
 import './CreateForm.scss';
 
 const blk = cn('CreateForm');
 
+const createValidationSchema = {
+  entityName: editValidationSchema.name,
+  motivationTextarea: editValidationSchema.motivation,
+  requirementsText: editValidationSchema.requirementsText,
+  requirementsMinValue: editValidationSchema.requirementsMinValue,
+  entityFrequency: Yup.number(),
+  successRate: Yup.number()
+    .min(10, 'Success Rate must be at least 10%')
+    .max(100, 'Success Rate cannot be greater than 100%'),
+};
+
 export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProps) => {
   const [applySR, setApplySR] = useState<boolean>(false);
 
-  const initialValues: ICreateParams = {
-    type,
-    entityName: '',
-    motivationTextarea: '',
-    entityFrequency: 1,
-    requirementsShortDescription: '',
-    requirementsUnits: 0,
-    successRate: DEFAULT_SUCCESS_RATE,
-  };
-
-  const validationSchema = Yup.object({
-    entityName: Yup.string()
-      .max(30, 'The name must be 15 characters or less.')
-      .required('The name cannot be empty.'),
-    motivationTextarea: Yup.string()
-      .min(10, 'Your motivation message must be at least 10 characters long.')
-      .max(80, 'Your motivation message must not exceed 80 characters.'),
-    entityFrequency: Yup.number(),
-    requirementsShortDescription: Yup.string().max(
-      40,
-      'The requirements message must not exceed 40 characters.'
-    ),
-    requirementsUnits: Yup.number()
-      .required('You must specify the minimum value for your requirements.')
-      .min(0, 'The specified value is too small.')
-      .max(999_999, 'The specified value is too big.'),
-    successRate: Yup.number()
-      .min(10, 'Success Rate must be at least 10%')
-      .max(100, 'Success Rate cannot be greater than 100%'),
-  });
+  const initialValues: ICreateParams = useMemo(
+    () => ({
+      type,
+      entityName: '',
+      motivationTextarea: '',
+      entityFrequency: 1,
+      requirementsText: '',
+      requirementsMinValue: 0,
+      successRate: DEFAULT_SUCCESS_RATE,
+    }),
+    [type]
+  );
 
   return (
     <>
       <Formik
         initialValues={initialValues}
-        validationSchema={validationSchema}
+        validationSchema={Yup.object(createValidationSchema)}
         onSubmit={handleSubmit}
       >
         {({ handleSubmit, getFieldProps }) => {
@@ -98,16 +92,16 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
                   <BSForm.Control
                     type='text'
                     placeholder='Short description'
-                    {...getFieldProps('requirementsShortDescription')}
+                    {...getFieldProps('requirementsText')}
                   />
                   <BSForm.Control
                     type='number'
-                    placeholder='Units'
-                    {...getFieldProps('requirementsUnits')}
+                    placeholder='e.g. 24'
+                    {...getFieldProps('requirementsMinValue')}
                   />
                 </div>
-                <MyErrorMessage name='requirementsShortDescription' />
-                <MyErrorMessage name='requirementsUnits' />
+                <MyErrorMessage name='requirementsText' />
+                <MyErrorMessage name='requirementsMinValue' />
               </BSForm.Group>
 
               <BSForm.Group className={blk('SRSection')}>

@@ -1,9 +1,6 @@
-import { IEntityType, IEntityParams } from '../components/App/App.types';
-import {
-  IHeatmapIntensityNames,
-  IHeatmapIntensityValues,
-} from '../components/common/Heatmap/Heatmap.types';
-import { getInitializedHeatmap } from '../components/pages/HabitsPage/Habits.helpers';
+import { IEntityType, IEntityParams, IEntityEditParams } from '../components/App/App.types';
+import { IHeatmapIntensityValues } from '../components/common/Heatmap/Heatmap.types';
+import { getInitializedHeatmap } from '../components/helpers';
 import { IHabitParams } from '../components/pages/HabitsPage/Habits.types';
 import { ICRUDResponse } from './services.types';
 import { getCurrentUserEmail } from './user.service';
@@ -12,13 +9,6 @@ export const DEFAULT_SUCCESS_RATE = 100;
 const entityMapper: Record<IEntityType, string> = {
   habit: 'habits',
   skill: 'skills',
-};
-
-const heatmapValueMapper = (n: IHeatmapIntensityValues): IHeatmapIntensityNames => {
-  if (n === -1) return 'blank';
-  if (n < 3) return 'failed';
-  if (n < 6) return 'skipped';
-  return 'completed';
 };
 
 export function getAllEntities(type: IEntityType): IEntityParams[] {
@@ -33,21 +23,45 @@ export function getAllUserEntities(type: IEntityType): IEntityParams[] {
   );
 }
 
-export function addEntity(type: IEntityType, item: IEntityParams): ICRUDResponse {
+export function addEntity(type: IEntityType, entity: IEntityParams): ICRUDResponse {
   const userEmail = getCurrentUserEmail();
   const entities = getAllEntities(type);
 
-  if (entities.some(u => u.userEmail === userEmail && u.name === item.name)) {
+  if (entities.some(u => u.userEmail === userEmail && u.name === entity.name)) {
     return { success: false, message: `A ${type} with this name already exists.` };
   }
 
-  localStorage.setItem(entityMapper[type], JSON.stringify([...entities, item]));
+  localStorage.setItem(entityMapper[type], JSON.stringify([...entities, entity]));
   return { success: true, message: `The ${type} has been successfully created.` };
 }
 
 export function getEntityByName(type: IEntityType, name: string): IHabitParams | null {
-  const entities = getAllUserEntities(type);
-  return entities.find(item => item.name === name) ?? null;
+  const userEmail = getCurrentUserEmail();
+  const entities = getAllEntities(type);
+
+  return entities.find(el => el.userEmail === userEmail && el.name === name) ?? null;
+}
+
+export function editEntity(type: IEntityType, name: string, params: IEntityEditParams) {
+  const userEmail = getCurrentUserEmail();
+  const allEntities = getAllEntities(type);
+  let edited = false;
+
+  for (let i = 0; i < allEntities.length && !edited; i++) {
+    const curr = allEntities[i];
+
+    if (curr.userEmail === userEmail && curr.name === name) {
+      allEntities[i] = { ...curr, ...params };
+      edited = true;
+    }
+  }
+
+  if (!edited) {
+    return { success: false, message: `Couldn't find the ${type} by its name "${name}".` };
+  }
+
+  localStorage.setItem(entityMapper[type], JSON.stringify(allEntities));
+  return { success: true, message: `The ${type} has been successfully updated.` };
 }
 
 export function updateEntityHeatmap(
@@ -57,12 +71,15 @@ export function updateEntityHeatmap(
   y: number,
   value: IHeatmapIntensityValues
 ): ICRUDResponse {
-  const allEntities = getAllUserEntities(type);
+  const userEmail = getCurrentUserEmail();
+  const allEntities = getAllEntities(type);
   let updated = false;
 
   for (let i = 0; i < allEntities.length && !updated; i++) {
-    if (allEntities[i].name === name) {
-      allEntities[i].heatmap[x][y].intensity = value;
+    const curr = allEntities[i];
+
+    if (curr.userEmail === userEmail && curr.name === name) {
+      curr.heatmap[x][y].intensity = value;
       updated = true;
     }
   }
@@ -85,14 +102,17 @@ export function deleteEntity(type: IEntityType, name: string) {
 }
 
 export function resetEntity(type: IEntityType, name: string) {
-  const allEntities = getAllUserEntities(type);
+  const userEmail = getCurrentUserEmail();
+  const allEntities = getAllEntities(type);
   let reset = false;
 
   for (let i = 0; i < allEntities.length && !reset; i++) {
-    if (allEntities[i].name === name) {
-      const { heatmap, startTime, entityFrequency } = allEntities[i];
+    const curr = allEntities[i];
 
-      allEntities[i].heatmap = getInitializedHeatmap({
+    if (curr.userEmail === userEmail && curr.name === name) {
+      const { heatmap, startTime, entityFrequency } = curr;
+
+      curr.heatmap = getInitializedHeatmap({
         size: heatmap.length,
         useTitle: true,
         startTime,

@@ -1,2 +1,2 @@
-export * from './CreateModal';
+export * from './CreateEditModal';
 export * from './DefaultModal';

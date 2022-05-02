@@ -1,8 +1,8 @@
-import { getCurrentUserEmail } from '../../../services/user.service';
-import { getDateByDayDiff } from '../../../utils';
-import { ICreateParams } from '../../common/Forms/Forms.types';
-import { IHeatmapCellParams, IHeatmapInitializerProps } from '../../common/Heatmap/Heatmap.types';
-import { IHabitParams } from './Habits.types';
+import { getCurrentUserEmail } from '../services/user.service';
+import { getDateByDayDiff } from '../utils';
+import { IEntityParams } from './App/App.types';
+import { ICreateParams, IEditParams } from './common/Forms/Forms.types';
+import { IHeatmapInitializerProps, IHeatmapCellParams } from './common/Heatmap/Heatmap.types';
 
 export function getInitializedHeatmap(props: IHeatmapInitializerProps): IHeatmapCellParams[][] {
   const { size, useTitle } = props;
@@ -50,15 +50,15 @@ function frequencyToHeatmapSizeMapper(frequency: number) {
   return 10;
 }
 
-export function createParamsToHabitParams(params: ICreateParams): IHabitParams {
+export function createParamsToEntityParams(params: ICreateParams): IEntityParams {
   const userEmail = getCurrentUserEmail() ?? 'anonymous@email.com';
   const startTime = Date.now();
   const {
     entityName: name,
     entityFrequency,
     motivationTextarea: motivation,
-    requirementsShortDescription,
-    requirementsUnits,
+    requirementsText,
+    requirementsMinValue,
     successRate,
   } = params;
 
@@ -75,10 +75,17 @@ export function createParamsToHabitParams(params: ICreateParams): IHabitParams {
     userEmail,
     motivation,
     entityFrequency,
-    requirementsShortDescription,
-    requirementsUnits,
+    requirementsText,
+    requirementsMinValue,
     successRate,
     heatmap,
     startTime,
   };
+}
+
+export function editParamsToEntityParams(
+  entity: IEntityParams,
+  params: IEditParams
+): IEntityParams {
+  return { ...entity, ...params };
 }

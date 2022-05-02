@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { cn } from '@bem-react/classname';
+import { ToastContainer } from 'react-toastify';
 
 import { Habits } from '../pages/HabitsPage/Habits';
 import { HabitsDashboard } from '../pages/HabitsPage';
@@ -37,26 +38,29 @@ export const App = () => {
   }, [location]);
 
   return (
-    <main className={blk('', { navbarVisible })}>
-      {navbarVisible && <Navbar user={user} />}
-      <Routes>
-        <Route element={<ProtectedRoutes />}>
-          <Route path='/home' element={<UserHomePage user={user} />} />
-          <Route path='/habits/:encodedName' element={<HabitsDashboard />} />
-          <Route path='/habits/' element={<Habits />} />
-          <Route path='/skills' element={<SkillsDashboard />} />
-          <Route path='/mood' element={<MoodDashboard />} />
-        </Route>
+    <>
+      <main className={blk('', { navbarVisible })}>
+        {navbarVisible && <Navbar user={user} />}
+        <Routes>
+          <Route element={<ProtectedRoutes />}>
+            <Route path='/home' element={<UserHomePage user={user} />} />
+            <Route path='/habits/:encodedName' element={<HabitsDashboard />} />
+            <Route path='/habits/' element={<Habits />} />
+            <Route path='/skills' element={<SkillsDashboard />} />
+            <Route path='/mood' element={<MoodDashboard />} />
+          </Route>
 
-        <Route path='/' element={<LandingPage user={user} />} />
-        <Route
-          path='/signup'
-          element={!user ? <RegisterForm /> : <Navigate to='/home' replace />}
-        />
-        <Route path='/login' element={!user ? <LoginForm /> : <Navigate to='/home' replace />} />
-        <Route path='/not-found' element={<NotFound />} />
-        <Route path='*' element={<Navigate to='/not-found' replace />} />
-      </Routes>
-    </main>
+          <Route path='/' element={<LandingPage user={user} />} />
+          <Route
+            path='/signup'
+            element={!user ? <RegisterForm /> : <Navigate to='/home' replace />}
+          />
+          <Route path='/login' element={!user ? <LoginForm /> : <Navigate to='/home' replace />} />
+          <Route path='/not-found' element={<NotFound />} />
+          <Route path='*' element={<Navigate to='/not-found' replace />} />
+        </Routes>
+      </main>
+      <ToastContainer autoClose={1500} position='bottom-right' closeButton hideProgressBar />
+    </>
   );
 };

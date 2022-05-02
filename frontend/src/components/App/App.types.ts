@@ -7,9 +7,14 @@ export interface IEntityParams {
   userEmail: string;
   motivation: string;
   entityFrequency: number;
-  requirementsShortDescription: string;
-  requirementsUnits: number;
+  requirementsText: string;
+  requirementsMinValue: number;
   successRate: number;
   heatmap: IHeatmapCellParams[][];
   startTime: number;
 }
+
+export type IEntityEditParams = Pick<
+  IEntityParams,
+  'name' | 'motivation' | 'requirementsText' | 'requirementsMinValue'
+>;

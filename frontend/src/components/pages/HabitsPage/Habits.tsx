@@ -6,12 +6,12 @@ import { Button, Container, Overlay, Tooltip } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
-import { Heatmap, CreateModal } from '../../common';
+import { IHabitParams } from './Habits.types';
+import { Heatmap, CreateEditModal as CreateModal } from '../../common';
 import { ICreateParams } from '../../common/Forms/Forms.types';
 import { IHeatmapCellParams } from '../../common/Heatmap/Heatmap.types';
-import { createParamsToHabitParams } from './Habits.helpers';
-import { IHabitParams } from './Habits.types';
 import { getAllUserEntities, addEntity } from '../../../services/entities.service';
+import { createParamsToEntityParams } from '../../helpers';
 
 import './Habits.scss';
 
@@ -33,7 +33,7 @@ export const Habits = () => {
   }, []);
 
   const handleAddHabit = (params: ICreateParams) => {
-    const resp = addEntity('habit', createParamsToHabitParams(params));
+    const resp = addEntity('habit', createParamsToEntityParams(params));
 
     if (resp.success) {
       toast.success(resp.message);
@@ -100,13 +100,13 @@ export const Habits = () => {
         </section>
       </Container>
       <CreateModal
-        type='habit'
+        entityType='habit'
+        modalType='create'
         title='Create a new habit'
         visible={createModalVisible}
         handleCancel={() => setCreateModalVisible(false)}
         handleCreate={handleAddHabit}
       />
-      <ToastContainer autoClose={2000} position='bottom-right' />
     </>
   );
 };
