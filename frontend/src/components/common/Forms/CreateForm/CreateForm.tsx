@@ -8,7 +8,7 @@ import { ENTITY_FREQUENCIES } from '../../../App/App.constants';
 import { MyErrorMessage } from '../ErrorMessage';
 import { ICreateFormProps, ICreateParams } from '../Forms.types';
 import { HintComponent } from '../../HintComponent/HintComponent';
-import { DEFAULT_SUCCESS_RATE } from '../../../../services/entities.service';
+import { DEFAULT_SUCCESS_RATE } from '../../../../services/entity.service';
 import { editValidationSchema } from '../EditForm/EditForm';
 
 import './CreateForm.scss';

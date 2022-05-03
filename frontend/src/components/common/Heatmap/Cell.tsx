@@ -15,7 +15,7 @@ export const Cell = React.memo(
     intensity,
     title,
     status,
-    active,
+    isActive,
   }: IHeatmapCellProps) => {
     const style: React.CSSProperties = {
       backgroundColor:
@@ -28,6 +28,7 @@ export const Cell = React.memo(
     };
 
     const contentProps: Record<string, any> = { style };
+
     if (onClick) {
       contentProps.onClick = () => onClick(x, y);
     }
@@ -36,7 +37,10 @@ export const Cell = React.memo(
     }
 
     const content = (
-      <div className={blk('Cell', { skipped: status === 'skipped', active })} {...contentProps} />
+      <div
+        className={blk('Cell', { skipped: status === 'skipped', active: isActive })}
+        {...contentProps}
+      />
     );
 
     return onClickPopover ? (

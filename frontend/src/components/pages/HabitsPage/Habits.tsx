@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { cn } from '@bem-react/classname';
 import { useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { Button, Container, Overlay, Tooltip } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -10,7 +10,7 @@ import { IHabitParams } from './Habits.types';
 import { Heatmap, CreateEditModal as CreateModal } from '../../common';
 import { ICreateParams } from '../../common/Forms/Forms.types';
 import { IHeatmapCellParams } from '../../common/Heatmap/Heatmap.types';
-import { getAllUserEntities, addEntity } from '../../../services/entities.service';
+import { getAllUserEntities, addEntity } from '../../../services/entity.service';
 import { createParamsToEntityParams } from '../../helpers';
 
 import './Habits.scss';

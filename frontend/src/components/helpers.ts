@@ -1,5 +1,5 @@
 import { getCurrentUserEmail } from '../services/user.service';
-import { getDateByDayDiff } from '../utils';
+import { getDateByDayDiff, truncateDateTime } from '../utils';
 import { IEntityParams } from './App/App.types';
 import { ICreateParams, IEditParams } from './common/Forms/Forms.types';
 import { IHeatmapInitializerProps, IHeatmapCellParams } from './common/Heatmap/Heatmap.types';
@@ -12,7 +12,7 @@ export function getInitializedHeatmap(props: IHeatmapInitializerProps): IHeatmap
     heatmap[i] = [];
 
     for (let j = 0; j < size; j++) {
-      const commonParams = { intensity: 0, status: 'new' } as const;
+      const commonParams = { intensity: 0, status: 'new', isActive: false } as const;
 
       if (useTitle) {
         const { startTime, entityFrequency } = props;
@@ -54,7 +54,8 @@ function frequencyToHeatmapSizeMapper(frequency: number) {
 
 export function createParamsToEntityParams(params: ICreateParams): IEntityParams {
   const userEmail = getCurrentUserEmail() ?? 'anonymous@email.com';
-  const startTime = Date.now();
+  const startTime = truncateDateTime(new Date()).getTime();
+
   const {
     entityName: name,
     entityFrequency,

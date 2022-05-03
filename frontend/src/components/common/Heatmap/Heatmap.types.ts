@@ -14,13 +14,14 @@ export interface IHeatmapCellProps {
   cellSize: number;
   intensity: IHeatmapIntensityValues;
   status: IHeatmapCellStatus;
-  active: boolean;
+  isActive: boolean;
 }
 
 export interface IHeatmapCellParams {
   intensity: IHeatmapIntensityValues;
   status: IHeatmapCellStatus;
   title?: string;
+  isActive: boolean;
 }
 
 //TODO: Add comments for each day

@@ -10,17 +10,19 @@ import {
   faCircleMinus,
   faCircleXmark,
   faArrowLeft,
+  faFloppyDisk,
+  faArrowRotateLeft,
   faPenToSquare,
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
   getEntityByName,
-  updateEntityHeatmap,
   deleteEntity,
   resetEntity,
   getCurrentEntitySuccessRate,
   editEntity,
-} from '../../../services/entities.service';
+} from '../../../services/entity.service';
+import { setCurrentHeatmapCell, updateEntityHeatmap } from '../../../services/heatmap.service';
 import { IDashboardProps } from './Dashboard.types';
 import {
   IHeatmapCellStatus,
@@ -28,7 +30,7 @@ import {
   IHeatmapSquare,
 } from '../Heatmap/Heatmap.types';
 import { IDefaultModalProps } from '../Modals/Modals.types';
-import { IEntityParams } from '../../App/App.types';
+import { IEntityParams, IEntityType } from '../../App/App.types';
 import { getFormattedDate, numberWithSpaces } from '../../../utils';
 import { CreateEditModal as EditModal, DefaultModal } from '../Modals';
 import { Heatmap } from '..';
@@ -64,7 +66,10 @@ export const Dashboard = ({
   const fetchEntity = useCallback(() => {
     if (encodedName == null) return null;
 
-    return getEntityByName(entityType, decodeURIComponent(encodedName));
+    const args: [IEntityType, string] = [entityType, decodeURIComponent(encodedName)];
+
+    setCurrentHeatmapCell(...args);
+    return getEntityByName(...args);
   }, [encodedName, entityType]);
 
   const handleHeatmapClick = useCallback(
@@ -81,7 +86,9 @@ export const Dashboard = ({
     const fetchedEntity = fetchEntity();
 
     if (!fetchedEntity) navigate('/not-found', { replace: true });
-    else setEntity(fetchedEntity);
+    else {
+      setEntity(fetchedEntity);
+    }
   }, [fetchEntity, navigate]);
 
   const currentSR = useMemo(() => getCurrentEntitySuccessRate(entity), [entity]);
@@ -212,14 +219,18 @@ export const Dashboard = ({
                 {entity.requirementsText && (
                   <span className={blk('SubsectionContent')}>{entity.requirementsText}</span>
                 )}
-                {entity.requirementsText.length > 15 && <br />}
-                <input
-                  className={blk('RequirementsInputField')}
-                  type='number'
-                  value={requirementsValue}
-                  onWheel={e => e.currentTarget.blur()}
-                  onChange={e => setRequirementsValue(e.target.value.slice(0, 6))}
-                />
+                <br />
+                <div className={blk('RequirementsValueInputSection')}>
+                  <input
+                    className={blk('RequirementsInputField')}
+                    type='number'
+                    value={requirementsValue}
+                    onWheel={e => e.currentTarget.blur()}
+                    onChange={e => setRequirementsValue(e.target.value.slice(0, 6))}
+                  />
+                  <FontAwesomeIcon icon={faFloppyDisk} />
+                  <FontAwesomeIcon icon={faArrowRotateLeft} />
+                </div>
               </section>
               <section className={blk('InfoSubsection')}>
                 <h2 className={blk('SubsectionHeading')}>Success Rate</h2>
