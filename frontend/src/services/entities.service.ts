@@ -1,5 +1,8 @@
 import { IEntityType, IEntityParams, IEntityEditParams } from '../components/App/App.types';
-import { IHeatmapIntensityValues } from '../components/common/Heatmap/Heatmap.types';
+import {
+  IHeatmapCellStatus,
+  IHeatmapIntensityValues,
+} from '../components/common/Heatmap/Heatmap.types';
 import { getInitializedHeatmap } from '../components/helpers';
 import { IHabitParams } from '../components/pages/HabitsPage/Habits.types';
 import { ICRUDResponse } from './services.types';
@@ -69,7 +72,8 @@ export function updateEntityHeatmap(
   name: string,
   x: number,
   y: number,
-  value: IHeatmapIntensityValues
+  value: IHeatmapIntensityValues,
+  status: IHeatmapCellStatus
 ): ICRUDResponse {
   const userEmail = getCurrentUserEmail();
   const allEntities = getAllEntities(type);
@@ -80,6 +84,7 @@ export function updateEntityHeatmap(
 
     if (curr.userEmail === userEmail && curr.name === name) {
       curr.heatmap[x][y].intensity = value;
+      curr.heatmap[x][y].status = status;
       updated = true;
     }
   }
@@ -133,22 +138,16 @@ export function resetEntity(type: IEntityType, name: string) {
 export function getCurrentEntitySuccessRate(item: IEntityParams | null): number {
   if (item === null) return DEFAULT_SUCCESS_RATE;
 
-  let completed = 0;
-  let failed = 0;
+  let [totalIntensity, totalDays] = [0, 0];
 
   for (const row of item.heatmap) {
-    for (const { intensity } of row) {
-      if (intensity === 9) {
-        completed++;
-      } else if (intensity === 0) {
-        failed++;
-      }
+    for (const cell of row) {
+      totalIntensity += cell.intensity;
+      totalDays += cell.status === 'normal' ? 1 : 0;
     }
   }
 
-  return completed + failed === 0
-    ? -1
-    : Number((completed / (completed + failed)).toFixed(2)) * 100;
+  return !totalDays ? 100 : Number(((totalIntensity / totalDays) * 10).toFixed(2));
 }
 
 // FIXME: get an overall heatmap for different periods of time

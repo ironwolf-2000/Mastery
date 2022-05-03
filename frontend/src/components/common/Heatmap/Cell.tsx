@@ -5,10 +5,23 @@ import { blk } from './Heatmap';
 import { IHeatmapCellProps } from './Heatmap.types';
 
 export const Cell = React.memo(
-  ({ x, y, onClick, bgColor, cellSize, onClickPopover, intensity, title }: IHeatmapCellProps) => {
+  ({
+    x,
+    y,
+    onClick,
+    bgColor,
+    cellSize,
+    onClickPopover,
+    intensity,
+    title,
+    status,
+    active,
+  }: IHeatmapCellProps) => {
     const style: React.CSSProperties = {
       backgroundColor:
-        intensity === -1 ? 'var(--bs-gray-100)' : `rgba(${bgColor}, ${(intensity + 1) * 0.1})`,
+        status === 'normal' && intensity
+          ? `rgba(${bgColor}, ${intensity * 0.1})`
+          : 'var(--bs-gray-100)',
       width: `${cellSize}rem`,
       height: `${cellSize}rem`,
       borderRadius: `${cellSize * 0.16}rem`,
@@ -22,7 +35,9 @@ export const Cell = React.memo(
       contentProps.title = title;
     }
 
-    const content = <div className={blk('Cell')} {...contentProps} />;
+    const content = (
+      <div className={blk('Cell', { skipped: status === 'skipped', active })} {...contentProps} />
+    );
 
     return onClickPopover ? (
       <OverlayTrigger rootClose trigger='click' placement='bottom' overlay={onClickPopover}>

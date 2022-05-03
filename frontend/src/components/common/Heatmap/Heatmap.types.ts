@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 import { OverlayChildren } from 'react-bootstrap/esm/Overlay';
 
-export type IHeatmapIntensityNames = 'blank' | 'failed' | 'skipped' | 'completed';
-export type IHeatmapIntensityValues = -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+export type IHeatmapIntensityValues = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+export type IHeatmapCellStatus = 'new' | 'skipped' | 'normal';
 
 export interface IHeatmapCellProps {
   x: number;
@@ -13,10 +13,13 @@ export interface IHeatmapCellProps {
   bgColor: string;
   cellSize: number;
   intensity: IHeatmapIntensityValues;
+  status: IHeatmapCellStatus;
+  active: boolean;
 }
 
 export interface IHeatmapCellParams {
   intensity: IHeatmapIntensityValues;
+  status: IHeatmapCellStatus;
   title?: string;
 }
 

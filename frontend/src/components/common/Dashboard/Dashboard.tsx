@@ -22,7 +22,11 @@ import {
   editEntity,
 } from '../../../services/entities.service';
 import { IDashboardProps } from './Dashboard.types';
-import { IHeatmapIntensityValues, IHeatmapSquare } from '../Heatmap/Heatmap.types';
+import {
+  IHeatmapCellStatus,
+  IHeatmapIntensityValues,
+  IHeatmapSquare,
+} from '../Heatmap/Heatmap.types';
 import { IDefaultModalProps } from '../Modals/Modals.types';
 import { IEntityParams } from '../../App/App.types';
 import { getFormattedDate, numberWithSpaces } from '../../../utils';
@@ -64,9 +68,9 @@ export const Dashboard = ({
   }, [encodedName, entityType]);
 
   const handleHeatmapClick = useCallback(
-    (val: IHeatmapIntensityValues) => {
+    (val: IHeatmapIntensityValues, status: IHeatmapCellStatus) => {
       if (entity && currSquare) {
-        updateEntityHeatmap(entityType, entity.name, currSquare.x, currSquare.y, val);
+        updateEntityHeatmap(entityType, entity.name, currSquare.x, currSquare.y, val, status);
         setEntity(fetchEntity());
       }
     },
@@ -118,29 +122,32 @@ export const Dashboard = ({
         {
           color: `var(--color-${entityType}s)`,
           title: 'complete',
-          val: 9,
+          val: 10,
+          status: 'normal',
           icon: faCircleCheck,
         } as const,
         {
-          color: `rgba(var(--color-rgb-${entityType}s), 0.5)`,
+          color: 'var(--bs-gray-500)',
           title: 'skip',
-          val: 3,
+          val: 0,
+          status: 'skipped',
           icon: faCircleMinus,
         } as const,
         {
-          color: `rgba(var(--color-rgb-${entityType}s), 0.25)`,
+          color: 'var(--bs-gray-500)',
           title: 'fail',
           val: 0,
+          status: 'normal',
           icon: faCircleXmark,
         } as const,
-      ].map(({ color, title, val, icon }) => (
+      ].map(({ color, title, val, status, icon }) => (
         <FontAwesomeIcon
           key={title}
           icon={icon}
           className={blk('PopoverIcon')}
           color={color}
           title={title}
-          onClick={() => handleHeatmapClick(val)}
+          onClick={() => handleHeatmapClick(val, status)}
         />
       ))}
     </Popover>
@@ -210,6 +217,7 @@ export const Dashboard = ({
                   className={blk('RequirementsInputField')}
                   type='number'
                   value={requirementsValue}
+                  onWheel={e => e.currentTarget.blur()}
                   onChange={e => setRequirementsValue(e.target.value.slice(0, 6))}
                 />
               </section>

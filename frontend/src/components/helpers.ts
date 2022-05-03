@@ -12,6 +12,8 @@ export function getInitializedHeatmap(props: IHeatmapInitializerProps): IHeatmap
     heatmap[i] = [];
 
     for (let j = 0; j < size; j++) {
+      const commonParams = { intensity: 0, status: 'new' } as const;
+
       if (useTitle) {
         const { startTime, entityFrequency } = props;
         const title =
@@ -19,9 +21,9 @@ export function getInitializedHeatmap(props: IHeatmapInitializerProps): IHeatmap
           (entityFrequency > 1
             ? ` - ${getDateByDayDiff(startTime, entityFrequency * (i * size + j + 1) - 1)}`
             : '');
-        heatmap[i].push({ intensity: -1, title } as const);
+        heatmap[i].push({ ...commonParams, title } as const);
       } else {
-        heatmap[i].push({ intensity: -1 });
+        heatmap[i].push(commonParams);
       }
     }
   }

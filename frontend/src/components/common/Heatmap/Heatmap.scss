@@ -15,11 +15,20 @@
 
   &-Cell {
     cursor: pointer;
-    border: 0.1rem solid transparent;
+    border: 0.1rem dotted transparent;
     transition: border-color 0.2s;
     display: flex;
     justify-content: center;
     align-items: center;
+
+    &_active {
+      border: 0.1rem solid var(--color-elements-black);
+    }
+
+    &_skipped::before {
+      content: '•';
+      padding-bottom: 0.25rem;
+    }
 
     &:hover {
       border-color: var(--color-hover-dark);
