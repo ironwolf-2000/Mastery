@@ -1,3 +1,13 @@
+%icon {
+  cursor: pointer;
+  color: var(--color-elements-black);
+  transition: 0.2s;
+
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
 .Dashboard {
   min-height: 100%;
   padding-bottom: 4rem;
@@ -70,11 +80,20 @@
     outline: none;
     border-radius: 0.25rem;
     padding: 0.25rem 0.5rem;
-    margin-right: 1rem;
 
     &:focus,
     &:active {
       border-color: var(--color-elements-black);
+    }
+  }
+
+  &-RequirementsIcon {
+    @extend %icon;
+    margin-left: 0.5rem;
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1;
     }
   }
 
@@ -101,8 +120,7 @@
   }
 
   &-EditIcon {
+    @extend %icon;
     margin-left: 1rem;
-    cursor: pointer;
-    color: var(--color-elements-black);
   }
 }
