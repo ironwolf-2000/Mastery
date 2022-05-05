@@ -2,7 +2,7 @@ import React from 'react';
 import { OverlayTrigger } from 'react-bootstrap';
 
 import { blk } from './Heatmap';
-import { IHeatmapCellProps } from './Heatmap.types';
+import { IHeatmapCellProps, IHeatmapIntensityValues } from './Heatmap.types';
 
 export const Cell = React.memo(
   ({
@@ -12,11 +12,16 @@ export const Cell = React.memo(
     bgColor,
     cellSize,
     onClickPopover,
-    intensity,
     title,
     status,
     isActive,
+    currValue,
+    targetValue,
   }: IHeatmapCellProps) => {
+    const _intensity = Math.floor((currValue * 10) / targetValue);
+    const intensity =
+      _intensity < 0 ? 0 : _intensity > 10 ? 10 : (_intensity as IHeatmapIntensityValues);
+
     const style: React.CSSProperties = {
       backgroundColor:
         status === 'normal' && intensity
@@ -29,12 +34,8 @@ export const Cell = React.memo(
 
     const contentProps: Record<string, any> = { style };
 
-    if (onClick) {
-      contentProps.onClick = () => onClick(x, y);
-    }
-    if (title) {
-      contentProps.title = title;
-    }
+    if (onClick) contentProps.onClick = () => onClick(x, y);
+    if (title) contentProps.title = title;
 
     const content = (
       <div

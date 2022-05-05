@@ -40,20 +40,11 @@ export const Heatmap = ({
     <div className={blk('', [className])}>
       {heatmapState.map((rowItems, xi) => (
         <Row key={xi}>
-          {rowItems.map(({ intensity, status, title, isActive }, yi) => {
+          {rowItems.map((cellParams, yi) => {
             const cellSize = cellSizeMapper(heatmapState.length);
-            const props = {
-              intensity,
-              status,
-              title,
-              isActive,
-              onClick,
-              onClickPopover,
-              bgColor,
-              cellSize,
-            };
+            const hmParams = { onClick, onClickPopover, bgColor, cellSize };
 
-            return <Cell key={yi} x={xi} y={yi} {...props} />;
+            return <Cell key={yi} x={xi} y={yi} {...{ ...cellParams, ...hmParams }} />;
           })}
         </Row>
       ))}

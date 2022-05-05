@@ -1,8 +1,5 @@
 import { IEntityType } from '../components/App/App.types';
-import {
-  IHeatmapIntensityValues,
-  IHeatmapCellStatus,
-} from '../components/common/Heatmap/Heatmap.types';
+import { IHeatmapCellStatus } from '../components/common/Heatmap/Heatmap.types';
 import { msToDays } from '../utils';
 import { entityMapper, getAllEntities } from './entity.service';
 import { ICRUDResponse } from './services.types';
@@ -13,8 +10,8 @@ export function updateEntityHeatmap(
   name: string,
   x: number,
   y: number,
-  value: IHeatmapIntensityValues,
-  status: IHeatmapCellStatus
+  status: IHeatmapCellStatus,
+  value: number
 ): ICRUDResponse {
   const userEmail = getCurrentUserEmail();
   const allEntities = getAllEntities(type);
@@ -23,9 +20,15 @@ export function updateEntityHeatmap(
   for (let i = 0; i < allEntities.length && !updated; i++) {
     const curr = allEntities[i];
 
-    if (curr.userEmail === userEmail && curr.name === name) {
-      curr.heatmap[x][y].intensity = value;
-      curr.heatmap[x][y].status = status;
+    if (curr.userEmail === userEmail && curr.name === name && value !== undefined) {
+      const hm = curr.heatmap[x][y];
+
+      hm.status = status;
+      hm.currValue = value;
+
+      if (hm.title) {
+        hm.title = hm.title.slice(0, hm.title.lastIndexOf(':')) + `: ${value}`;
+      }
       updated = true;
     }
   }
@@ -38,7 +41,7 @@ export function updateEntityHeatmap(
   return { success: true, message: `Successully updated the ${type} progress.` };
 }
 
-export function setCurrentHeatmapCell(type: IEntityType, name: string) {
+export function getCurrentHeatmapCell(type: IEntityType, name: string): [number, number] | null {
   const userEmail = getCurrentUserEmail();
   const allEntities = getAllEntities(type);
 
@@ -53,9 +56,27 @@ export function setCurrentHeatmapCell(type: IEntityType, name: string) {
       const hmSize = curr.heatmap.length;
       const [x, y] = [Math.floor(cellNumber / hmSize), cellNumber % hmSize];
 
-      for (let x0 = 0; x0 < hmSize; x0++) {
-        for (let y0 = 0; y0 < hmSize; y0++) {
-          curr.heatmap[x0][y0].isActive = x0 === x && y0 === y;
+      return [x, y];
+    }
+  }
+
+  return null;
+}
+
+export function highlightCurrentHeatmapCell(type: IEntityType, name: string) {
+  const userEmail = getCurrentUserEmail();
+  const allEntities = getAllEntities(type);
+
+  for (let i = 0; i < allEntities.length; i++) {
+    const curr = allEntities[i];
+
+    if (curr.userEmail === userEmail && curr.name === name) {
+      const currCell = getCurrentHeatmapCell(type, name);
+      const hmSize = curr.heatmap.length;
+
+      for (let i = 0; i < hmSize; i++) {
+        for (let j = 0; j < hmSize; j++) {
+          curr.heatmap[i][j].isActive = currCell !== null && i === currCell[0] && j === currCell[1];
         }
       }
     }

@@ -12,19 +12,24 @@ export function getInitializedHeatmap(props: IHeatmapInitializerProps): IHeatmap
     heatmap[i] = [];
 
     for (let j = 0; j < size; j++) {
-      const commonParams = { intensity: 0, status: 'new', isActive: false } as const;
+      const params: IHeatmapCellParams = {
+        status: 'new',
+        isActive: false,
+        currValue: 0,
+        targetValue: props.targetValue,
+      };
 
       if (useTitle) {
         const { startTime, entityFrequency } = props;
-        const title =
+        params.title =
           `${getDateByDayDiff(startTime, entityFrequency * (i * size + j))}` +
           (entityFrequency > 1
             ? ` - ${getDateByDayDiff(startTime, entityFrequency * (i * size + j + 1) - 1)}`
-            : '');
-        heatmap[i].push({ ...commonParams, title } as const);
-      } else {
-        heatmap[i].push(commonParams);
+            : '') +
+          ': 0';
       }
+
+      heatmap[i].push(params);
     }
   }
 
@@ -67,10 +72,12 @@ export function createParamsToEntityParams(params: ICreateParams): IEntityParams
 
   const heatmapSize = frequencyToHeatmapSizeMapper(entityFrequency);
   const heatmap = getInitializedHeatmap({
+    heatmapType: 'tracking',
     size: heatmapSize,
     useTitle: true,
     startTime,
     entityFrequency,
+    targetValue: requirementsMinValue,
   });
 
   return {

@@ -22,13 +22,13 @@ import {
   getCurrentEntitySuccessRate,
   editEntity,
 } from '../../../services/entity.service';
-import { setCurrentHeatmapCell, updateEntityHeatmap } from '../../../services/heatmap.service';
-import { IDashboardProps } from './Dashboard.types';
 import {
-  IHeatmapCellStatus,
-  IHeatmapIntensityValues,
-  IHeatmapSquare,
-} from '../Heatmap/Heatmap.types';
+  getCurrentHeatmapCell,
+  highlightCurrentHeatmapCell,
+  updateEntityHeatmap,
+} from '../../../services/heatmap.service';
+import { IDashboardProps } from './Dashboard.types';
+import { IHeatmapCellStatus, IHeatmapCellCoordinates } from '../Heatmap/Heatmap.types';
 import { IDefaultModalProps } from '../Modals/Modals.types';
 import { IEntityParams, IEntityType } from '../../App/App.types';
 import { getFormattedDate, numberWithSpaces } from '../../../utils';
@@ -58,40 +58,58 @@ export const Dashboard = ({
   const { encodedName } = useParams();
 
   const [editModalVisible, setEditModalVisible] = useState<boolean>(false);
-  const [currSquare, setCurrSquare] = useState<IHeatmapSquare | null>(null);
+  const [activeCellCoords, setActiveCellCoords] = useState<IHeatmapCellCoordinates | null>(null);
   const [entity, setEntity] = useState<IEntityParams | null>(null);
   const [modalParams, setModalParams] = useState<IDefaultModalProps>(defaultModalParams);
   const [requirementsValue, setRequirementsValue] = useState('');
+
+  const currentSR = useMemo(() => getCurrentEntitySuccessRate(entity), [entity]);
+
+  const currPeriodCellCoords = useMemo(() => {
+    if (!entity) return null;
+
+    return getCurrentHeatmapCell(entityType, entity.name);
+  }, [entity, entityType]);
 
   const fetchEntity = useCallback(() => {
     if (encodedName == null) return null;
 
     const args: [IEntityType, string] = [entityType, decodeURIComponent(encodedName)];
 
-    setCurrentHeatmapCell(...args);
+    highlightCurrentHeatmapCell(...args);
     return getEntityByName(...args);
   }, [encodedName, entityType]);
 
   const handleHeatmapClick = useCallback(
-    (val: IHeatmapIntensityValues, status: IHeatmapCellStatus) => {
-      if (entity && currSquare) {
-        updateEntityHeatmap(entityType, entity.name, currSquare.x, currSquare.y, val, status);
+    (status: IHeatmapCellStatus, currValue?: number) => {
+      if (entity && activeCellCoords && currValue !== undefined) {
+        updateEntityHeatmap(
+          entityType,
+          entity.name,
+          activeCellCoords.x,
+          activeCellCoords.y,
+          status,
+          currValue
+        );
         setEntity(fetchEntity());
       }
     },
-    [entity, currSquare, entityType, fetchEntity]
+    [entity, activeCellCoords, entityType, fetchEntity]
   );
 
   useEffect(() => {
     const fetchedEntity = fetchEntity();
 
     if (!fetchedEntity) navigate('/not-found', { replace: true });
-    else {
-      setEntity(fetchedEntity);
-    }
+    else setEntity(fetchedEntity);
   }, [fetchEntity, navigate]);
 
-  const currentSR = useMemo(() => getCurrentEntitySuccessRate(entity), [entity]);
+  useEffect(() => {
+    if (!entity || !currPeriodCellCoords) return;
+
+    const [x, y] = currPeriodCellCoords;
+    setRequirementsValue((entity.heatmap[x][y].currValue ?? 0).toString());
+  }, [currPeriodCellCoords, entity]);
 
   const getWarningModalParams = useCallback(
     (name: string) => ({
@@ -129,32 +147,32 @@ export const Dashboard = ({
         {
           color: `var(--color-${entityType}s)`,
           title: 'complete',
-          val: 10,
+          value: entity?.requirementsMinValue ?? undefined,
           status: 'normal',
           icon: faCircleCheck,
         } as const,
         {
           color: 'var(--bs-gray-500)',
           title: 'skip',
-          val: 0,
+          value: 0,
           status: 'skipped',
           icon: faCircleMinus,
         } as const,
         {
           color: 'var(--bs-gray-500)',
           title: 'fail',
-          val: 0,
+          value: 0,
           status: 'normal',
           icon: faCircleXmark,
         } as const,
-      ].map(({ color, title, val, status, icon }) => (
+      ].map(({ color, title, value, status, icon }) => (
         <FontAwesomeIcon
           key={title}
           icon={icon}
           className={blk('PopoverIcon')}
           color={color}
           title={title}
-          onClick={() => handleHeatmapClick(val, status)}
+          onClick={() => handleHeatmapClick(status, value)}
         />
       ))}
     </Popover>
@@ -223,13 +241,42 @@ export const Dashboard = ({
                 <div className={blk('RequirementsValueInputSection')}>
                   <input
                     className={blk('RequirementsInputField')}
-                    type='number'
+                    type='text'
                     value={requirementsValue}
-                    onWheel={e => e.currentTarget.blur()}
-                    onChange={e => setRequirementsValue(e.target.value.slice(0, 6))}
+                    onChange={e => {
+                      const val = e.target.value;
+                      if (val && !/^\d+$/.test(val)) {
+                        return;
+                      }
+
+                      setRequirementsValue(val.slice(0, 6));
+                    }}
                   />
-                  <FontAwesomeIcon icon={faFloppyDisk} />
-                  <FontAwesomeIcon icon={faArrowRotateLeft} />
+                  <FontAwesomeIcon
+                    icon={faArrowRotateLeft}
+                    className={blk('RequirementsIcon')}
+                    size='lg'
+                    onClick={() => {
+                      if (currPeriodCellCoords) {
+                        const [x, y] = currPeriodCellCoords;
+                        setRequirementsValue(entity.heatmap[x][y].currValue.toString());
+                      }
+                    }}
+                  />
+                  <FontAwesomeIcon
+                    icon={faFloppyDisk}
+                    className={blk('RequirementsIcon')}
+                    size='lg'
+                    onClick={() => {
+                      if (currPeriodCellCoords) {
+                        const [x, y] = currPeriodCellCoords;
+                        const currValue = Number(requirementsValue);
+
+                        updateEntityHeatmap(entityType, entity.name, x, y, 'normal', currValue);
+                        setEntity(fetchEntity());
+                      }
+                    }}
+                  />
                 </div>
               </section>
               <section className={blk('InfoSubsection')}>
@@ -277,7 +324,7 @@ export const Dashboard = ({
             <Heatmap
               className={blk('Heatmap')}
               heatmapState={entity.heatmap}
-              onClick={(x, y) => setCurrSquare({ x, y })}
+              onClick={(x, y) => setActiveCellCoords({ x, y })}
               onClickPopover={heatmapCellPopover}
               bgColor={entityHeatmapColor}
             />
