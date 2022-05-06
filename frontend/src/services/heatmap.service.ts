@@ -85,6 +85,24 @@ export function highlightCurrentHeatmapCell(type: IEntityType, name: string) {
   localStorage.setItem(entityMapper[type], JSON.stringify(allEntities));
 }
 
+function generateEmptyOverallEntityHeatmap(size: number) {
+  const overallHeatmap: IHeatmapCellParams[][] = new Array(size);
+
+  for (let i = 0; i < size; i++) {
+    overallHeatmap[i] = new Array(size);
+    for (let j = 0; j < size; j++) {
+      overallHeatmap[i][j] = {
+        currValue: 0,
+        targetValue: 0,
+        status: 'normal',
+        isActive: false,
+      };
+    }
+  }
+
+  return overallHeatmap;
+}
+
 export function getOverallEntityHeatmap(type: IEntityType) {
   const allUserEntities = getAllUserEntities(type);
   const dayValues: Record<number, { curr: number; target: number }> = {};
@@ -115,19 +133,21 @@ export function getOverallEntityHeatmap(type: IEntityType) {
 
   const dayEntries = Object.entries(dayValues);
   const hmSize = Math.ceil(Math.sqrt(dayEntries.length));
+  if (hmSize === 0) {
+    return generateEmptyOverallEntityHeatmap(6);
+  }
+
   const overallHeatmap: IHeatmapCellParams[][] = new Array(hmSize);
 
-  for (let i = 0, cnt = 0; i < hmSize; i++) {
+  for (let i = 0, cnt = 0, day = Number(dayEntries[0][0]); i < hmSize; i++) {
     overallHeatmap[i] = new Array(hmSize);
-    for (let j = 0; j < hmSize; j++, cnt++) {
-      let [currValue, targetValue, title] = [0, 0, '-'];
+    for (let j = 0; j < hmSize; j++, cnt++, day++) {
+      let [currValue, targetValue] = [0, 0];
       if (cnt < dayEntries.length) {
         [currValue, targetValue] = [dayEntries[cnt][1].curr, dayEntries[cnt][1].target];
-
-        title = `${getFormattedDate(
-          daysToMs(Number(dayEntries[cnt][0]))
-        )}: ${currValue} / ${targetValue}`;
       }
+
+      const title = `${getFormattedDate(daysToMs(day))}: ${currValue} / ${targetValue}`;
 
       overallHeatmap[i][j] = {
         currValue,

@@ -96,7 +96,16 @@ export const Habits = () => {
               })}
             </div>
           ) : (
-            "You don't have any habits in progress."
+            <>
+              <p className={blk('NoHabitsLabel')}>You don't have any habits in progress.</p>
+              <div className={blk('ImageContainer')}>
+                <img
+                  src={require('../../../assets/no-entities.webp')}
+                  alt=''
+                  className={blk('Image')}
+                />
+              </div>
+            </>
           )}
         </section>
         <section className={blk('HeatmapSection')}>

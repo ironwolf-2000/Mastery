@@ -2,6 +2,7 @@
 @import '~bootstrap/scss/bootstrap';
 
 :root {
+  --color-bg: #fdfdfd;
   --color-header-bg: #073b4c;
   --color-habits: #06d6a0;
   --color-rgb-habits: 6, 214, 160;
@@ -18,6 +19,7 @@ html {
 
 body {
   height: 100%;
+  background-color: var(--color-bg);
 }
 
 #root {

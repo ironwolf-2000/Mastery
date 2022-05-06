@@ -4,6 +4,20 @@
   display: flex;
   justify-content: space-between;
 
+  &-NoHabitsLabel {
+    font-size: 1.2rem;
+    margin: 0;
+    text-align: center;
+  }
+
+  &-ImageContainer {
+    max-width: 70vmin;
+  }
+
+  &-Image {
+    width: 100%;
+  }
+
   &-ManageHabitsSection {
     max-width: 50%;
   }
