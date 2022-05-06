@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Formik, ErrorMessage } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { cn } from '@bem-react/classname';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,24 +9,24 @@ import { toast } from 'react-toastify';
 
 import { ILoginFormProps, ILoginUser } from './LoginForm.types';
 import { login } from '../../services/user.service';
+import { MyErrorMessage } from '../common/Forms/ErrorMessage';
 
 import './LoginForm.scss';
 
 const blk = cn('LoginForm');
 
-// TODO: create a reusable Form component
+const loginValidationSchema = Yup.object({
+  email: Yup.string()
+    .email('This is not a valid email.')
+    .required('The email address cannot be empty.'),
+  password: Yup.string().required('The password cannot be empty.'),
+});
+
 export const LoginForm = (props: ILoginFormProps) => {
   const initialValues: ILoginUser = {
     email: '',
     password: '',
   };
-
-  const validationSchema = Yup.object({
-    email: Yup.string()
-      .email('This is not a valid email.')
-      .required('Email address cannot be empty.'),
-    password: Yup.string().required('Password cannot be empty.'),
-  });
 
   const handleSubmit = (user: ILoginUser) => {
     const resp = login(user);
@@ -43,7 +43,7 @@ export const LoginForm = (props: ILoginFormProps) => {
         <h2 className={blk('Heading')}>Login</h2>
         <Formik
           initialValues={initialValues}
-          validationSchema={validationSchema}
+          validationSchema={loginValidationSchema}
           onSubmit={handleSubmit}
         >
           {({ values, errors, handleSubmit, getFieldProps }) => {
@@ -60,10 +60,7 @@ export const LoginForm = (props: ILoginFormProps) => {
                     placeholder='Enter email'
                     {...getFieldProps('email')}
                   />
-                  <ErrorMessage
-                    name='email'
-                    render={message => <small className={blk('ErrorMessage')}>{message}</small>}
-                  />
+                  <MyErrorMessage name='email' />
                 </BSForm.Group>
                 <BSForm.Group className='mb-3'>
                   <BSForm.Label>Password</BSForm.Label>
@@ -72,10 +69,7 @@ export const LoginForm = (props: ILoginFormProps) => {
                     placeholder='Password'
                     {...getFieldProps('password')}
                   />
-                  <ErrorMessage
-                    name='password'
-                    render={message => <small className={blk('ErrorMessage')}>{message}</small>}
-                  />
+                  <MyErrorMessage name='password' />
                 </BSForm.Group>
                 <div className={blk('BottomSection')}>
                   <Button variant='primary' type='submit' disabled={isSubmitDisabled}>

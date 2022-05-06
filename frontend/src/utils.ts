@@ -33,3 +33,16 @@ export function numberWithSpaces(n?: number) {
 export function toTwoDecimalPlaces(n: number) {
   return Number(n.toFixed(2));
 }
+
+export function typeNumber(
+  e: React.ChangeEvent<HTMLInputElement>,
+  maxDigits: number,
+  cb: (v: string) => void
+) {
+  const val = e.target.value;
+  if ((val && !/^\d+$/.test(val)) || val.length > maxDigits) {
+    return;
+  }
+
+  cb(val);
+}

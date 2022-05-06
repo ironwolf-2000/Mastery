@@ -1,4 +1,3 @@
-import { ToastContainer } from 'react-toastify';
 import { Modal } from 'react-bootstrap';
 
 import { CreateForm, EditForm } from '../Forms';
@@ -35,7 +34,6 @@ export const CreateEditModal = ({
           )}
         </Modal.Body>
       </Modal>
-      {/* <MyToastContainer /> */}
     </>
   );
 };

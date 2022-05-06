@@ -13,15 +13,13 @@ const blk = cn('EditForm');
 
 export const editValidationSchema = {
   name: Yup.string()
-    .max(30, 'The name must be 15 characters or less.')
+    .max(20, 'The name must be 20 characters or less.')
     .required('The name cannot be empty.'),
-  motivation: Yup.string()
-    .min(10, 'Your motivation message must be at least 10 characters long.')
-    .max(80, 'Your motivation message must not exceed 80 characters.'),
+  motivation: Yup.string().max(80, 'Your motivation message must not exceed 80 characters.'),
   requirementsText: Yup.string().max(40, 'The requirements message must not exceed 40 characters.'),
   requirementsMinValue: Yup.number()
     .required('You must specify the minimum value for your requirements.')
-    .min(0, 'The minimum required value cannot be negative.')
+    .min(1, 'The minimum required value must be a positive integer.')
     .max(999_999, 'The specified value is too big.'),
 };
 

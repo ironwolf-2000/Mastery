@@ -31,7 +31,7 @@ import { IDashboardProps } from './Dashboard.types';
 import { IHeatmapCellStatus, IHeatmapCellCoordinates } from '../Heatmap/Heatmap.types';
 import { IDefaultModalProps } from '../Modals/Modals.types';
 import { IEntityParams, IEntityType } from '../../App/App.types';
-import { getFormattedDate, numberWithSpaces } from '../../../utils';
+import { getFormattedDate, numberWithSpaces, typeNumber } from '../../../utils';
 import { CreateEditModal as EditModal, DefaultModal } from '../Modals';
 import { Heatmap } from '..';
 import { editParamsToEntityParams } from '../../helpers';
@@ -242,14 +242,7 @@ export const Dashboard = ({
                     className={blk('RequirementsInputField')}
                     type='text'
                     value={requirementsValue}
-                    onChange={e => {
-                      const val = e.target.value;
-                      if (val && !/^\d+$/.test(val)) {
-                        return;
-                      }
-
-                      setRequirementsValue(val.slice(0, 6));
-                    }}
+                    onChange={e => typeNumber(e, 6, setRequirementsValue)}
                   />
                   <FontAwesomeIcon
                     icon={faArrowRotateLeft}

@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
-import { Formik, ErrorMessage } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { cn } from '@bem-react/classname';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRightToBracket } from '@fortawesome/free-solid-svg-icons';
 import { Button, Form as BSForm } from 'react-bootstrap';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
+import { MyErrorMessage } from '../common/Forms/ErrorMessage';
 import { IRegisterFormProps, IUser } from './RegisterForm.types';
 import { register } from '../../services/user.service';
 
@@ -15,6 +16,21 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const blk = cn('RegisterForm');
 
+const registerValidationSchema = Yup.object({
+  firstName: Yup.string()
+    .max(15, 'First name must be 15 characters or less.')
+    .required('First name cannot be empty.'),
+  lastName: Yup.string()
+    .max(20, 'Last name must be 20 characters or less.')
+    .required('Last name cannot be empty.'),
+  email: Yup.string()
+    .email('This is not a valid email.')
+    .required('Email address cannot be empty.'),
+  password: Yup.string()
+    .min(6, 'Password must be at least 6 characters long.')
+    .required('Password cannot be empty.'),
+});
+
 export const RegisterForm = (props: IRegisterFormProps) => {
   const initialValues: IUser = {
     firstName: '',
@@ -22,21 +38,6 @@ export const RegisterForm = (props: IRegisterFormProps) => {
     email: '',
     password: '',
   };
-
-  const validationSchema = Yup.object({
-    firstName: Yup.string()
-      .max(15, 'First name must be 15 characters or less.')
-      .required('First name cannot be empty.'),
-    lastName: Yup.string()
-      .max(20, 'Last name must be 20 characters or less.')
-      .required('Last name cannot be empty.'),
-    email: Yup.string()
-      .email('This is not a valid email.')
-      .required('Email address cannot be empty.'),
-    password: Yup.string()
-      .min(6, 'Password must be at least 6 characters long.')
-      .required('Password cannot be empty.'),
-  });
 
   const handleSubmit = (user: IUser) => {
     const resp = register(user);
@@ -53,7 +54,7 @@ export const RegisterForm = (props: IRegisterFormProps) => {
         <h2 className={blk('Heading')}>Register a new user</h2>
         <Formik
           initialValues={initialValues}
-          validationSchema={validationSchema}
+          validationSchema={registerValidationSchema}
           onSubmit={handleSubmit}
         >
           {({ values, errors, handleSubmit, getFieldProps }) => {
@@ -70,10 +71,7 @@ export const RegisterForm = (props: IRegisterFormProps) => {
                     placeholder='Your first name'
                     {...getFieldProps('firstName')}
                   />
-                  <ErrorMessage
-                    name='firstName'
-                    render={message => <small className={blk('ErrorMessage')}>{message}</small>}
-                  />
+                  <MyErrorMessage name='firstName' />
                 </BSForm.Group>
                 <BSForm.Group className='mb-3'>
                   <BSForm.Label>Last Name</BSForm.Label>
@@ -82,10 +80,7 @@ export const RegisterForm = (props: IRegisterFormProps) => {
                     placeholder='Your last name'
                     {...getFieldProps('lastName')}
                   />
-                  <ErrorMessage
-                    name='lastName'
-                    render={message => <small className={blk('ErrorMessage')}>{message}</small>}
-                  />
+                  <MyErrorMessage name='lastName' />
                 </BSForm.Group>
                 <BSForm.Group className='mb-3'>
                   <BSForm.Label>Email</BSForm.Label>
@@ -94,10 +89,7 @@ export const RegisterForm = (props: IRegisterFormProps) => {
                     placeholder='Email address'
                     {...getFieldProps('email')}
                   />
-                  <ErrorMessage
-                    name='email'
-                    render={message => <small className={blk('ErrorMessage')}>{message}</small>}
-                  />
+                  <MyErrorMessage name='email' />
                 </BSForm.Group>
                 <BSForm.Group className='mb-3'>
                   <BSForm.Label>Password</BSForm.Label>
@@ -106,7 +98,7 @@ export const RegisterForm = (props: IRegisterFormProps) => {
                     placeholder='Password'
                     {...getFieldProps('password')}
                   />
-                  <small>Password must be at least 6 characters long</small>
+                  <small>The password must be at least 6 characters long</small>
                 </BSForm.Group>
                 <div className={blk('BottomSection')}>
                   <Button variant='primary' type='submit' disabled={isSubmitDisabled}>

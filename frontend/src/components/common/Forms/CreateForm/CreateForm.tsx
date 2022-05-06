@@ -36,7 +36,7 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
       motivationTextarea: '',
       entityFrequency: 1,
       requirementsText: '',
-      requirementsMinValue: 0,
+      requirementsMinValue: 10,
       successRate: DEFAULT_SUCCESS_RATE,
     }),
     [type]
