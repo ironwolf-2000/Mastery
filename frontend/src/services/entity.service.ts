@@ -2,6 +2,7 @@ import { IEntityType, IEntityParams, IEntityEditParams } from '../components/App
 import {} from '../components/common/Heatmap/Heatmap.types';
 import { getInitializedHeatmap } from '../components/helpers';
 import { IHabitParams } from '../components/pages/HabitsPage/Habits.types';
+import { toTwoDecimalPlaces } from '../utils';
 import { ICRUDResponse } from './services.types';
 import { getCurrentUserEmail } from './user.service';
 
@@ -134,5 +135,5 @@ export function getCurrentEntitySuccessRate(entity: IEntityParams | null): numbe
 
   return !totalDays
     ? 100
-    : Number((Math.min(totalValue / (targetValue * totalDays), 1) * 100).toFixed(2));
+    : toTwoDecimalPlaces(Math.min(totalValue / (targetValue * totalDays), 1) * 100);
 }

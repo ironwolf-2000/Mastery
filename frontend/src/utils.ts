@@ -18,20 +18,6 @@ export function getDateByDayDiff(ms: number, days: number, rtype: 'number' | 'st
   return rtype === 'number' ? result : getFormattedDate(result);
 }
 
-export function compareDates(date1: Date, date2: Date) {
-  let result = date1.getFullYear() - date2.getFullYear();
-
-  if (!result) {
-    result = date1.getMonth() - date2.getMonth();
-  }
-
-  if (!result) {
-    result = date1.getDate() - date2.getDate();
-  }
-
-  return result;
-}
-
 export function msToDays(ms: number) {
   return Math.ceil(ms / 1000 / 60 / 60 / 24);
 }
@@ -42,4 +28,8 @@ export function daysToMs(days: number) {
 
 export function numberWithSpaces(n?: number) {
   return n !== undefined ? n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '';
+}
+
+export function toTwoDecimalPlaces(n: number) {
+  return Number(n.toFixed(2));
 }

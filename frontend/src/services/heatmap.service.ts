@@ -1,7 +1,7 @@
 import { IEntityType } from '../components/App/App.types';
-import { IHeatmapCellStatus } from '../components/common/Heatmap/Heatmap.types';
-import { msToDays } from '../utils';
-import { entityMapper, getAllEntities } from './entity.service';
+import { IHeatmapCellParams, IHeatmapCellStatus } from '../components/common/Heatmap/Heatmap.types';
+import { daysToMs, getFormattedDate, msToDays, toTwoDecimalPlaces } from '../utils';
+import { entityMapper, getAllEntities, getAllUserEntities } from './entity.service';
 import { ICRUDResponse } from './services.types';
 import { getCurrentUserEmail } from './user.service';
 
@@ -85,49 +85,59 @@ export function highlightCurrentHeatmapCell(type: IEntityType, name: string) {
   localStorage.setItem(entityMapper[type], JSON.stringify(allEntities));
 }
 
-// FIXME: get an overall heatmap for different periods of time
-// export function getOverallEntityHeatmap(type: IEntityType) {
-//   const allEntities = getAllUserEntities(type);
-//   let [startTime, endTime] = [Infinity, -Infinity];
-//   const intensities: Record<IHeatmapIntensityNames, IHeatmapIntensityValues>[] = [];
+export function getOverallEntityHeatmap(type: IEntityType) {
+  const allUserEntities = getAllUserEntities(type);
+  const dayValues: Record<number, { curr: number; target: number }> = {};
 
-//   allEntities.forEach(entity => {
-//     startTime = Math.min(startTime, entity.startTime);
-//     endTime = Math.max(endTime, getDateByDayDiff(entity.startTime, entity.timePeriod, 'number'));
+  allUserEntities.forEach(entity => {
+    const { heatmap, startTime, entityFrequency, requirementsMinValue } = entity;
+    const hmSize = heatmap.length;
 
-//     const [m, n] = [entity.heatmap.length, entity.heatmap[0].length];
+    for (let i = 0; i < hmSize; i++) {
+      for (let j = 0; j < hmSize; j++) {
+        const fromDay = msToDays(startTime + daysToMs(i * hmSize + j) * entityFrequency);
+        const toDay = msToDays(startTime + daysToMs((i * hmSize + j + 1) * entityFrequency - 1));
+        const hmCell = entity.heatmap[i][j];
 
-//     for (let i = 0; i < m; i++) {
-//       for (let j = 0; j < n; j++) {
-//         const currInd = i * n + j;
+        for (let k = fromDay; k <= toDay; k++) {
+          if (!(k in dayValues)) {
+            dayValues[k] = { curr: 0, target: 0 };
+          }
 
-//         if (currInd >= intensities.length) {
-//           intensities.push({
-//             blank: 0,
-//             failed: 0,
-//             skipped: 0,
-//             completed: 0,
-//           });
-//         }
-//       }
-//     }
-//   });
+          dayValues[k].curr += toTwoDecimalPlaces(
+            Math.min(hmCell.currValue, hmCell.targetValue) / entityFrequency
+          );
+          dayValues[k].target += toTwoDecimalPlaces(requirementsMinValue / entityFrequency);
+        }
+      }
+    }
+  });
 
-//   const daysTotal = msToDays(endTime - startTime);
-//   const k = Math.ceil(Math.sqrt(daysTotal / 6));
-//   const [m, n] = [k * 2, k * 3];
+  const dayEntries = Object.entries(dayValues);
+  const hmSize = Math.ceil(Math.sqrt(dayEntries.length));
+  const overallHeatmap: IHeatmapCellParams[][] = new Array(hmSize);
 
-//   const heatmap: IHeatmapCellParams[][] = new Array(m);
+  for (let i = 0, cnt = 0; i < hmSize; i++) {
+    overallHeatmap[i] = new Array(hmSize);
+    for (let j = 0; j < hmSize; j++, cnt++) {
+      let [currValue, targetValue, title] = [0, 0, '-'];
+      if (cnt < dayEntries.length) {
+        [currValue, targetValue] = [dayEntries[cnt][1].curr, dayEntries[cnt][1].target];
 
-//   for (let i = 0; i < m; i++) {
-//     heatmap[i] = [];
+        title = `${getFormattedDate(
+          daysToMs(Number(dayEntries[cnt][0]))
+        )}: ${currValue} / ${targetValue}`;
+      }
 
-//     for (let j = 0; j < n; j++) {
-//       const title = getDateByDayDiff(startTime, i * n + j);
-//       const params = { title, intensity: -1 } as const;
-//       heatmap[i].push(params);
-//     }
-//   }
+      overallHeatmap[i][j] = {
+        currValue,
+        targetValue,
+        title,
+        status: 'normal',
+        isActive: false,
+      };
+    }
+  }
 
-//   return heatmap;
-// }
+  return overallHeatmap;
+}

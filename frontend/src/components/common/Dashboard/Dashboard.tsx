@@ -235,9 +235,8 @@ export const Dashboard = ({
                   </Badge>
                 </h3>
                 {entity.requirementsText && (
-                  <span className={blk('SubsectionContent')}>{entity.requirementsText}</span>
+                  <p className={blk('SubsectionContent')}>{entity.requirementsText}</p>
                 )}
-                <br />
                 <div className={blk('RequirementsValueInputSection')}>
                   <input
                     className={blk('RequirementsInputField')}
@@ -255,6 +254,7 @@ export const Dashboard = ({
                   <FontAwesomeIcon
                     icon={faArrowRotateLeft}
                     className={blk('RequirementsIcon')}
+                    title='Restore to the previous value'
                     size='lg'
                     onClick={() => {
                       if (currPeriodCellCoords) {
@@ -266,6 +266,7 @@ export const Dashboard = ({
                   <FontAwesomeIcon
                     icon={faFloppyDisk}
                     className={blk('RequirementsIcon')}
+                    title='Save the current value'
                     size='lg'
                     onClick={() => {
                       if (currPeriodCellCoords) {

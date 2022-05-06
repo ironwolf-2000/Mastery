@@ -16,6 +16,7 @@ const cellSizeMapper = (heatmapSize: number) => {
     [6, 2],
     [8, 1.75],
     [10, 1.5],
+    [25, 1.25],
   ];
 
   for (const [hmLength, size] of sizeMapper) {

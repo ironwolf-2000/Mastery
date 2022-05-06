@@ -11,6 +11,7 @@ import { Heatmap, CreateEditModal as CreateModal } from '../../common';
 import { ICreateParams } from '../../common/Forms/Forms.types';
 import { IHeatmapCellParams } from '../../common/Heatmap/Heatmap.types';
 import { getAllUserEntities, addEntity } from '../../../services/entity.service';
+import { getOverallEntityHeatmap } from '../../../services/heatmap.service';
 import { createParamsToEntityParams } from '../../helpers';
 
 import './Habits.scss';
@@ -27,9 +28,13 @@ export const Habits = () => {
   const [overallHabitsHeatmap, setOverallHabitsHeatmap] = useState<IHeatmapCellParams[][]>([]);
   const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
 
-  useEffect(() => {
+  const updatePageElements = () => {
     setHabits(getAllUserEntities('habit'));
-    // setOverallHabitsHeatmap(getOverallEntityHeatmap('habit'));
+    setOverallHabitsHeatmap(getOverallEntityHeatmap('habit'));
+  };
+
+  useEffect(() => {
+    updatePageElements();
   }, []);
 
   const handleAddHabit = (params: ICreateParams) => {
@@ -37,7 +42,7 @@ export const Habits = () => {
 
     if (resp.success) {
       toast.success(resp.message);
-      setHabits(getAllUserEntities('habit'));
+      updatePageElements();
       setCreateModalVisible(false);
     } else {
       toast.error(resp.message);
