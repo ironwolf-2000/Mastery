@@ -1,5 +1,5 @@
 import { getCurrentUserEmail } from '../services/user.service';
-import { getDateByDayDiff, truncateDateTime } from '../utils';
+import { daysToMs, getDateByDayDiff, truncateDateTime } from '../utils';
 import { IEntityParams } from './App/App.types';
 import { ICreateParams, IEditParams } from './common/Forms/Forms.types';
 import { IHeatmapInitializerProps, IHeatmapCellParams } from './common/Heatmap/Heatmap.types';
@@ -98,4 +98,15 @@ export function editParamsToEntityParams(
   params: IEditParams
 ): IEntityParams {
   return { ...entity, ...params };
+}
+
+export function getEntityEndTime(entity: IEntityParams) {
+  const { startTime, heatmap, entityFrequency } = entity;
+  return startTime + daysToMs(heatmap.length ** 2 * entityFrequency - 1);
+}
+
+export function entityFrequencyToLabel(frequency: number) {
+  if (frequency === 1) return 'daily';
+
+  return `Every ${frequency} days`;
 }

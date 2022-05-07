@@ -18,7 +18,7 @@ export const Cell = React.memo(
     currValue,
     targetValue,
   }: IHeatmapCellProps) => {
-    const _intensity = Math.floor((currValue * 10) / targetValue);
+    const _intensity = !targetValue ? 10 : Math.floor((currValue * 10) / targetValue);
     const intensity =
       _intensity < 0 ? 0 : _intensity > 10 ? 10 : (_intensity as IHeatmapIntensityValues);
 

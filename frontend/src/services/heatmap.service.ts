@@ -122,10 +122,12 @@ export function getOverallEntityHeatmap(type: IEntityType) {
             dayValues[k] = { curr: 0, target: 0 };
           }
 
-          dayValues[k].curr += toTwoDecimalPlaces(
-            Math.min(hmCell.currValue, hmCell.targetValue) / entityFrequency
-          );
-          dayValues[k].target += toTwoDecimalPlaces(requirementsMinValue / entityFrequency);
+          if (hmCell.status !== 'skipped') {
+            dayValues[k].curr += toTwoDecimalPlaces(
+              Math.min(hmCell.currValue, hmCell.targetValue) / entityFrequency
+            );
+            dayValues[k].target += toTwoDecimalPlaces(requirementsMinValue / entityFrequency);
+          }
         }
       }
     }
@@ -142,7 +144,7 @@ export function getOverallEntityHeatmap(type: IEntityType) {
   for (let i = 0, cnt = 0, day = Number(dayEntries[0][0]); i < hmSize; i++) {
     overallHeatmap[i] = new Array(hmSize);
     for (let j = 0; j < hmSize; j++, cnt++, day++) {
-      let [currValue, targetValue] = [0, 0];
+      let [currValue, targetValue] = [0, Infinity];
       if (cnt < dayEntries.length) {
         [currValue, targetValue] = [dayEntries[cnt][1].curr, dayEntries[cnt][1].target];
       }

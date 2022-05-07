@@ -34,7 +34,7 @@ import { IEntityParams, IEntityType } from '../../App/App.types';
 import { getFormattedDate, numberWithSpaces, typeNumber } from '../../../utils';
 import { CreateEditModal as EditModal, DefaultModal } from '../Modals';
 import { Heatmap } from '..';
-import { editParamsToEntityParams } from '../../helpers';
+import { editParamsToEntityParams, entityFrequencyToLabel, getEntityEndTime } from '../../helpers';
 import { IEditParams } from '../Forms/Forms.types';
 
 import './Dashboard.scss';
@@ -218,8 +218,12 @@ export const Dashboard = ({
             </header>
             <div className={blk('InfoSectionContent')}>
               <section className={blk('InfoSubsection')}>
-                <h3 className={blk('SubsectionHeading')}>Start Date</h3>
-                {getFormattedDate(entity.startTime)}
+                <h3 className={blk('SubsectionHeading')}>Time Period</h3>
+                {getFormattedDate(entity.startTime)} – {getFormattedDate(getEntityEndTime(entity))}
+                <br />
+                {`Frequency: ${entityFrequencyToLabel(entity.entityFrequency)}; ${
+                  entity.heatmap.length ** 2 * entity.entityFrequency
+                } days total.`}
               </section>
               {entity.motivation && (
                 <section className={blk('InfoSubsection')}>
