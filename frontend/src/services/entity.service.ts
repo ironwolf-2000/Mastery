@@ -1,7 +1,5 @@
 import { IEntityType, IEntityParams, IEntityEditParams } from '../components/App/App.types';
-import {} from '../components/common/Heatmap/Heatmap.types';
 import { getInitializedHeatmap } from '../components/helpers';
-import { IHabitParams } from '../components/pages/HabitsPage/Habits.types';
 import { toTwoDecimalPlaces } from '../utils';
 import { ICRUDResponse } from './services.types';
 import { getCurrentUserEmail } from './user.service';
@@ -36,7 +34,7 @@ export function addEntity(type: IEntityType, entity: IEntityParams): ICRUDRespon
   return { success: true, message: `The ${type} has been successfully created.` };
 }
 
-export function getEntityByName(type: IEntityType, name: string): IHabitParams | null {
+export function getEntityByName(type: IEntityType, name: string): IEntityParams | null {
   const userEmail = getCurrentUserEmail();
   const entities = getAllEntities(type);
 

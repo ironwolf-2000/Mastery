@@ -3,8 +3,7 @@ import { cn } from '@bem-react/classname';
 
 import motivationMessages from '../../data/entitiesMotivationMessages.json';
 import { nextRandomInt } from '../../utils';
-import { IMotivationMessageParams } from '../pages/HabitsPage/Habits.types';
-import { IEntityType } from '../App/App.types';
+import { IMotivationMessageParams, IQuotesComponentProps } from './QuotesComponent.types';
 
 import './QuotesComponent.scss';
 
@@ -22,7 +21,7 @@ export const QuotesComponent = ({ entityType }: IQuotesComponentProps) => {
   const [fadeIn, setFadeIn] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => setFadeIn(false), 17000);
+    setTimeout(() => setFadeIn(false), 57000);
   }, []);
 
   useEffect(() => {
@@ -31,8 +30,8 @@ export const QuotesComponent = ({ entityType }: IQuotesComponentProps) => {
       setCount(count + 1);
       setMessageId(nextRandomInt(0, allMessages.length - 1, messageId));
 
-      setTimeout(() => setFadeIn(false), 17000);
-    }, 20000);
+      setTimeout(() => setFadeIn(false), 57000);
+    }, 60000);
 
     return () => clearInterval(interval);
   }, [allMessages, count, messageId]);
@@ -40,12 +39,8 @@ export const QuotesComponent = ({ entityType }: IQuotesComponentProps) => {
   return (
     <article className={blk({ fadeIn, fadeOut: !fadeIn })}>
       <header className={blk('Header')}>Quote {count}</header>
-      <p className={blk('Content')}>{allMessages[messageId].text}</p>
+      <p className={blk('Content')}>“{allMessages[messageId].text}”</p>
       <footer className={blk('Footer')}>{allMessages[messageId].author}</footer>
     </article>
   );
 };
-
-interface IQuotesComponentProps {
-  entityType: IEntityType;
-}

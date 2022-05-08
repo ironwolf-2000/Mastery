@@ -93,7 +93,7 @@ function generateEmptyOverallEntityHeatmap(size: number) {
     for (let j = 0; j < size; j++) {
       overallHeatmap[i][j] = {
         currValue: 0,
-        targetValue: 0,
+        targetValue: Infinity,
         status: 'normal',
         isActive: false,
       };

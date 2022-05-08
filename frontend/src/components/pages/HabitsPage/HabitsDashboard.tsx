@@ -1,8 +1,8 @@
-import { EntitiesPage } from '../../common';
+import { Dashboard } from '../../common';
 
-export const Habits = () => {
+export const HabitsDashboard = () => {
   return (
-    <EntitiesPage
+    <Dashboard
       entityType='habit'
       redirectPath='/habits'
       entityHeatmapColor='var(--color-rgb-habits)'

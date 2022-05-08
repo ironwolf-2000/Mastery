@@ -3,15 +3,14 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { cn } from '@bem-react/classname';
 import { ToastContainer } from 'react-toastify';
 
-import { Habits } from '../pages/HabitsPage/Habits';
-import { HabitsDashboard } from '../pages/HabitsPage';
+import { Habits, HabitsDashboard } from '../pages/HabitsPage';
+import { Skills, SkillsDashboard } from '../pages/SkillsPage';
 import { LandingPage } from '../pages/LandingPage';
 import { LoginForm } from '../LoginForm';
 import { MoodDashboard } from '../pages/MoodPage';
 import { Navbar } from '../Navbar';
 import { NotFound } from '../pages/NotFoundPage';
 import { RegisterForm } from '../RegisterForm';
-import { SkillsDashboard } from '../pages/SkillsPage';
 import { UserHomePage } from '../pages/UserHomePage';
 import { ProtectedRoutes } from '../common';
 
@@ -46,7 +45,8 @@ export const App = () => {
             <Route path='/home' element={<UserHomePage user={user} />} />
             <Route path='/habits/:encodedName' element={<HabitsDashboard />} />
             <Route path='/habits/' element={<Habits />} />
-            <Route path='/skills' element={<SkillsDashboard />} />
+            <Route path='/skills/:encodedName' element={<SkillsDashboard />} />
+            <Route path='/skills' element={<Skills />} />
             <Route path='/mood' element={<MoodDashboard />} />
           </Route>
 

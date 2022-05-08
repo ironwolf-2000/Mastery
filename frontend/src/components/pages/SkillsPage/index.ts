@@ -1,1 +1,2 @@
-export * from './SkillsDashboard/SkillsDashboard';
+export * from './Skills';
+export * from './SkillsDashboard';
