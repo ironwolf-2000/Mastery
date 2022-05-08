@@ -219,11 +219,10 @@ export const Dashboard = ({
             <div className={blk('InfoSectionContent')}>
               <section className={blk('InfoSubsection')}>
                 <h3 className={blk('SubsectionHeading')}>Time Period</h3>
-                {getFormattedDate(entity.startTime)} – {getFormattedDate(getEntityEndTime(entity))}
+                {getFormattedDate(entity.startTime)} – {getFormattedDate(getEntityEndTime(entity))}{' '}
+                ({entity.heatmap.length ** 2 * entity.entityFrequency} days)
                 <br />
-                {`Frequency: ${entityFrequencyToLabel(entity.entityFrequency)}; ${
-                  entity.heatmap.length ** 2 * entity.entityFrequency
-                } days total.`}
+                Frequency: {entityFrequencyToLabel(entity.entityFrequency)}
               </section>
               {entity.motivation && (
                 <section className={blk('InfoSubsection')}>
