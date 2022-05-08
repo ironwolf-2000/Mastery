@@ -1,0 +1,51 @@
+import { useEffect, useMemo, useState } from 'react';
+import { cn } from '@bem-react/classname';
+
+import motivationMessages from '../../data/entitiesMotivationMessages.json';
+import { nextRandomInt } from '../../utils';
+import { IMotivationMessageParams } from '../pages/HabitsPage/Habits.types';
+import { IEntityType } from '../App/App.types';
+
+import './QuotesComponent.scss';
+
+const blk = cn('QuotesComponent');
+
+export const QuotesComponent = ({ entityType }: IQuotesComponentProps) => {
+  const allMessages: IMotivationMessageParams[] = useMemo(
+    () => motivationMessages[`${entityType}s`],
+    [entityType]
+  );
+
+  const [count, setCount] = useState(1);
+  const [messageId, setMessageId] = useState(Math.floor(Math.random() * allMessages.length));
+
+  const [fadeIn, setFadeIn] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => setFadeIn(false), 17000);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFadeIn(true);
+      setCount(count + 1);
+      setMessageId(nextRandomInt(0, allMessages.length - 1, messageId));
+
+      setTimeout(() => setFadeIn(false), 17000);
+    }, 20000);
+
+    return () => clearInterval(interval);
+  }, [allMessages, count, messageId]);
+
+  return (
+    <article className={blk({ fadeIn, fadeOut: !fadeIn })}>
+      <header className={blk('Header')}>Quote {count}</header>
+      <p className={blk('Content')}>{allMessages[messageId].text}</p>
+      <footer className={blk('Footer')}>{allMessages[messageId].author}</footer>
+    </article>
+  );
+};
+
+interface IQuotesComponentProps {
+  entityType: IEntityType;
+}

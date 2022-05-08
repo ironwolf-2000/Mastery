@@ -108,5 +108,5 @@ export function getEntityEndTime(entity: IEntityParams) {
 export function entityFrequencyToLabel(frequency: number) {
   if (frequency === 1) return 'daily';
 
-  return `Every ${frequency} days`;
+  return `every ${frequency} days`;
 }

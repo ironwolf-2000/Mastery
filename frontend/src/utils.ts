@@ -46,3 +46,13 @@ export function typeNumber(
 
   cb(val);
 }
+
+export function nextRandomInt(min: number, max: number, curr: number) {
+  let res = curr;
+
+  while (res === curr) {
+    res = Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  return res;
+}

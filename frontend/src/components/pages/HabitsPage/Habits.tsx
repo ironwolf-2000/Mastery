@@ -6,17 +6,18 @@ import { Button, Container, Overlay, Tooltip } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
-import { IHabitParams } from './Habits.types';
-import { Heatmap, CreateEditModal as CreateModal } from '../../common';
-import { ICreateParams } from '../../common/Forms/Forms.types';
-import { IHeatmapCellParams } from '../../common/Heatmap/Heatmap.types';
+import { createParamsToEntityParams } from '../../helpers';
 import { getAllUserEntities, addEntity } from '../../../services/entity.service';
 import { getOverallEntityHeatmap } from '../../../services/heatmap.service';
-import { createParamsToEntityParams } from '../../helpers';
+import { Heatmap, CreateEditModal as CreateModal } from '../../common';
+import { ICreateParams } from '../../common/Forms/Forms.types';
+import { IHabitParams } from './Habits.types';
+import { IHeatmapCellParams } from '../../common/Heatmap/Heatmap.types';
+import { QuotesComponent } from '../../QuotesComponent';
 
 import './Habits.scss';
 
-const blk = cn('Habits');
+export const blk = cn('Habits');
 
 export const Habits = () => {
   const navigate = useNavigate();
@@ -79,22 +80,27 @@ export const Habits = () => {
             </Overlay>
           </header>
           {habits.length ? (
-            <div className={blk('HabitLinksBlock')}>
-              {habits.map(habit => {
-                const encodedName = encodeURIComponent(habit.name);
+            <>
+              <div className={blk('HabitLinksBlock')}>
+                {habits.map(habit => {
+                  const encodedName = encodeURIComponent(habit.name);
 
-                return (
-                  <Button
-                    key={encodedName}
-                    className={blk('HabitLink')}
-                    variant='outline-secondary'
-                    onClick={() => navigate(`/habits/${encodedName}`)}
-                  >
-                    {habit.name}
-                  </Button>
-                );
-              })}
-            </div>
+                  return (
+                    <Button
+                      key={encodedName}
+                      className={blk('HabitLink')}
+                      variant='outline-secondary'
+                      onClick={() => navigate(`/habits/${encodedName}`)}
+                    >
+                      {habit.name}
+                    </Button>
+                  );
+                })}
+              </div>
+              <div className={blk('QuotesComponentWrapper')}>
+                <QuotesComponent entityType='habit' />
+              </div>
+            </>
           ) : (
             <>
               <p className={blk('NoHabitsLabel')}>You don't have any habits in progress.</p>
