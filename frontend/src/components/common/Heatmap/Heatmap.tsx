@@ -9,18 +9,18 @@ import './Heatmap.scss';
 
 export const blk = cn('Heatmap');
 
-const cellSizeMapper = (heatmapSize: number) => {
+const cellSizeMapper = (hmSize: number) => {
   const sizeMapper = [
     [2, 2.5],
     [4, 2.25],
     [6, 2],
     [8, 1.75],
     [10, 1.5],
-    [25, 1.25],
+    [20, 1.25],
   ];
 
-  for (const [hmLength, size] of sizeMapper) {
-    if (heatmapSize <= hmLength) {
+  for (const [hmRows, size] of sizeMapper) {
+    if (hmSize <= hmRows) {
       return size;
     }
   }

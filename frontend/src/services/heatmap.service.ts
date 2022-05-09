@@ -85,12 +85,13 @@ export function highlightCurrentHeatmapCell(type: IEntityType, name: string) {
   localStorage.setItem(entityMapper[type], JSON.stringify(allEntities));
 }
 
-function generateEmptyOverallEntityHeatmap(size: number) {
-  const overallHeatmap: IHeatmapCellParams[][] = new Array(size);
+function generateEmptyOverallEntityHeatmap() {
+  const [rows, cols] = [8, 12];
+  const overallHeatmap: IHeatmapCellParams[][] = new Array(rows);
 
-  for (let i = 0; i < size; i++) {
-    overallHeatmap[i] = new Array(size);
-    for (let j = 0; j < size; j++) {
+  for (let i = 0; i < rows; i++) {
+    overallHeatmap[i] = new Array(cols);
+    for (let j = 0; j < cols; j++) {
       overallHeatmap[i][j] = {
         currValue: 0,
         targetValue: Infinity,
@@ -134,16 +135,15 @@ export function getOverallEntityHeatmap(type: IEntityType) {
   });
 
   const dayEntries = Object.entries(dayValues);
-  const hmSize = Math.ceil(Math.sqrt(dayEntries.length));
-  if (hmSize === 0) {
-    return generateEmptyOverallEntityHeatmap(6);
-  }
+  const k = Math.ceil(Math.sqrt(Math.ceil(dayEntries.length / 6)));
+  if (!k) return generateEmptyOverallEntityHeatmap();
 
-  const overallHeatmap: IHeatmapCellParams[][] = new Array(hmSize);
+  const [rows, cols] = [k * 2, k * 3];
+  const overallHeatmap: IHeatmapCellParams[][] = new Array(rows);
 
-  for (let i = 0, cnt = 0, day = Number(dayEntries[0][0]); i < hmSize; i++) {
-    overallHeatmap[i] = new Array(hmSize);
-    for (let j = 0; j < hmSize; j++, cnt++, day++) {
+  for (let i = 0, cnt = 0, day = Number(dayEntries[0][0]); i < rows; i++) {
+    overallHeatmap[i] = new Array(cols);
+    for (let j = 0; j < cols; j++, cnt++, day++) {
       let [currValue, targetValue] = [0, Infinity];
       if (cnt < dayEntries.length) {
         [currValue, targetValue] = [dayEntries[cnt][1].curr, dayEntries[cnt][1].target];

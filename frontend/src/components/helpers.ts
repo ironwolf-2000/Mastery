@@ -102,7 +102,9 @@ export function editParamsToEntityParams(
 
 export function getEntityEndTime(entity: IEntityParams) {
   const { startTime, heatmap, entityFrequency } = entity;
-  return startTime + daysToMs(heatmap.length ** 2 * entityFrequency - 1);
+  const [hmRows, hmCols] = [heatmap.length, heatmap[0].length];
+
+  return startTime + daysToMs(hmRows * hmCols * entityFrequency - 1);
 }
 
 export function entityFrequencyToLabel(frequency: number) {
