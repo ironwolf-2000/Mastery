@@ -21,7 +21,11 @@
     align-items: center;
   }
 
-  &-ControlButtons {
+  &-ControlButton {
+    @include entity-button-colors;
+  }
+
+  &-ActionButtons {
     display: flex;
     gap: 1rem;
     align-self: flex-end;

@@ -38,6 +38,10 @@
     align-items: center;
   }
 
+  &-ControlButton {
+    @include entity-button-colors;
+  }
+
   &-Tooltip.tooltip.show {
     opacity: 0.8;
   }
@@ -48,9 +52,7 @@
     white-space: nowrap;
     transition: color 0.2s;
 
-    &:hover {
-      color: var(--color-hover-dark);
-    }
+    @include entity-button-colors;
   }
 
   &-HeatmapSectionHeading {

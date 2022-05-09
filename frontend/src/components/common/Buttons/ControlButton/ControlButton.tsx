@@ -7,15 +7,16 @@ import './ControlButton.scss';
 
 const blk = cn('ControlButton');
 
-export const ControlButton = ({ icon, onClick }: IControlButtonProps) => {
+export const ControlButton = ({ className, icon, onClick }: IControlButtonProps) => {
   return (
-    <Button className={blk()} variant='outline-secondary' onClick={onClick}>
+    <Button className={blk('', [className])} variant='outline-secondary' onClick={onClick}>
       <FontAwesomeIcon className={blk('Icon')} icon={icon} />
     </Button>
   );
 };
 
 interface IControlButtonProps {
+  className?: string;
   icon: IconProp;
   onClick: () => void;
 }

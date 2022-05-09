@@ -65,13 +65,21 @@ export const EntitiesPage = ({
       <Container className={blk('', [className])}>
         <section className={blk('ManageEntitiesSection')}>
           <header className={blk('Header')}>
-            <ControlButton icon={faHouse} onClick={() => navigate('/home')} />
+            <ControlButton
+              className={blk('ControlButton', { [entityType]: true })}
+              icon={faHouse}
+              onClick={() => navigate('/home')}
+            />
             <span
               ref={addButtonRef}
               onMouseEnter={addButtonDisabled ? () => setTooltipVisible(true) : undefined}
               onMouseLeave={addButtonDisabled ? () => setTooltipVisible(false) : undefined}
             >
-              <ControlButton icon={faPlus} onClick={() => setCreateModalVisible(true)} />
+              <ControlButton
+                className={blk('ControlButton', { [entityType]: true })}
+                icon={faPlus}
+                onClick={() => setCreateModalVisible(true)}
+              />
             </span>
             <Overlay target={addButtonRef.current} show={tooltipVisible} placement='bottom'>
               {props => (
@@ -90,7 +98,7 @@ export const EntitiesPage = ({
                   return (
                     <Button
                       key={encodedName}
-                      className={blk('EntityLink')}
+                      className={blk('EntityLink', { [entityType]: true })}
                       variant='outline-secondary'
                       onClick={() => navigate(`${redirectPath}/${encodedName}`)}
                     >

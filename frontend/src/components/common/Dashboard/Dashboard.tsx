@@ -207,7 +207,11 @@ export const Dashboard = ({
         <Container className={blk('', [className])}>
           <section className={blk('InfoSection')}>
             <header className={blk('InfoSectionHeader')}>
-              <ControlButton icon={faArrowLeft} onClick={() => navigate(redirectPath)} />
+              <ControlButton
+                className={blk('ControlButton', { [entityType]: true })}
+                icon={faArrowLeft}
+                onClick={() => navigate(redirectPath)}
+              />
               <h2 className={blk('SectionHeading')}>{_.capitalize(entityType)} Info</h2>
             </header>
             <div className={blk('InfoSectionContent')}>
@@ -287,7 +291,7 @@ export const Dashboard = ({
                 </div>
               </section>
             </div>
-            <div className={blk('ControlButtons')}>
+            <div className={blk('ActionButtons')}>
               <Button
                 variant='warning'
                 onClick={() => setModalParams(() => getWarningModalParams(entity.name))}
