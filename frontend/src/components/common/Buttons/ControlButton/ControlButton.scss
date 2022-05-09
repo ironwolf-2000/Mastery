@@ -1,0 +1,14 @@
+.ControlButton {
+  border-radius: 25%;
+  height: 2.5rem;
+  margin-right: 0.75rem;
+  position: relative;
+  width: 2.5rem;
+
+  &-Icon {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}

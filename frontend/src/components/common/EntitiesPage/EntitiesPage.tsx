@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Button, Container, Overlay, Tooltip } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faHouse } from '@fortawesome/free-solid-svg-icons';
 
 import { createParamsToEntityParams } from '../../helpers';
 import { getAllUserEntities, addEntity } from '../../../services/entity.service';
@@ -15,6 +15,7 @@ import { IHeatmapCellParams } from '../../common/Heatmap/Heatmap.types';
 import { QuotesComponent } from '../../QuotesComponent';
 import { IEntityParams } from '../../App/App.types';
 import { IEntitiesPageProps } from './EntitiesPage.types';
+import { ControlButton } from '../Buttons';
 
 import './EntitiesPage.scss';
 
@@ -65,19 +66,13 @@ export const EntitiesPage = ({
       <Container className={blk('', [className])}>
         <section className={blk('ManageEntitiesSection')}>
           <header className={blk('Header')}>
+            <ControlButton icon={faHouse} onClick={() => navigate('/home')} />
             <span
               ref={addButtonRef}
               onMouseEnter={addButtonDisabled ? () => setTooltipVisible(true) : undefined}
               onMouseLeave={addButtonDisabled ? () => setTooltipVisible(false) : undefined}
             >
-              <Button
-                className={blk('AddButton')}
-                variant='outline-secondary'
-                onClick={() => setCreateModalVisible(true)}
-                disabled={addButtonDisabled}
-              >
-                <FontAwesomeIcon icon={faPlus} />
-              </Button>
+              <ControlButton icon={faPlus} onClick={() => setCreateModalVisible(true)} />
             </span>
             <Overlay target={addButtonRef.current} show={tooltipVisible} placement='bottom'>
               {props => (

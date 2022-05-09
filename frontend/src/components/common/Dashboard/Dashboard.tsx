@@ -36,6 +36,7 @@ import { CreateEditModal as EditModal, DefaultModal } from '../Modals';
 import { Heatmap } from '..';
 import { editParamsToEntityParams, entityFrequencyToLabel, getEntityEndTime } from '../../helpers';
 import { IEditParams } from '../Forms/Forms.types';
+import { ControlButton } from '../Buttons';
 
 import './Dashboard.scss';
 
@@ -206,14 +207,7 @@ export const Dashboard = ({
         <Container className={blk('', [className])}>
           <section className={blk('InfoSection')}>
             <header className={blk('InfoSectionHeader')}>
-              <Button
-                className={blk('BackButton')}
-                variant='outline-secondary'
-                size='sm'
-                onClick={() => navigate(redirectPath)}
-              >
-                <FontAwesomeIcon icon={faArrowLeft} />
-              </Button>
+              <ControlButton icon={faArrowLeft} onClick={() => navigate(redirectPath)} />
               <h2 className={blk('SectionHeading')}>{_.capitalize(entityType)} Info</h2>
             </header>
             <div className={blk('InfoSectionContent')}>
