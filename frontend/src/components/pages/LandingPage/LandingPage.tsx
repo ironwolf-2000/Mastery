@@ -30,7 +30,7 @@ export const LandingPage = ({ user }: ILandingPageProps) => {
         </section>
         <section className={blk('Section')}>
           <h2 className={blk('SectionHeading', ['h4'])}>Track how your feel</h2>
-          <FontAwesomeIcon icon={faFaceSmile} size='6x' color='var(--color-red)' />
+          <FontAwesomeIcon icon={faFaceSmile} size='6x' color='var(--color-preferences)' />
         </section>
       </div>
       <div className={blk('RegisterSection')}>

@@ -1,22 +1,39 @@
+import { useEffect, useState } from 'react';
 import { cn } from '@bem-react/classname';
 import { Container } from 'react-bootstrap';
 
-import { IUser } from '../../RegisterForm/RegisterForm.types';
+import { IEntityOverallHeatmaps, IUserHomePageProps } from './UserHomePage.types';
+import { getOverallEntityHeatmap } from '../../../services/heatmap.service';
+import { Heatmap } from '../../common';
 
 import './UserHomePage.scss';
 
 const blk = cn('UserHomePage');
 
-export const UserHomePage = ({ user }: IUserHomePageProps) => {
-  return (
-    <Container className={blk()}>
-      {user && (
-        <span className={blk('UserLabel')}>{`${user.firstName} ${user.lastName}'s progress`}</span>
-      )}
-    </Container>
-  );
-};
+const entityTypes = ['habit', 'skill', 'preference'] as const;
 
-interface IUserHomePageProps {
-  user: IUser | null;
-}
+export const UserHomePage = ({ user }: IUserHomePageProps) => {
+  const [loading, setLoading] = useState(true);
+  const [overallEntitiesHeatmap, setOverallEntitiesHeatmap] = useState<IEntityOverallHeatmaps>({});
+
+  useEffect(() => {
+    const heatmaps: IEntityOverallHeatmaps = {};
+    for (const entityType of entityTypes) {
+      heatmaps[entityType] = getOverallEntityHeatmap(entityType, [3, 2]);
+    }
+
+    setOverallEntitiesHeatmap(heatmaps);
+    setLoading(false);
+  }, []);
+
+  return user && !loading ? (
+    <Container className={blk()}>
+      {Object.entries(overallEntitiesHeatmap).map(([entityType, heatmapParams]) => (
+        <section key={entityType}>
+          <h2 className={blk('EntityHeading')}>{entityType} heatmap</h2>
+          <Heatmap heatmapState={heatmapParams} bgColor={`var(--color-rgb-${entityType}s)`} />
+        </section>
+      ))}
+    </Container>
+  ) : null;
+};

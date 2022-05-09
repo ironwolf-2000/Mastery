@@ -8,6 +8,7 @@ export const DEFAULT_SUCCESS_RATE = 100;
 export const entityMapper: Record<IEntityType, string> = {
   habit: 'habits',
   skill: 'skills',
+  preference: 'preferences',
 };
 
 export function getAllEntities(type: IEntityType): IEntityParams[] {

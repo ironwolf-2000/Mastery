@@ -1,7 +1,7 @@
 import { IEntityType } from '../App/App.types';
 
 export interface IQuotesComponentProps {
-  entityType: IEntityType;
+  entityType: Exclude<IEntityType, 'preference'>;
 }
 
 export interface IMotivationMessageParams {

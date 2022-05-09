@@ -3,7 +3,6 @@ import { cn } from '@bem-react/classname';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Button, Container, Overlay, Tooltip } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faHouse } from '@fortawesome/free-solid-svg-icons';
 
 import { createParamsToEntityParams } from '../../helpers';
@@ -39,7 +38,7 @@ export const EntitiesPage = ({
 
   const updatePageElements = useCallback(() => {
     setEntities(getAllUserEntities(entityType));
-    setOverallEntitiesHeatmap(getOverallEntityHeatmap(entityType));
+    setOverallEntitiesHeatmap(getOverallEntityHeatmap(entityType, [2, 3]));
   }, [entityType]);
 
   useEffect(() => {
@@ -100,9 +99,11 @@ export const EntitiesPage = ({
                   );
                 })}
               </div>
-              <div className={blk('QuotesComponentWrapper')}>
-                <QuotesComponent entityType={entityType} />
-              </div>
+              {entityType !== 'preference' && (
+                <div className={blk('QuotesComponentWrapper')}>
+                  <QuotesComponent entityType={entityType} />
+                </div>
+              )}
             </>
           ) : (
             <>

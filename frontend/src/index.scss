@@ -10,13 +10,26 @@
   --color-rgb-habits: 6, 214, 160;
   --color-skills: #118ab2;
   --color-rgb-skills: 17, 138, 178;
+  --color-preferences: #ef476f;
+  --color-rgb-preferences: 239, 71, 111;
 
-  --color-red: #ef476f;
   --color-yellow: #ffd166;
 
   --color-elements-black: rgba(0, 0, 0, 0.8);
   --color-border-light: rgba(0, 0, 0, 0.1);
   --color-hover-dark: #1e1924;
+}
+
+%Heading2Styles {
+  font-size: 1.5rem;
+  font-weight: normal;
+  margin-bottom: 0.5rem;
+}
+
+%Heading3Styles {
+  font-size: 1.3rem;
+  font-weight: normal;
+  margin-bottom: 0.35rem;
 }
 
 html {

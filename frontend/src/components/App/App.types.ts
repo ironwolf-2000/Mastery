@@ -1,6 +1,6 @@
 import { IHeatmapCellParams } from '../common/Heatmap/Heatmap.types';
 
-export type IEntityType = 'habit' | 'skill';
+export type IEntityType = 'habit' | 'skill' | 'preference';
 
 export interface IEntityParams {
   name: string;

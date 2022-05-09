@@ -1,3 +1,5 @@
+@use '../../../index' as *;
+
 %icon {
   cursor: pointer;
   color: var(--color-elements-black);
@@ -39,16 +41,12 @@
   }
 
   &-SectionHeading {
-    font-size: 1.8rem;
-    font-weight: normal;
+    @extend %Heading2Styles;
     margin: 0;
-    text-align: center;
   }
 
   &-SubsectionHeading {
-    font-size: 1.3rem;
-    font-weight: normal;
-    margin-bottom: 0.5rem;
+    @extend %Heading3Styles;
   }
 
   &-InfoSectionContent {

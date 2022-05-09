@@ -104,7 +104,15 @@ function generateEmptyOverallEntityHeatmap() {
   return overallHeatmap;
 }
 
-export function getOverallEntityHeatmap(type: IEntityType) {
+/**
+ * @param type entity type, i.e., a habit or a skill
+ * @param ratio width and height coefficients for the heatmap dimensions
+ * @returns the overall heatmap object
+ */
+export function getOverallEntityHeatmap(
+  type: IEntityType,
+  ratio: [number, number]
+): IHeatmapCellParams[][] {
   const allUserEntities = getAllUserEntities(type);
   const dayValues: Record<number, { curr: number; target: number }> = {};
 
@@ -138,7 +146,7 @@ export function getOverallEntityHeatmap(type: IEntityType) {
   const k = Math.ceil(Math.sqrt(Math.ceil(dayEntries.length / 6)));
   if (!k) return generateEmptyOverallEntityHeatmap();
 
-  const [rows, cols] = [k * 2, k * 3];
+  const [rows, cols] = [k * ratio[0], k * ratio[1]];
   const overallHeatmap: IHeatmapCellParams[][] = new Array(rows);
 
   for (let i = 0, cnt = 0, day = Number(dayEntries[0][0]); i < rows; i++) {

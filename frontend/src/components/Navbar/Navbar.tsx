@@ -38,8 +38,8 @@ export const Navbar = ({ user }: INavbarProps) => {
                 <Nav.Link className={blk('NavElement')} as={NavLink} to='/skills'>
                   Skills
                 </Nav.Link>
-                <Nav.Link className={blk('NavElement')} as={NavLink} to='/mood'>
-                  Mood
+                <Nav.Link className={blk('NavElement')} as={NavLink} to='/preferences'>
+                  Preferences
                 </Nav.Link>
               </>
             )}

@@ -5,9 +5,9 @@ import { ToastContainer } from 'react-toastify';
 
 import { Habits, HabitsDashboard } from '../pages/HabitsPage';
 import { Skills, SkillsDashboard } from '../pages/SkillsPage';
+import { Preferences, PreferencesDashboard } from '../pages/PreferencesPage';
 import { LandingPage } from '../pages/LandingPage';
 import { LoginForm } from '../LoginForm';
-import { MoodDashboard } from '../pages/MoodPage';
 import { Navbar } from '../Navbar';
 import { NotFound } from '../pages/NotFoundPage';
 import { RegisterForm } from '../RegisterForm';
@@ -43,11 +43,13 @@ export const App = () => {
         <Routes>
           <Route element={<ProtectedRoutes />}>
             <Route path='/home' element={<UserHomePage user={user} />} />
+
             <Route path='/habits/:encodedName' element={<HabitsDashboard />} />
             <Route path='/habits/' element={<Habits />} />
             <Route path='/skills/:encodedName' element={<SkillsDashboard />} />
             <Route path='/skills' element={<Skills />} />
-            <Route path='/mood' element={<MoodDashboard />} />
+            <Route path='/preferences/:encodedName' element={<PreferencesDashboard />} />
+            <Route path='/preferences' element={<Preferences />} />
           </Route>
 
           <Route path='/' element={<LandingPage user={user} />} />
