@@ -85,8 +85,8 @@ export function highlightCurrentHeatmapCell(type: IEntityType, name: string) {
   localStorage.setItem(entityMapper[type], JSON.stringify(allEntities));
 }
 
-function generateEmptyOverallEntityHeatmap() {
-  const [rows, cols] = [8, 12];
+function generateEmptyOverallEntityHeatmap(ratio: [number, number]) {
+  const [rows, cols] = [ratio[0] * 4, ratio[1] * 4];
   const overallHeatmap: IHeatmapCellParams[][] = new Array(rows);
 
   for (let i = 0; i < rows; i++) {
@@ -144,7 +144,7 @@ export function getOverallEntityHeatmap(
 
   const dayEntries = Object.entries(dayValues);
   const k = Math.ceil(Math.sqrt(Math.ceil(dayEntries.length / 6)));
-  if (!k) return generateEmptyOverallEntityHeatmap();
+  if (!k) return generateEmptyOverallEntityHeatmap(ratio);
 
   const [rows, cols] = [k * ratio[0], k * ratio[1]];
   const overallHeatmap: IHeatmapCellParams[][] = new Array(rows);

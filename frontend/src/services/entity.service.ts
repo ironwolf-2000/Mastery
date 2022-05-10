@@ -1,5 +1,11 @@
-import { IEntityType, IEntityParams, IEntityEditParams } from '../components/App/App.types';
+import {
+  IEntityType,
+  IEntityParams,
+  IEntityEditParams,
+  ENTITY_TYPES,
+} from '../components/App/App.types';
 import { getInitializedHeatmap } from '../components/helpers';
+import { IEntitiesCount } from '../components/pages/UserHomePage/UserHomePage.types';
 import { toTwoDecimalPlaces } from '../utils';
 import { ICRUDResponse } from './services.types';
 import { getCurrentUserEmail } from './user.service';
@@ -20,6 +26,13 @@ export function getAllUserEntities(type: IEntityType): IEntityParams[] {
 
   return JSON.parse(localStorage.getItem(entityMapper[type]) ?? '[]').filter(
     (el: IEntityParams) => el.userEmail === userEmail
+  );
+}
+
+export function getUserEntitiesCount(): IEntitiesCount {
+  return ENTITY_TYPES.reduce(
+    (prev, curr) => ({ ...prev, [curr]: getAllUserEntities(curr).length }),
+    { habit: 0, skill: 0, preference: 0 }
   );
 }
 

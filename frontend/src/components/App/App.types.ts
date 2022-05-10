@@ -1,6 +1,7 @@
 import { IHeatmapCellParams } from '../common/Heatmap/Heatmap.types';
 
-export type IEntityType = 'habit' | 'skill' | 'preference';
+export const ENTITY_TYPES = ['habit', 'skill', 'preference'] as const;
+export type IEntityType = typeof ENTITY_TYPES[number];
 
 export interface IEntityParams {
   name: string;

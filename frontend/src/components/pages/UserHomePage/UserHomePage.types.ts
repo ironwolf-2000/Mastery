@@ -7,3 +7,4 @@ export interface IUserHomePageProps {
 }
 
 export type IEntityOverallHeatmaps = Partial<Record<IEntityType, IHeatmapCellParams[][]>>;
+export type IEntitiesCount = Record<IEntityType, number>;
