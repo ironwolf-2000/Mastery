@@ -1,3 +1,4 @@
+import i18n from '../i18n/config';
 import {
   IEntityType,
   IEntityParams,
@@ -41,11 +42,11 @@ export function addEntity(type: IEntityType, entity: IEntityParams): ICRUDRespon
   const entities = getAllEntities(type);
 
   if (entities.some(u => u.userEmail === userEmail && u.name === entity.name)) {
-    return { success: false, message: `A ${type} with this name already exists.` };
+    return { success: false, message: i18n.t(`already-exists-${type}`) };
   }
 
   localStorage.setItem(entityMapper[type], JSON.stringify([...entities, entity]));
-  return { success: true, message: `The ${type} has been successfully created.` };
+  return { success: true, message: i18n.t(`successfully-created-${type}`) };
 }
 
 export function getEntityByName(type: IEntityType, name: string): IEntityParams | null {
@@ -85,11 +86,14 @@ export function editEntity(type: IEntityType, name: string, params: IEntityEditP
   }
 
   if (!edited) {
-    return { success: false, message: `Couldn't find the ${type} by its name "${name}".` };
+    return {
+      success: false,
+      message: i18n.t(`couldn't-find-${type}`),
+    };
   }
 
   localStorage.setItem(entityMapper[type], JSON.stringify(allEntities));
-  return { success: true, message: `The ${type} has been successfully updated.` };
+  return { success: true, message: i18n.t(`successfully-updated-${type}`) };
 }
 
 export function deleteEntity(type: IEntityType, name: string) {
@@ -125,11 +129,11 @@ export function resetEntity(type: IEntityType, name: string) {
   }
 
   if (!reset) {
-    return { success: false, message: `Couldn't find a ${type} with the name "${name}".` };
+    return { success: false, message: i18n.t(`couldn't-find-${type}`) };
   }
 
   localStorage.setItem(entityMapper[type], JSON.stringify(allEntities));
-  return { success: true, message: `Successully reset the ${type} progress.` };
+  return { success: true, message: i18n.t(`successully-reset-${type}`) };
 }
 
 export function getCurrentEntitySuccessRate(entity: IEntityParams | null): number {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@bem-react/classname';
 import { Container } from 'react-bootstrap';
-import _ from 'lodash';
 
 import { IEntityOverallHeatmaps, IUserHomePageProps } from './UserHomePage.types';
 import { getOverallEntityHeatmap } from '../../../services/heatmap.service';
@@ -15,6 +15,8 @@ const blk = cn('UserHomePage');
 const entitiesCount = getUserEntitiesCount();
 
 export const UserHomePage = ({ user }: IUserHomePageProps) => {
+  const { t } = useTranslation();
+
   const [loading, setLoading] = useState(true);
   const [overallEntitiesHeatmap, setOverallEntitiesHeatmap] = useState<IEntityOverallHeatmaps>({});
 
@@ -33,7 +35,7 @@ export const UserHomePage = ({ user }: IUserHomePageProps) => {
       {Object.entries(overallEntitiesHeatmap).map(([entityType, heatmapParams]) => (
         <section key={entityType}>
           <h2 className={blk('EntityHeading')}>
-            {_.capitalize(entityType)}s ({entitiesCount[entityType as IEntityType]})
+            {t(`${entityType}s`)} ({entitiesCount[entityType as IEntityType]})
           </h2>
           <Heatmap heatmapState={heatmapParams} bgColor={`var(--color-rgb-${entityType}s)`} />
         </section>

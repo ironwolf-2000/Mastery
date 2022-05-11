@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@bem-react/classname';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -26,6 +27,7 @@ export const EntitiesPage = ({
   redirectPath,
   entityHeatmapColor,
 }: IEntitiesPageProps) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const addButtonRef = useRef(null);
@@ -84,7 +86,7 @@ export const EntitiesPage = ({
             <Overlay target={addButtonRef.current} show={tooltipVisible} placement='bottom'>
               {props => (
                 <Tooltip className={blk('Tooltip')} {...props}>
-                  You cannot have more than 7 {entityType}s at once.
+                  {t(`upper-limit-${entityType}`)}
                 </Tooltip>
               )}
             </Overlay>
@@ -115,9 +117,7 @@ export const EntitiesPage = ({
             </>
           ) : (
             <>
-              <p className={blk('NoEntitiesLabel')}>
-                You don't have any {entityType}s in progress.
-              </p>
+              <p className={blk('NoEntitiesLabel')}>{t(`none-in-progress-${entityType}`)}</p>
               <div className={blk('ImageContainer')}>
                 <img
                   src={require('../../../assets/no-entities.webp')}
@@ -129,14 +129,14 @@ export const EntitiesPage = ({
           )}
         </section>
         <section className={blk('HeatmapSection')}>
-          <h2 className={blk('HeatmapSectionHeading')}>Overall Progress</h2>
+          <h2 className={blk('HeatmapSectionHeading')}>{t('Overall Progress')}</h2>
           <Heatmap heatmapState={overallEntitiesHeatmap} bgColor={entityHeatmapColor} />
         </section>
       </Container>
       <CreateModal
         entityType={entityType}
         modalType='create'
-        title={`Create a new ${entityType}`}
+        title={t(`create-${entityType}`)}
         visible={createModalVisible}
         handleCancel={() => setCreateModalVisible(false)}
         handleCreate={handleAddEntity}

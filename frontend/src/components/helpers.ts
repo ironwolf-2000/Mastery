@@ -1,3 +1,4 @@
+import i18n from '../i18n/config';
 import { getCurrentUserEmail } from '../services/user.service';
 import { daysToMs, getDateByDayDiff, truncateDateTime } from '../utils';
 import { IEntityParams } from './App/App.types';
@@ -108,7 +109,7 @@ export function getEntityEndTime(entity: IEntityParams) {
 }
 
 export function entityFrequencyToLabel(frequency: number) {
-  if (frequency === 1) return 'daily';
+  if (frequency === 1) return i18n.t('daily');
 
-  return `every ${frequency} days`;
+  return i18n.t('every {{frequency}} days', { frequency });
 }

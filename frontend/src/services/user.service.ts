@@ -1,3 +1,4 @@
+import i18n from '../i18n/config';
 import { IUser } from '../components/RegisterForm/RegisterForm.types';
 import { ILoginUser } from '../components/LoginForm/LoginForm.types';
 import { ICRUDResponse } from './services.types';
@@ -25,12 +26,12 @@ export function getCurrentUser(): IUser | null {
 export function register(user: IUser): ICRUDResponse {
   const users = getAllUsers();
   if (users.some(u => u.email === user.email)) {
-    return { success: false, message: 'A user with this email already exists.' };
+    return { success: false, message: i18n.t('A user with this email already exists.') };
   }
 
   localStorage.setItem('users', JSON.stringify([...users, user]));
   localStorage.setItem('currentUserEmail', user.email);
-  return { success: true, message: 'A new user has been registered.' };
+  return { success: true, message: i18n.t('A new user has been registered.') };
 }
 
 export function login(loginUser: ILoginUser): ICRUDResponse {
@@ -38,15 +39,18 @@ export function login(loginUser: ILoginUser): ICRUDResponse {
   const currUser = users.find(u => u.email === loginUser.email);
 
   if (!currUser) {
-    return { success: false, message: 'A user with this email was not found.' };
+    return { success: false, message: i18n.t('A user with this email was not found.') };
   }
 
   if (currUser.password !== loginUser.password) {
-    return { success: false, message: 'Incorrect password' };
+    return { success: false, message: i18n.t('Incorrect password') };
   }
 
   localStorage.setItem('currentUserEmail', currUser.email);
-  return { success: true, message: `Successfully logged in as ${currUser.firstName}.` };
+  return {
+    success: true,
+    message: `${i18n.t(`Successfully logged in as`)} ${currUser.firstName}.`,
+  };
 }
 
 export function logout() {

@@ -1,4 +1,4 @@
 export interface ICRUDResponse {
   success: boolean;
-  message: string;
+  message?: string;
 }

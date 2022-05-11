@@ -1,6 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { cn } from '@bem-react/classname';
-import _ from 'lodash';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Badge, Button, Container, Popover } from 'react-bootstrap';
@@ -55,6 +55,8 @@ export const Dashboard = ({
   redirectPath,
   entityHeatmapColor,
 }: IDashboardProps) => {
+  const { t } = useTranslation();
+
   const navigate = useNavigate();
   const { encodedName } = useParams();
 
@@ -115,8 +117,8 @@ export const Dashboard = ({
   const getWarningModalParams = useCallback(
     (name: string) => ({
       visible: true,
-      title: `Reset the ${entityType}?`,
-      bodyText: 'Are you sure you want to reset all of your progress?',
+      title: t(`reset-${entityType}`) + '?',
+      bodyText: t('Are you sure you want to reset all of your progress?'),
       handleCancel: () => setModalParams(defaultModalParams),
       handleConfirm: () => {
         resetEntity(entityType, name);
@@ -124,14 +126,14 @@ export const Dashboard = ({
         setEntity(fetchEntity());
       },
     }),
-    [entityType, fetchEntity]
+    [t, entityType, fetchEntity]
   );
 
   const getDangerModalParams = useCallback(
     (name: string) => ({
       visible: true,
-      title: `Delete the ${entityType}?`,
-      bodyText: `Are you sure you want to delete this ${entityType} and lose all of your progress?`,
+      title: t(`delete-${entityType}`) + '?',
+      bodyText: t(`delete-message-${entityType}`),
       handleCancel: () => setModalParams(defaultModalParams),
       handleConfirm: () => {
         deleteEntity(entityType, name);
@@ -139,7 +141,7 @@ export const Dashboard = ({
         setTimeout(() => window.location.replace(redirectPath), 500);
       },
     }),
-    [entityType, redirectPath]
+    [t, entityType, redirectPath]
   );
 
   const heatmapCellPopover = (
@@ -212,25 +214,25 @@ export const Dashboard = ({
                 icon={faArrowLeft}
                 onClick={() => navigate(redirectPath)}
               />
-              <h2 className={blk('SectionHeading')}>{_.capitalize(entityType)} Info</h2>
+              <h2 className={blk('SectionHeading')}>{t(`${entityType}-info`)}</h2>
             </header>
             <div className={blk('InfoSectionContent')}>
               <section className={blk('InfoSubsection')}>
-                <h3 className={blk('SubsectionHeading')}>Time Period</h3>
+                <h3 className={blk('SubsectionHeading')}>{t('Time Period')}</h3>
                 {getFormattedDate(entity.startTime)} – {getFormattedDate(getEntityEndTime(entity))}{' '}
-                ({entity.heatmap.length ** 2 * entity.entityFrequency} days)
+                ({entity.heatmap.length ** 2 * entity.entityFrequency} {t('days')})
                 <br />
-                Frequency: {entityFrequencyToLabel(entity.entityFrequency)}
+                {t('Frequency')}: {entityFrequencyToLabel(entity.entityFrequency)}
               </section>
               {entity.motivation && (
                 <section className={blk('InfoSubsection')}>
-                  <h3 className={blk('SubsectionHeading')}>Your Motivation</h3>
+                  <h3 className={blk('SubsectionHeading')}>{t('Your Motivation')}</h3>
                   <p className={blk('SubsectionContent')}>{entity.motivation}</p>
                 </section>
               )}
               <section className={blk('InfoSubsection')}>
                 <h3 className={blk('SubsectionHeading')}>
-                  Required Value{' '}
+                  {t('Required Value')}{' '}
                   <Badge bg='info' className='ms-1'>
                     {numberWithSpaces(entity.requirementsMinValue)}
                   </Badge>
@@ -248,7 +250,7 @@ export const Dashboard = ({
                   <FontAwesomeIcon
                     icon={faArrowRotateLeft}
                     className={blk('RequirementsIcon')}
-                    title='Restore to the previous value'
+                    title={t('Restore the previous value')}
                     size='lg'
                     onClick={() => {
                       if (currPeriodCellCoords) {
@@ -260,7 +262,7 @@ export const Dashboard = ({
                   <FontAwesomeIcon
                     icon={faFloppyDisk}
                     className={blk('RequirementsIcon')}
-                    title='Save the current value'
+                    title={t('Save the current value')}
                     size='lg'
                     onClick={() => {
                       if (currPeriodCellCoords) {
@@ -275,13 +277,13 @@ export const Dashboard = ({
                 </div>
               </section>
               <section className={blk('InfoSubsection')}>
-                <h2 className={blk('SubsectionHeading')}>Success Rate</h2>
+                <h2 className={blk('SubsectionHeading')}>{t('Success Rate')}</h2>
                 <div className={blk('SubsectionContent')}>
                   <span className={blk('TargetSRLabel')}>
-                    Target <Badge bg='info'>{entity.successRate}</Badge>
+                    {t('Target')} <Badge bg='info'>{entity.successRate}</Badge>
                   </span>
                   <span>
-                    Current{' '}
+                    {t('Current')}{' '}
                     <Badge
                       bg={currentSR > -1 && currentSR < entity.successRate ? 'danger' : 'success'}
                     >
@@ -296,13 +298,13 @@ export const Dashboard = ({
                 variant='warning'
                 onClick={() => setModalParams(() => getWarningModalParams(entity.name))}
               >
-                Reset Progress
+                {t('Reset Progress')}
               </Button>
               <Button
                 variant='danger'
                 onClick={() => setModalParams(() => getDangerModalParams(entity.name))}
               >
-                Delete the {entityType}
+                {t(`delete-${entityType}`)}
               </Button>
             </div>
           </section>
@@ -327,10 +329,10 @@ export const Dashboard = ({
         </Container>
         {modalParams && <DefaultModal {...modalParams} />}
         <EditModal
-          entityType='habit'
+          entityType={entityType}
           entity={entity}
           modalType='edit'
-          title={`Edit a ${entityType}`}
+          title={t(`edit-${entityType}`)}
           visible={editModalVisible}
           handleCancel={() => setEditModalVisible(false)}
           handleEdit={handleEditEntity}

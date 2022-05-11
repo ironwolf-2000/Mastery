@@ -62,7 +62,7 @@ export const App = () => {
           <Route path='*' element={<Navigate to='/not-found' replace />} />
         </Routes>
       </main>
-      <ToastContainer autoClose={1500} position='bottom-right' closeButton hideProgressBar />
+      <ToastContainer autoClose={2000} position='bottom-right' closeButton hideProgressBar />
     </>
   );
 };

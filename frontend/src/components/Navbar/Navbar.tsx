@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@bem-react/classname';
 import { Link, NavLink } from 'react-router-dom';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
@@ -14,6 +15,7 @@ import './Navbar.scss';
 const blk = cn('Navbar');
 
 export const Navbar = ({ user }: INavbarProps) => {
+  const { t } = useTranslation();
   const [logoutModalVisible, setLogoutModalVisible] = useState<boolean>(false);
 
   const handleLogout = () => {
@@ -33,13 +35,13 @@ export const Navbar = ({ user }: INavbarProps) => {
             {user && (
               <>
                 <Nav.Link className={blk('NavElement')} as={NavLink} to='/habits'>
-                  Habits
+                  {t('habits')}
                 </Nav.Link>
                 <Nav.Link className={blk('NavElement')} as={NavLink} to='/skills'>
-                  Skills
+                  {t('skills')}
                 </Nav.Link>
                 <Nav.Link className={blk('NavElement')} as={NavLink} to='/preferences'>
-                  Preferences
+                  {t('preferences')}
                 </Nav.Link>
               </>
             )}
@@ -49,7 +51,7 @@ export const Navbar = ({ user }: INavbarProps) => {
                 {user ? (
                   <>
                     <Dropdown.Item className={blk('DropdownItem')} as={Link} to='/user/options'>
-                      Options
+                      {t('Options')}
                     </Dropdown.Item>
                     <Dropdown.Divider className={blk('DropdownDivider')} />
                     <Dropdown.Item
@@ -59,17 +61,17 @@ export const Navbar = ({ user }: INavbarProps) => {
                         setLogoutModalVisible(true);
                       }}
                     >
-                      Logout
+                      {t('Log out')}
                     </Dropdown.Item>
                   </>
                 ) : (
                   <>
                     <Dropdown.Item className={blk('DropdownItem')} as={Link} to='/login'>
-                      Login
+                      {t('Log in')}
                     </Dropdown.Item>
                     <Dropdown.Divider className={blk('DropdownDivider')} />
                     <Dropdown.Item className={blk('DropdownItem')} as={Link} to='/signup'>
-                      Register
+                      {t('Register')}
                     </Dropdown.Item>
                   </>
                 )}
@@ -82,16 +84,12 @@ export const Navbar = ({ user }: INavbarProps) => {
         visible={logoutModalVisible}
         handleCancel={() => setLogoutModalVisible(false)}
         handleConfirm={handleLogout}
-        title='Log out?'
-        bodyText='Are you sure you want to log out?'
+        title={`${t('Log out')}?`}
+        bodyText={t('Are you sure you want to log out?')}
       />
     </>
   );
 };
-
-interface INavbarProps {
-  user: IUser | null;
-}
 
 const CustomToggle = React.forwardRef<HTMLSpanElement, { onClick: () => void }>(
   ({ onClick }, ref) => (
@@ -100,3 +98,7 @@ const CustomToggle = React.forwardRef<HTMLSpanElement, { onClick: () => void }>(
     </span>
   )
 );
+
+interface INavbarProps {
+  user: IUser | null;
+}

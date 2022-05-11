@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@bem-react/classname';
 import { Button } from 'react-bootstrap';
@@ -7,6 +8,7 @@ import './NotFound.scss';
 const blk = cn('NotFound');
 
 export const NotFound = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
@@ -19,7 +21,7 @@ export const NotFound = () => {
         type='button'
         onClick={() => navigate('/home', { replace: true })}
       >
-        Go To Home Page
+        {t('Go To Home Page')}
       </Button>
     </div>
   );

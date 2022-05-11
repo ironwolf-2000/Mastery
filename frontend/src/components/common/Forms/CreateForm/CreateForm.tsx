@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@bem-react/classname';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { FloatingLabel, Form as BSForm, Button } from 'react-bootstrap';
 
+import i18n from '../../../../i18n/config';
 import { ENTITY_FREQUENCIES } from '../../../App/App.constants';
 import { MyErrorMessage } from '../ErrorMessage';
 import { ICreateFormProps, ICreateParams } from '../Forms.types';
@@ -22,11 +24,12 @@ const createValidationSchema = {
   requirementsMinValue: editValidationSchema.requirementsMinValue,
   entityFrequency: Yup.number(),
   successRate: Yup.number()
-    .min(10, 'Success Rate must be at least 10%')
-    .max(100, 'Success Rate cannot be greater than 100%'),
+    .min(10, i18n.t('Success Rate must be at least 10%'))
+    .max(100, i18n.t('Success Rate cannot be greater than 100%')),
 };
 
 export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProps) => {
+  const { t } = useTranslation();
   const [applySR, setApplySR] = useState<boolean>(false);
 
   const initialValues: ICreateParams = useMemo(
@@ -53,16 +56,16 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
           return (
             <BSForm className={blk('Form')} onSubmit={handleSubmit}>
               <BSForm.Group className='mb-3'>
-                <BSForm.Label>Give your {type} a name</BSForm.Label>
+                <BSForm.Label>{t(`give-name-${type}`)}</BSForm.Label>
                 <BSForm.Control
                   type='text'
-                  placeholder={`The name for your ${type}`}
+                  placeholder={t(`name-for-${type}`)}
                   {...getFieldProps('entityName')}
                 />
                 <MyErrorMessage name='entityName' />
               </BSForm.Group>
 
-              <FloatingLabel label='Identify a motivator' className={blk('FloatingLabel')}>
+              <FloatingLabel label={t('Identify a motivator')} className={blk('FloatingLabel')}>
                 <BSForm.Control
                   className={blk('MotivationTextarea')}
                   as='textarea'
@@ -72,7 +75,7 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
               <MyErrorMessage name='motivationTextarea' />
 
               <BSForm.Group className={blk('EntityFrequencySection')}>
-                <BSForm.Label>Choose the frequency in days</BSForm.Label>
+                <BSForm.Label>{t('Choose the frequency in days')}</BSForm.Label>
                 <BSForm.Select
                   className={blk('EntityFrequencySelect')}
                   {...getFieldProps('entityFrequency')}
@@ -84,19 +87,17 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
               </BSForm.Group>
 
               <BSForm.Group className={blk('RequirementsSection')}>
-                <BSForm.Label>Requirements</BSForm.Label>
-                <HintComponent
-                  tooltipMessage={`Specify the minimum conditions that must be met in order to keep the ${type}.`}
-                />
+                <BSForm.Label>{t('Requirements')}</BSForm.Label>
+                <HintComponent tooltipMessage={t(`min-conditions-for-${type}`)} />
                 <div className={blk('RequirementsControlFields')}>
                   <BSForm.Control
                     type='text'
-                    placeholder='Short description'
+                    placeholder={t('Short description')}
                     {...getFieldProps('requirementsText')}
                   />
                   <BSForm.Control
                     type='number'
-                    placeholder='e.g. 24'
+                    placeholder={t('e.g. 24')}
                     {...getFieldProps('requirementsMinValue')}
                   />
                 </div>
@@ -107,24 +108,21 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
               <BSForm.Group className={blk('SRSection')}>
                 <BSForm.Check
                   type='checkbox'
-                  label='Apply success rate'
+                  label={t('Apply success rate')}
                   checked={applySR}
                   onChange={() => setApplySR(!applySR)}
                 />
-                <HintComponent
-                  tooltipMessage={`Determine the percentage of successful periods in case you don't want to stick to the
-            ${type} 100%.`}
-                />
+                <HintComponent tooltipMessage={t(`sr-tooltip-${type}`)} />
               </BSForm.Group>
 
               {applySR && (
                 <BSForm.Group className='mt-3'>
                   <div className={blk('SRInputContainer')}>
-                    <BSForm.Label>Determine the success rate of your {type}.</BSForm.Label>
+                    <BSForm.Label>{t(`sr-determine-${type}`)}</BSForm.Label>
                     <BSForm.Control
                       className={blk('SRInputField')}
                       type='number'
-                      placeholder='e.g. 90'
+                      placeholder={t('e.g. 90')}
                       {...getFieldProps('successRate')}
                     />
                   </div>
@@ -134,10 +132,10 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
 
               <div className={blk('FormFooter')}>
                 <Button variant='secondary' onClick={handleCancel}>
-                  Cancel
+                  {t('Cancel')}
                 </Button>
                 <Button variant='primary' type='submit'>
-                  Create
+                  {t('Create')}
                 </Button>
               </div>
             </BSForm>

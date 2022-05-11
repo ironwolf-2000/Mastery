@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -7,7 +8,7 @@ import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { Button, Form as BSForm } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
-import { ILoginFormProps, ILoginUser } from './LoginForm.types';
+import { ILoginUser } from './LoginForm.types';
 import { login } from '../../services/user.service';
 import { MyErrorMessage } from '../common/Forms/ErrorMessage';
 
@@ -15,14 +16,16 @@ import './LoginForm.scss';
 
 const blk = cn('LoginForm');
 
-const loginValidationSchema = Yup.object({
-  email: Yup.string()
-    .email('This is not a valid email.')
-    .required('The email address cannot be empty.'),
-  password: Yup.string().required('The password cannot be empty.'),
-});
+export const LoginForm = () => {
+  const { t } = useTranslation();
 
-export const LoginForm = (props: ILoginFormProps) => {
+  const loginValidationSchema = Yup.object({
+    email: Yup.string()
+      .email(t('This is not a valid email.'))
+      .required(t('Email address cannot be empty.')),
+    password: Yup.string().required(t('Password cannot be empty.')),
+  });
+
   const initialValues: ILoginUser = {
     email: '',
     password: '',
@@ -40,7 +43,7 @@ export const LoginForm = (props: ILoginFormProps) => {
   return (
     <>
       <div className={blk()}>
-        <h2 className={blk('Heading')}>Login</h2>
+        <h2 className={blk('Heading')}>{t('Login')}</h2>
         <Formik
           initialValues={initialValues}
           validationSchema={loginValidationSchema}
@@ -54,30 +57,29 @@ export const LoginForm = (props: ILoginFormProps) => {
             return (
               <BSForm className={blk('Form')} onSubmit={handleSubmit}>
                 <BSForm.Group className='mb-3'>
-                  <BSForm.Label>Email address</BSForm.Label>
+                  <BSForm.Label>{t('Email')}</BSForm.Label>
                   <BSForm.Control
                     type='text'
-                    placeholder='Enter email'
+                    placeholder={t('Email address')}
                     {...getFieldProps('email')}
                   />
                   <MyErrorMessage name='email' />
                 </BSForm.Group>
                 <BSForm.Group className='mb-3'>
-                  <BSForm.Label>Password</BSForm.Label>
+                  <BSForm.Label>{t('Password')}</BSForm.Label>
                   <BSForm.Control
                     type='password'
-                    placeholder='Password'
+                    placeholder={t('Password')}
                     {...getFieldProps('password')}
                   />
                   <MyErrorMessage name='password' />
                 </BSForm.Group>
                 <div className={blk('BottomSection')}>
                   <Button variant='primary' type='submit' disabled={isSubmitDisabled}>
-                    Login
+                    {t('Log in')}
                   </Button>
                   <Link to='/signup' className={blk('SignInLabel')}>
-                    Register instead&nbsp;
-                    <FontAwesomeIcon icon={faUserPlus} />
+                    {t('Register instead')} <FontAwesomeIcon icon={faUserPlus} />
                   </Link>
                 </div>
               </BSForm>

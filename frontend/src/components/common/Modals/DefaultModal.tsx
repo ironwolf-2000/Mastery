@@ -1,4 +1,6 @@
 import { Button, Modal } from 'react-bootstrap';
+
+import i18n from '../../../i18n/config';
 import { IDefaultModalProps } from './Modals.types';
 
 export const DefaultModal = ({
@@ -7,8 +9,8 @@ export const DefaultModal = ({
   handleConfirm,
   title,
   bodyText,
-  cancelLabel = 'Cancel',
-  confirmLabel = 'Confirm',
+  cancelLabel = i18n.t('Cancel'),
+  confirmLabel = i18n.t('Confirm'),
 }: IDefaultModalProps) => {
   return (
     <Modal show={visible} onHide={handleCancel}>

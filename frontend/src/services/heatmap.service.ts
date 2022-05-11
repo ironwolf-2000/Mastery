@@ -34,11 +34,11 @@ export function updateEntityHeatmap(
   }
 
   if (!updated) {
-    return { success: false, message: `Couldn't find the ${type} by its name "${name}".` };
+    return { success: false };
   }
 
   localStorage.setItem(entityMapper[type], JSON.stringify(allEntities));
-  return { success: true, message: `Successully updated the ${type} progress.` };
+  return { success: true };
 }
 
 export function getCurrentHeatmapCell(type: IEntityType, name: string): [number, number] | null {

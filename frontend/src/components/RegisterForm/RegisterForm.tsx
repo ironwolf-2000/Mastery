@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -8,7 +9,7 @@ import { Button, Form as BSForm } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
 import { MyErrorMessage } from '../common/Forms/ErrorMessage';
-import { IRegisterFormProps, IUser } from './RegisterForm.types';
+import { IUser } from './RegisterForm.types';
 import { register } from '../../services/user.service';
 
 import './RegisterForm.scss';
@@ -16,22 +17,24 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const blk = cn('RegisterForm');
 
-const registerValidationSchema = Yup.object({
-  firstName: Yup.string()
-    .max(15, 'First name must be 15 characters or less.')
-    .required('First name cannot be empty.'),
-  lastName: Yup.string()
-    .max(20, 'Last name must be 20 characters or less.')
-    .required('Last name cannot be empty.'),
-  email: Yup.string()
-    .email('This is not a valid email.')
-    .required('Email address cannot be empty.'),
-  password: Yup.string()
-    .min(6, 'Password must be at least 6 characters long.')
-    .required('Password cannot be empty.'),
-});
+export const RegisterForm = () => {
+  const { t } = useTranslation();
 
-export const RegisterForm = (props: IRegisterFormProps) => {
+  const registerValidationSchema = Yup.object({
+    firstName: Yup.string()
+      .max(15, t('First name must be 15 characters or less.'))
+      .required(t('First name cannot be empty.')),
+    lastName: Yup.string()
+      .max(20, t('Last name must be 20 characters or less.'))
+      .required(t('Last name cannot be empty.')),
+    email: Yup.string()
+      .email(t('This is not a valid email.'))
+      .required(t('Email address cannot be empty.')),
+    password: Yup.string()
+      .min(6, t('Password must be at least 6 characters long.'))
+      .required(t('Password cannot be empty.')),
+  });
+
   const initialValues: IUser = {
     firstName: '',
     lastName: '',
@@ -51,7 +54,7 @@ export const RegisterForm = (props: IRegisterFormProps) => {
   return (
     <>
       <div className={blk()}>
-        <h2 className={blk('Heading')}>Register a new user</h2>
+        <h2 className={blk('Heading')}>{t('Register a new user')}</h2>
         <Formik
           initialValues={initialValues}
           validationSchema={registerValidationSchema}
@@ -65,48 +68,47 @@ export const RegisterForm = (props: IRegisterFormProps) => {
             return (
               <BSForm className={blk('Form')} onSubmit={handleSubmit}>
                 <BSForm.Group className='mb-3'>
-                  <BSForm.Label>First Name</BSForm.Label>
+                  <BSForm.Label>{t('First Name')}</BSForm.Label>
                   <BSForm.Control
                     type='text'
-                    placeholder='Your first name'
+                    placeholder={t('Your first name')}
                     {...getFieldProps('firstName')}
                   />
                   <MyErrorMessage name='firstName' />
                 </BSForm.Group>
                 <BSForm.Group className='mb-3'>
-                  <BSForm.Label>Last Name</BSForm.Label>
+                  <BSForm.Label>{t('Last Name')}</BSForm.Label>
                   <BSForm.Control
                     type='text'
-                    placeholder='Your last name'
+                    placeholder={t('Your last name')}
                     {...getFieldProps('lastName')}
                   />
                   <MyErrorMessage name='lastName' />
                 </BSForm.Group>
                 <BSForm.Group className='mb-3'>
-                  <BSForm.Label>Email</BSForm.Label>
+                  <BSForm.Label>{t('Email')}</BSForm.Label>
                   <BSForm.Control
                     type='text'
-                    placeholder='Email address'
+                    placeholder={t('Email address')}
                     {...getFieldProps('email')}
                   />
                   <MyErrorMessage name='email' />
                 </BSForm.Group>
                 <BSForm.Group className='mb-3'>
-                  <BSForm.Label>Password</BSForm.Label>
+                  <BSForm.Label>{t('Password')}</BSForm.Label>
                   <BSForm.Control
                     type='password'
-                    placeholder='Password'
+                    placeholder={t('Password')}
                     {...getFieldProps('password')}
                   />
-                  <small>The password must be at least 6 characters long</small>
+                  <small>{t('Password must be at least 6 characters long.')}</small>
                 </BSForm.Group>
                 <div className={blk('BottomSection')}>
                   <Button variant='primary' type='submit' disabled={isSubmitDisabled}>
-                    Register
+                    {t('Register')}
                   </Button>
                   <Link to='/login' className={blk('SignInLabel')}>
-                    Sign in instead&nbsp;
-                    <FontAwesomeIcon icon={faArrowRightToBracket} />
+                    {t('Log in instead')} <FontAwesomeIcon icon={faArrowRightToBracket} />
                   </Link>
                 </div>
               </BSForm>

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@bem-react/classname';
 
 import motivationMessages from '../../data/entitiesMotivationMessages.json';
@@ -10,6 +11,8 @@ import './QuotesComponent.scss';
 const blk = cn('QuotesComponent');
 
 export const QuotesComponent = ({ entityType }: IQuotesComponentProps) => {
+  const { t } = useTranslation();
+
   const allMessages: IMotivationMessageParams[] = useMemo(
     () => motivationMessages[`${entityType}s`],
     [entityType]
@@ -38,7 +41,9 @@ export const QuotesComponent = ({ entityType }: IQuotesComponentProps) => {
 
   return (
     <article className={blk({ fadeIn, fadeOut: !fadeIn })}>
-      <header className={blk('Header')}>Quote {count}</header>
+      <header className={blk('Header')}>
+        {t('Quote')} {count}
+      </header>
       <p className={blk('Content')}>“{allMessages[messageId].text}”</p>
       <footer className={blk('Footer')}>{allMessages[messageId].author}</footer>
     </article>
