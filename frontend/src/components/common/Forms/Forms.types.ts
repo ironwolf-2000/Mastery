@@ -1,4 +1,6 @@
+import { ILanguage } from '../../../i18n/config';
 import { IEntityParams, IEntityType } from '../../App/App.types';
+import { IUser } from '../../RegisterForm/RegisterForm.types';
 
 export interface ICreateParams {
   type: IEntityType;
@@ -17,6 +19,10 @@ export interface IEditParams {
   requirementsMinValue: number;
 }
 
+export interface IUserOptionsParams {
+  language: ILanguage;
+}
+
 export interface ICreateFormProps {
   type: IEntityType;
   handleCancel: () => void;
@@ -24,6 +30,12 @@ export interface ICreateFormProps {
 }
 
 export interface IEditFormProps extends Pick<ICreateFormProps, 'type' | 'handleCancel'> {
-  handleSubmit: (params: IEditParams) => void;
   entity: IEntityParams;
+  handleSubmit: (params: IEditParams) => void;
+}
+
+export interface IUserOptionsFormProps {
+  user: IUser;
+  handleCancel: () => void;
+  handleSave: (params: IUserOptionsParams) => void;
 }

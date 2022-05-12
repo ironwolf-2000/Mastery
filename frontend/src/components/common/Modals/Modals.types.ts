@@ -1,5 +1,6 @@
 import { IEntityParams, IEntityType } from '../../App/App.types';
-import { ICreateParams, IEditParams } from '../Forms/Forms.types';
+import { IUser } from '../../RegisterForm/RegisterForm.types';
+import { ICreateParams, IEditParams, IUserOptionsParams } from '../Forms/Forms.types';
 
 interface IBaseModalProps {
   visible: boolean;
@@ -14,17 +15,28 @@ export interface IDefaultModalProps extends IBaseModalProps {
   handleConfirm: () => void;
 }
 
-export interface ICreateOnlyModalProps {
-  modalType: 'create';
+export interface ICreateEntityOnlyModalProps {
+  modalType: 'create-entity';
+  entityType: IEntityType;
   handleCreate: (params: ICreateParams) => void;
 }
 
-export interface IEditOnlyModalProps {
-  modalType: 'edit';
+export interface IEditEntityOnlyModalProps {
+  modalType: 'edit-entity';
+  entityType: IEntityType;
   entity: IEntityParams;
   handleEdit: (params: IEditParams) => void;
 }
 
-export type ICreateEditModalProps = IBaseModalProps & {
-  entityType: IEntityType;
-} & (ICreateOnlyModalProps | IEditOnlyModalProps);
+export interface IUserOptionsOnlyModalProps {
+  modalType: 'user-options';
+  user: IUser;
+  handleSave: (params: IUserOptionsParams) => void;
+}
+
+export type IModalPropsUnion =
+  | ICreateEntityOnlyModalProps
+  | IEditEntityOnlyModalProps
+  | IUserOptionsOnlyModalProps;
+
+export type IFormModalProps = IBaseModalProps & IModalPropsUnion;

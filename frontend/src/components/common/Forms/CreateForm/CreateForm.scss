@@ -1,9 +1,5 @@
 .CreateForm {
-  position: relative;
-
-  &-Form {
-    margin-bottom: 4rem;
-  }
+  margin-bottom: 4rem;
 
   &-FloatingLabel {
     font-size: 0.9rem;
@@ -19,6 +15,11 @@
     }
   }
 
+  &-EntityFrequencySelect {
+    flex-basis: 20%;
+    margin-left: 1rem;
+  }
+
   &-RequirementsSection {
     margin: 1rem 0;
   }
@@ -32,11 +33,6 @@
       flex-basis: 20%;
       margin-left: 1rem;
     }
-  }
-
-  &-EntityFrequencySelect {
-    flex-basis: 20%;
-    margin-left: 1rem;
   }
 
   &-Checkbox {

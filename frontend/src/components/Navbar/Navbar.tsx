@@ -2,26 +2,42 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@bem-react/classname';
 import { Link, NavLink } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Container, Dropdown, Nav, Navbar as BSNavbar } from 'react-bootstrap';
 
-import { DefaultModal } from '../common';
+import { DefaultModal, FormModal as UserOptionsModal } from '../common';
 import { IUser } from '../RegisterForm/RegisterForm.types';
-import { logout } from '../../services/user.service';
+import { changeCurrentUserLanguage, logout } from '../../services/user.service';
+import { IUserOptionsParams } from '../common/Forms/Forms.types';
 
 import './Navbar.scss';
 
 const blk = cn('Navbar');
 
 export const Navbar = ({ user }: INavbarProps) => {
-  const { t } = useTranslation();
-  const [logoutModalVisible, setLogoutModalVisible] = useState<boolean>(false);
+  const { i18n, t } = useTranslation();
+
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+  const [userOptionsModalVisible, setUserOptionsModalVisible] = useState(false);
 
   const handleLogout = () => {
     logout();
     setLogoutModalVisible(false);
     setTimeout(() => window.location.replace('/'), 500);
+  };
+
+  const handleSaveUserOptions = ({ language }: IUserOptionsParams) => {
+    const resp = changeCurrentUserLanguage(language);
+
+    if (resp.success) {
+      i18n.changeLanguage(language);
+    } else {
+      toast.error(resp.message);
+    }
+
+    setUserOptionsModalVisible(false);
   };
 
   return (
@@ -50,16 +66,16 @@ export const Navbar = ({ user }: INavbarProps) => {
               <Dropdown.Menu className={blk('DropdownMenu')}>
                 {user ? (
                   <>
-                    <Dropdown.Item className={blk('DropdownItem')} as={Link} to='/user/options'>
+                    <Dropdown.Item
+                      className={blk('DropdownItem')}
+                      onClick={() => setUserOptionsModalVisible(true)}
+                    >
                       {t('Options')}
                     </Dropdown.Item>
                     <Dropdown.Divider className={blk('DropdownDivider')} />
                     <Dropdown.Item
                       className={blk('DropdownItem')}
-                      onClick={e => {
-                        e.preventDefault();
-                        setLogoutModalVisible(true);
-                      }}
+                      onClick={() => setLogoutModalVisible(true)}
                     >
                       {t('Log out')}
                     </Dropdown.Item>
@@ -87,6 +103,16 @@ export const Navbar = ({ user }: INavbarProps) => {
         title={`${t('Log out')}?`}
         bodyText={t('Are you sure you want to log out?')}
       />
+      {user && (
+        <UserOptionsModal
+          title={t('Options')}
+          modalType='user-options'
+          visible={userOptionsModalVisible}
+          user={user}
+          handleCancel={() => setUserOptionsModalVisible(false)}
+          handleSave={handleSaveUserOptions}
+        />
+      )}
     </>
   );
 };

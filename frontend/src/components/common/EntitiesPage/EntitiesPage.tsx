@@ -9,7 +9,7 @@ import { faPlus, faHouse } from '@fortawesome/free-solid-svg-icons';
 import { createParamsToEntityParams } from '../../helpers';
 import { getAllUserEntities, addEntity } from '../../../services/entity.service';
 import { getOverallEntityHeatmap } from '../../../services/heatmap.service';
-import { Heatmap, CreateEditModal as CreateModal } from '../../common';
+import { Heatmap, FormModal as CreateModal } from '../../common';
 import { ICreateParams } from '../../common/Forms/Forms.types';
 import { IHeatmapCellParams } from '../../common/Heatmap/Heatmap.types';
 import { QuotesComponent } from '../../QuotesComponent';
@@ -135,7 +135,7 @@ export const EntitiesPage = ({
       </Container>
       <CreateModal
         entityType={entityType}
-        modalType='create'
+        modalType='create-entity'
         title={t(`create-${entityType}`)}
         visible={createModalVisible}
         handleCancel={() => setCreateModalVisible(false)}

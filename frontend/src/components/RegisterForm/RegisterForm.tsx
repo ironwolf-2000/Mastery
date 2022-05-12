@@ -8,6 +8,7 @@ import { faArrowRightToBracket } from '@fortawesome/free-solid-svg-icons';
 import { Button, Form as BSForm } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
+import { DEFAULT_LANGUAGE } from '../../i18n/config';
 import { MyErrorMessage } from '../common/Forms/ErrorMessage';
 import { IUser } from './RegisterForm.types';
 import { register } from '../../services/user.service';
@@ -40,6 +41,7 @@ export const RegisterForm = () => {
     lastName: '',
     email: '',
     password: '',
+    language: DEFAULT_LANGUAGE,
   };
 
   const handleSubmit = (user: IUser) => {

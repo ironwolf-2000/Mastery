@@ -51,7 +51,7 @@ export const EditForm = ({ type, entity, handleCancel, handleSubmit }: IEditForm
       >
         {({ handleSubmit, getFieldProps }) => {
           return (
-            <BSForm className={blk('Form')} onSubmit={handleSubmit}>
+            <BSForm className={blk()} onSubmit={handleSubmit}>
               <BSForm.Group className='mb-3'>
                 <BSForm.Label>{t(`change-name-${type}`)}</BSForm.Label>
                 <BSForm.Control

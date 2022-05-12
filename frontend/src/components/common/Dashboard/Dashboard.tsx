@@ -32,7 +32,7 @@ import { IHeatmapCellStatus, IHeatmapCellCoordinates } from '../Heatmap/Heatmap.
 import { IDefaultModalProps } from '../Modals/Modals.types';
 import { IEntityParams, IEntityType } from '../../App/App.types';
 import { getFormattedDate, numberWithSpaces, typeNumber } from '../../../utils';
-import { CreateEditModal as EditModal, DefaultModal } from '../Modals';
+import { FormModal as EditModal, DefaultModal } from '../Modals';
 import { Heatmap } from '..';
 import { editParamsToEntityParams, entityFrequencyToLabel, getEntityEndTime } from '../../helpers';
 import { IEditParams } from '../Forms/Forms.types';
@@ -331,7 +331,7 @@ export const Dashboard = ({
         <EditModal
           entityType={entityType}
           entity={entity}
-          modalType='edit'
+          modalType='edit-entity'
           title={t(`edit-${entityType}`)}
           visible={editModalVisible}
           handleCancel={() => setEditModalVisible(false)}

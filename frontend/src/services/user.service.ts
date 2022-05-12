@@ -1,4 +1,4 @@
-import i18n from '../i18n/config';
+import i18n, { ILanguage } from '../i18n/config';
 import { IUser } from '../components/RegisterForm/RegisterForm.types';
 import { ILoginUser } from '../components/LoginForm/LoginForm.types';
 import { ICRUDResponse } from './services.types';
@@ -55,4 +55,28 @@ export function login(loginUser: ILoginUser): ICRUDResponse {
 
 export function logout() {
   localStorage.setItem('currentUserEmail', '');
+}
+
+export function changeCurrentUserLanguage(language: ILanguage): ICRUDResponse {
+  const allUsers = getAllUsers();
+  const currEmail = getCurrentUserEmail();
+
+  let userFound = false;
+
+  allUsers.forEach(user => {
+    if (user.email === currEmail) {
+      user.language = language;
+      userFound = true;
+    }
+  });
+
+  if (userFound) {
+    localStorage.setItem('users', JSON.stringify(allUsers));
+    return { success: true };
+  }
+
+  return {
+    success: false,
+    message: i18n.t('A user with this email was not found.'),
+  };
 }

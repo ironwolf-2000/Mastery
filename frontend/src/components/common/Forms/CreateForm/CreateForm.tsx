@@ -54,7 +54,7 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
       >
         {({ handleSubmit, getFieldProps }) => {
           return (
-            <BSForm className={blk('Form')} onSubmit={handleSubmit}>
+            <BSForm className={blk()} onSubmit={handleSubmit}>
               <BSForm.Group className='mb-3'>
                 <BSForm.Label>{t(`give-name-${type}`)}</BSForm.Label>
                 <BSForm.Control
