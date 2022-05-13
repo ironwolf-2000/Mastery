@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@bem-react/classname';
 import { useNavigate } from 'react-router-dom';
@@ -16,6 +16,7 @@ import { QuotesComponent } from '../../QuotesComponent';
 import { IEntityParams } from '../../App/App.types';
 import { IEntitiesPageProps } from './EntitiesPage.types';
 import { ControlButton } from '../Buttons';
+import { LanguageContext } from '../../App';
 
 import './EntitiesPage.scss';
 
@@ -28,6 +29,8 @@ export const EntitiesPage = ({
   entityHeatmapColor,
 }: IEntitiesPageProps) => {
   const { t } = useTranslation();
+  const lang = useContext(LanguageContext);
+
   const navigate = useNavigate();
 
   const addButtonRef = useRef(null);
@@ -40,8 +43,8 @@ export const EntitiesPage = ({
 
   const updatePageElements = useCallback(() => {
     setEntities(getAllUserEntities(entityType));
-    setOverallEntitiesHeatmap(getOverallEntityHeatmap(entityType, [2, 3]));
-  }, [entityType]);
+    setOverallEntitiesHeatmap(getOverallEntityHeatmap(lang, entityType, [2, 3]));
+  }, [lang, entityType]);
 
   useEffect(() => {
     updatePageElements();
@@ -49,7 +52,7 @@ export const EntitiesPage = ({
   }, [updatePageElements]);
 
   const handleAddEntity = (params: ICreateParams) => {
-    const resp = addEntity(entityType, createParamsToEntityParams(params));
+    const resp = addEntity(entityType, createParamsToEntityParams(lang, params));
 
     if (resp.success) {
       toast.success(resp.message);

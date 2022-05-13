@@ -2,42 +2,27 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@bem-react/classname';
 import { Link, NavLink } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Container, Dropdown, Nav, Navbar as BSNavbar } from 'react-bootstrap';
 
-import { DefaultModal, FormModal as UserOptionsModal } from '../common';
-import { IUser } from '../RegisterForm/RegisterForm.types';
-import { changeCurrentUserLanguage, logout } from '../../services/user.service';
-import { IUserOptionsParams } from '../common/Forms/Forms.types';
+import { DefaultModal } from '../common';
+import { logout } from '../../services/user.service';
+import { INavbarProps } from './Navbar.types';
 
 import './Navbar.scss';
 
 const blk = cn('Navbar');
 
-export const Navbar = ({ user }: INavbarProps) => {
-  const { i18n, t } = useTranslation();
+export const Navbar = ({ user, onUserOptionsClick }: INavbarProps) => {
+  const { t } = useTranslation();
 
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
-  const [userOptionsModalVisible, setUserOptionsModalVisible] = useState(false);
 
   const handleLogout = () => {
     logout();
     setLogoutModalVisible(false);
     setTimeout(() => window.location.replace('/'), 500);
-  };
-
-  const handleSaveUserOptions = ({ language }: IUserOptionsParams) => {
-    const resp = changeCurrentUserLanguage(language);
-
-    if (resp.success) {
-      i18n.changeLanguage(language);
-    } else {
-      toast.error(resp.message);
-    }
-
-    setUserOptionsModalVisible(false);
   };
 
   return (
@@ -66,10 +51,7 @@ export const Navbar = ({ user }: INavbarProps) => {
               <Dropdown.Menu className={blk('DropdownMenu')}>
                 {user ? (
                   <>
-                    <Dropdown.Item
-                      className={blk('DropdownItem')}
-                      onClick={() => setUserOptionsModalVisible(true)}
-                    >
+                    <Dropdown.Item className={blk('DropdownItem')} onClick={onUserOptionsClick}>
                       {t('Options')}
                     </Dropdown.Item>
                     <Dropdown.Divider className={blk('DropdownDivider')} />
@@ -103,16 +85,6 @@ export const Navbar = ({ user }: INavbarProps) => {
         title={`${t('Log out')}?`}
         bodyText={t('Are you sure you want to log out?')}
       />
-      {user && (
-        <UserOptionsModal
-          title={t('Options')}
-          modalType='user-options'
-          visible={userOptionsModalVisible}
-          user={user}
-          handleCancel={() => setUserOptionsModalVisible(false)}
-          handleSave={handleSaveUserOptions}
-        />
-      )}
     </>
   );
 };
@@ -124,7 +96,3 @@ const CustomToggle = React.forwardRef<HTMLSpanElement, { onClick: () => void }>(
     </span>
   )
 );
-
-interface INavbarProps {
-  user: IUser | null;
-}

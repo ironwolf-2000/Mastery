@@ -1,5 +1,7 @@
-import { IEntityType } from '../components/App/App.types';
+import { ENTITY_TYPES, IEntityType } from '../components/App/App.types';
 import { IHeatmapCellParams, IHeatmapCellStatus } from '../components/common/Heatmap/Heatmap.types';
+import { getHeatmapCellTitle } from '../components/helpers';
+import { ILanguage } from '../i18n/config';
 import { daysToMs, getFormattedDate, msToDays, toTwoDecimalPlaces } from '../utils';
 import { entityMapper, getAllEntities, getAllUserEntities } from './entity.service';
 import { ICRUDResponse } from './services.types';
@@ -39,6 +41,31 @@ export function updateEntityHeatmap(
 
   localStorage.setItem(entityMapper[type], JSON.stringify(allEntities));
   return { success: true };
+}
+
+export function translateEntityHeatmaps(lang: ILanguage) {
+  const userEmail = getCurrentUserEmail();
+
+  for (const entityType of ENTITY_TYPES) {
+    const allEntities = getAllEntities(entityType);
+
+    for (let i = 0; i < allEntities.length; i++) {
+      const entity = allEntities[i];
+
+      if (entity.userEmail === userEmail) {
+        const [rows, cols] = [entity.heatmap.length, entity.heatmap[0].length];
+
+        for (let x = 0; x < rows; x++) {
+          for (let y = 0; y < cols; y++) {
+            const { startTime, entityFrequency, heatmap } = entity;
+            heatmap[x][y].title = getHeatmapCellTitle(lang, startTime, entityFrequency, cols, x, y);
+          }
+        }
+      }
+    }
+
+    localStorage.setItem(entityMapper[entityType], JSON.stringify(allEntities));
+  }
 }
 
 export function getCurrentHeatmapCell(type: IEntityType, name: string): [number, number] | null {
@@ -110,6 +137,7 @@ function generateEmptyOverallEntityHeatmap(ratio: [number, number]) {
  * @returns the overall heatmap object
  */
 export function getOverallEntityHeatmap(
+  lang: ILanguage,
   type: IEntityType,
   ratio: [number, number]
 ): IHeatmapCellParams[][] {
@@ -157,7 +185,7 @@ export function getOverallEntityHeatmap(
         [currValue, targetValue] = [dayEntries[cnt][1].curr, dayEntries[cnt][1].target];
       }
 
-      const title = `${getFormattedDate(daysToMs(day))}: ${currValue} / ${targetValue}`;
+      const title = `${getFormattedDate(lang, daysToMs(day))}: ${currValue} / ${targetValue}`;
 
       overallHeatmap[i][j] = {
         currValue,

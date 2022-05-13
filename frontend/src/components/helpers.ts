@@ -1,11 +1,31 @@
-import i18n from '../i18n/config';
+import i18n, { ILanguage } from '../i18n/config';
 import { getCurrentUserEmail } from '../services/user.service';
 import { daysToMs, getDateByDayDiff, truncateDateTime } from '../utils';
 import { IEntityParams } from './App/App.types';
 import { ICreateParams, IEditParams } from './common/Forms/Forms.types';
 import { IHeatmapInitializerProps, IHeatmapCellParams } from './common/Heatmap/Heatmap.types';
 
-export function getInitializedHeatmap(props: IHeatmapInitializerProps): IHeatmapCellParams[][] {
+export function getHeatmapCellTitle(
+  lang: ILanguage,
+  startTime: number,
+  frequency: number,
+  cols: number,
+  x: number,
+  y: number
+) {
+  return (
+    `${getDateByDayDiff(lang, startTime, frequency * (x * cols + y))}` +
+    (frequency > 1
+      ? ` - ${getDateByDayDiff(lang, startTime, frequency * (x * cols + y + 1) - 1)}`
+      : '') +
+    ': 0'
+  );
+}
+
+export function getInitializedHeatmap(
+  lang: ILanguage,
+  props: IHeatmapInitializerProps
+): IHeatmapCellParams[][] {
   const { size, useTitle } = props;
 
   const heatmap: IHeatmapCellParams[][] = new Array(size);
@@ -22,12 +42,7 @@ export function getInitializedHeatmap(props: IHeatmapInitializerProps): IHeatmap
 
       if (useTitle) {
         const { startTime, entityFrequency } = props;
-        params.title =
-          `${getDateByDayDiff(startTime, entityFrequency * (i * size + j))}` +
-          (entityFrequency > 1
-            ? ` - ${getDateByDayDiff(startTime, entityFrequency * (i * size + j + 1) - 1)}`
-            : '') +
-          ': 0';
+        params.title = getHeatmapCellTitle(lang, startTime, entityFrequency, size, i, j);
       }
 
       heatmap[i].push(params);
@@ -58,9 +73,9 @@ function frequencyToHeatmapSizeMapper(frequency: number) {
   return 10;
 }
 
-export function createParamsToEntityParams(params: ICreateParams): IEntityParams {
+export function createParamsToEntityParams(lang: ILanguage, params: ICreateParams): IEntityParams {
   const userEmail = getCurrentUserEmail() ?? 'anonymous@email.com';
-  const startTime = truncateDateTime(new Date()).getTime();
+  const startTime = truncateDateTime(lang, new Date()).getTime();
 
   const {
     entityName: name,
@@ -72,7 +87,7 @@ export function createParamsToEntityParams(params: ICreateParams): IEntityParams
   } = params;
 
   const heatmapSize = frequencyToHeatmapSizeMapper(entityFrequency);
-  const heatmap = getInitializedHeatmap({
+  const heatmap = getInitializedHeatmap(lang, {
     heatmapType: 'tracking',
     size: heatmapSize,
     useTitle: true,

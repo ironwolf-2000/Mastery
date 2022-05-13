@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 import { cn } from '@bem-react/classname';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -30,6 +30,7 @@ import {
 import { IDashboardProps } from './Dashboard.types';
 import { IHeatmapCellStatus, IHeatmapCellCoordinates } from '../Heatmap/Heatmap.types';
 import { IDefaultModalProps } from '../Modals/Modals.types';
+import { LanguageContext } from '../../App';
 import { IEntityParams, IEntityType } from '../../App/App.types';
 import { getFormattedDate, numberWithSpaces, typeNumber } from '../../../utils';
 import { FormModal as EditModal, DefaultModal } from '../Modals';
@@ -56,6 +57,7 @@ export const Dashboard = ({
   entityHeatmapColor,
 }: IDashboardProps) => {
   const { t } = useTranslation();
+  const lang = useContext(LanguageContext);
 
   const navigate = useNavigate();
   const { encodedName } = useParams();
@@ -121,12 +123,12 @@ export const Dashboard = ({
       bodyText: t('Are you sure you want to reset all of your progress?'),
       handleCancel: () => setModalParams(defaultModalParams),
       handleConfirm: () => {
-        resetEntity(entityType, name);
+        resetEntity(lang, entityType, name);
         setModalParams(defaultModalParams);
         setEntity(fetchEntity());
       },
     }),
-    [t, entityType, fetchEntity]
+    [t, entityType, lang, fetchEntity]
   );
 
   const getDangerModalParams = useCallback(
@@ -219,8 +221,9 @@ export const Dashboard = ({
             <div className={blk('InfoSectionContent')}>
               <section className={blk('InfoSubsection')}>
                 <h3 className={blk('SubsectionHeading')}>{t('Time Period')}</h3>
-                {getFormattedDate(entity.startTime)} – {getFormattedDate(getEntityEndTime(entity))}{' '}
-                ({entity.heatmap.length ** 2 * entity.entityFrequency} {t('days')})
+                {getFormattedDate(lang, entity.startTime)} –{' '}
+                {getFormattedDate(lang, getEntityEndTime(entity))} (
+                {entity.heatmap.length ** 2 * entity.entityFrequency} {t('days')})
                 <br />
                 {t('Frequency')}: {entityFrequencyToLabel(entity.entityFrequency)}
               </section>

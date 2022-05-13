@@ -1,4 +1,4 @@
-import i18n from '../i18n/config';
+import i18n, { ILanguage } from '../i18n/config';
 import {
   IEntityType,
   IEntityParams,
@@ -105,7 +105,7 @@ export function deleteEntity(type: IEntityType, name: string) {
   localStorage.setItem(entityMapper[type], JSON.stringify(newEntities));
 }
 
-export function resetEntity(type: IEntityType, name: string) {
+export function resetEntity(lang: ILanguage, type: IEntityType, name: string) {
   const userEmail = getCurrentUserEmail();
   const allEntities = getAllEntities(type);
   let reset = false;
@@ -116,7 +116,7 @@ export function resetEntity(type: IEntityType, name: string) {
     if (curr.userEmail === userEmail && curr.name === name) {
       const { heatmap, startTime, entityFrequency, requirementsMinValue } = curr;
 
-      curr.heatmap = getInitializedHeatmap({
+      curr.heatmap = getInitializedHeatmap(lang, {
         heatmapType: 'tracking',
         size: heatmap.length,
         useTitle: true,
