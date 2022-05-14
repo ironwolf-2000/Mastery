@@ -75,7 +75,7 @@ function frequencyToHeatmapSizeMapper(frequency: number) {
 
 export function createParamsToEntityParams(lang: ILanguage, params: ICreateParams): IEntityParams {
   const userEmail = getCurrentUserEmail() ?? 'anonymous@email.com';
-  const startTime = truncateDateTime(lang, new Date()).getTime();
+  const startTime = truncateDateTime(new Date()).getTime();
 
   const {
     entityName: name,

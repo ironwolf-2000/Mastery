@@ -9,8 +9,8 @@ export function getFormattedDate(lang: ILanguage, dateOrMs: Date | number) {
   });
 }
 
-export function truncateDateTime(lang: ILanguage, date: Date) {
-  return new Date(getFormattedDate(lang, date));
+export function truncateDateTime(date: Date) {
+  return new Date(`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
 }
 
 export function getDateByDayDiff(
@@ -32,7 +32,6 @@ export function getDateByDayDiff(
   rtype: 'number' | 'string' = 'string'
 ) {
   const result = ms + daysToMs(days);
-
   return rtype === 'number' ? result : getFormattedDate(lang, result);
 }
 

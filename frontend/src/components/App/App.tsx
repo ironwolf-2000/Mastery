@@ -16,7 +16,6 @@ import { UserHomePage } from '../pages/UserHomePage';
 import { ProtectedRoutes, FormModal as UserOptionsModal } from '../common';
 
 import { changeCurrentUserLanguage, getCurrentUser } from '../../services/user.service';
-import { translateEntityHeatmaps } from '../../services/heatmap.service';
 import { IUser } from '../RegisterForm/RegisterForm.types';
 import { DEFAULT_LANGUAGE, ILanguage } from '../../i18n/config';
 import { IUserOptionsParams } from '../common/Forms/Forms.types';
@@ -62,7 +61,6 @@ export const App = () => {
 
   useEffect(() => {
     setLoading(true);
-    translateEntityHeatmaps(language);
     i18n.changeLanguage(language, () => setLoading(false));
   }, [i18n, language]);
 

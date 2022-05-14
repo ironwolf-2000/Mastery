@@ -25,10 +25,15 @@ import {
 import {
   getCurrentHeatmapCell,
   highlightCurrentHeatmapCell,
+  getTranslatedEntityHeatmap,
   updateEntityHeatmap,
 } from '../../../services/heatmap.service';
 import { IDashboardProps } from './Dashboard.types';
-import { IHeatmapCellStatus, IHeatmapCellCoordinates } from '../Heatmap/Heatmap.types';
+import {
+  IHeatmapCellStatus,
+  IHeatmapCellCoordinates,
+  IHeatmapCellParams,
+} from '../Heatmap/Heatmap.types';
 import { IDefaultModalProps } from '../Modals/Modals.types';
 import { LanguageContext } from '../../App';
 import { IEntityParams, IEntityType } from '../../App/App.types';
@@ -65,6 +70,7 @@ export const Dashboard = ({
   const [editModalVisible, setEditModalVisible] = useState<boolean>(false);
   const [activeCellCoords, setActiveCellCoords] = useState<IHeatmapCellCoordinates | null>(null);
   const [entity, setEntity] = useState<IEntityParams | null>(null);
+  const [heatmap, setHeatmap] = useState<IHeatmapCellParams[][] | null>(null);
   const [modalParams, setModalParams] = useState<IDefaultModalProps>(defaultModalParams);
   const [requirementsValue, setRequirementsValue] = useState('');
 
@@ -101,6 +107,12 @@ export const Dashboard = ({
     },
     [entity, activeCellCoords, entityType, fetchEntity]
   );
+
+  useEffect(() => {
+    if (entity) {
+      setHeatmap(getTranslatedEntityHeatmap(lang, entityType, entity.name));
+    }
+  }, [entity, entityType, lang]);
 
   useEffect(() => {
     const fetchedEntity = fetchEntity();
@@ -205,142 +217,140 @@ export const Dashboard = ({
     }
   };
 
-  return (
-    entity && (
-      <>
-        <Container className={blk('', [className])}>
-          <section className={blk('InfoSection')}>
-            <header className={blk('InfoSectionHeader')}>
-              <ControlButton
-                className={blk('ControlButton', { [entityType]: true })}
-                icon={faArrowLeft}
-                onClick={() => navigate(redirectPath)}
-              />
-              <h2 className={blk('SectionHeading')}>{t(`${entityType}-info`)}</h2>
-            </header>
-            <div className={blk('InfoSectionContent')}>
-              <section className={blk('InfoSubsection')}>
-                <h3 className={blk('SubsectionHeading')}>{t('Time Period')}</h3>
-                {getFormattedDate(lang, entity.startTime)} –{' '}
-                {getFormattedDate(lang, getEntityEndTime(entity))} (
-                {entity.heatmap.length ** 2 * entity.entityFrequency} {t('days')})
-                <br />
-                {t('Frequency')}: {entityFrequencyToLabel(entity.entityFrequency)}
-              </section>
-              {entity.motivation && (
-                <section className={blk('InfoSubsection')}>
-                  <h3 className={blk('SubsectionHeading')}>{t('Your Motivation')}</h3>
-                  <p className={blk('SubsectionContent')}>{entity.motivation}</p>
-                </section>
-              )}
-              <section className={blk('InfoSubsection')}>
-                <h3 className={blk('SubsectionHeading')}>
-                  {t('Required Value')}{' '}
-                  <Badge bg='info' className='ms-1'>
-                    {numberWithSpaces(entity.requirementsMinValue)}
-                  </Badge>
-                </h3>
-                {entity.requirementsText && (
-                  <p className={blk('SubsectionContent')}>{entity.requirementsText}</p>
-                )}
-                <div className={blk('RequirementsValueInputSection')}>
-                  <input
-                    className={blk('RequirementsInputField')}
-                    type='text'
-                    value={requirementsValue}
-                    onChange={e => typeNumber(e, 6, setRequirementsValue)}
-                  />
-                  <FontAwesomeIcon
-                    icon={faArrowRotateLeft}
-                    className={blk('RequirementsIcon')}
-                    title={t('Restore the previous value')}
-                    size='lg'
-                    onClick={() => {
-                      if (currPeriodCellCoords) {
-                        const [x, y] = currPeriodCellCoords;
-                        setRequirementsValue(entity.heatmap[x][y].currValue.toString());
-                      }
-                    }}
-                  />
-                  <FontAwesomeIcon
-                    icon={faFloppyDisk}
-                    className={blk('RequirementsIcon')}
-                    title={t('Save the current value')}
-                    size='lg'
-                    onClick={() => {
-                      if (currPeriodCellCoords) {
-                        const [x, y] = currPeriodCellCoords;
-                        const currValue = Number(requirementsValue);
-
-                        updateEntityHeatmap(entityType, entity.name, x, y, 'normal', currValue);
-                        setEntity(fetchEntity());
-                      }
-                    }}
-                  />
-                </div>
-              </section>
-              <section className={blk('InfoSubsection')}>
-                <h2 className={blk('SubsectionHeading')}>{t('Success Rate')}</h2>
-                <div className={blk('SubsectionContent')}>
-                  <span className={blk('TargetSRLabel')}>
-                    {t('Target')} <Badge bg='info'>{entity.successRate}</Badge>
-                  </span>
-                  <span>
-                    {t('Current')}{' '}
-                    <Badge
-                      bg={currentSR > -1 && currentSR < entity.successRate ? 'danger' : 'success'}
-                    >
-                      {currentSR === -1 ? 0 : currentSR}
-                    </Badge>
-                  </span>
-                </div>
-              </section>
-            </div>
-            <div className={blk('ActionButtons')}>
-              <Button
-                variant='warning'
-                onClick={() => setModalParams(() => getWarningModalParams(entity.name))}
-              >
-                {t('Reset Progress')}
-              </Button>
-              <Button
-                variant='danger'
-                onClick={() => setModalParams(() => getDangerModalParams(entity.name))}
-              >
-                {t(`delete-${entityType}`)}
-              </Button>
-            </div>
-          </section>
-          <section className={blk('HeatmapSection')}>
-            <header className={blk('HeatmapSectionHeader')}>
-              <h2 className={blk('SectionHeading')}>{entity.name}</h2>
-              <FontAwesomeIcon
-                icon={faPenToSquare}
-                className={blk('EditIcon')}
-                size='lg'
-                onClick={() => setEditModalVisible(true)}
-              />
-            </header>
-            <Heatmap
-              className={blk('Heatmap')}
-              heatmapState={entity.heatmap}
-              onClick={(x, y) => setActiveCellCoords({ x, y })}
-              onClickPopover={heatmapCellPopover}
-              bgColor={entityHeatmapColor}
+  return entity && heatmap ? (
+    <>
+      <Container className={blk('', [className])}>
+        <section className={blk('InfoSection')}>
+          <header className={blk('InfoSectionHeader')}>
+            <ControlButton
+              className={blk('ControlButton', { [entityType]: true })}
+              icon={faArrowLeft}
+              onClick={() => navigate(redirectPath)}
             />
-          </section>
-        </Container>
-        {modalParams && <DefaultModal {...modalParams} />}
-        <EditModal
-          entityType={entityType}
-          entity={entity}
-          modalType='edit-entity'
-          title={t(`edit-${entityType}`)}
-          visible={editModalVisible}
-          handleCancel={() => setEditModalVisible(false)}
-          handleEdit={handleEditEntity}
-        />
-      </>
-    )
-  );
+            <h2 className={blk('SectionHeading')}>{t(`${entityType}-info`)}</h2>
+          </header>
+          <div className={blk('InfoSectionContent')}>
+            <section className={blk('InfoSubsection')}>
+              <h3 className={blk('SubsectionHeading')}>{t('Time Period')}</h3>
+              {getFormattedDate(lang, entity.startTime)} –{' '}
+              {getFormattedDate(lang, getEntityEndTime(entity))} (
+              {heatmap.length ** 2 * entity.entityFrequency} {t('days')})
+              <br />
+              {t('Frequency')}: {entityFrequencyToLabel(entity.entityFrequency)}
+            </section>
+            {entity.motivation && (
+              <section className={blk('InfoSubsection')}>
+                <h3 className={blk('SubsectionHeading')}>{t('Your Motivation')}</h3>
+                <p className={blk('SubsectionContent')}>{entity.motivation}</p>
+              </section>
+            )}
+            <section className={blk('InfoSubsection')}>
+              <h3 className={blk('SubsectionHeading')}>
+                {t('Required Value')}{' '}
+                <Badge bg='info' className='ms-1'>
+                  {numberWithSpaces(entity.requirementsMinValue)}
+                </Badge>
+              </h3>
+              {entity.requirementsText && (
+                <p className={blk('SubsectionContent')}>{entity.requirementsText}</p>
+              )}
+              <div className={blk('RequirementsValueInputSection')}>
+                <input
+                  className={blk('RequirementsInputField')}
+                  type='text'
+                  value={requirementsValue}
+                  onChange={e => typeNumber(e, 6, setRequirementsValue)}
+                />
+                <FontAwesomeIcon
+                  icon={faArrowRotateLeft}
+                  className={blk('RequirementsIcon')}
+                  title={t('Restore the previous value')}
+                  size='lg'
+                  onClick={() => {
+                    if (currPeriodCellCoords) {
+                      const [x, y] = currPeriodCellCoords;
+                      setRequirementsValue(heatmap[x][y].currValue.toString());
+                    }
+                  }}
+                />
+                <FontAwesomeIcon
+                  icon={faFloppyDisk}
+                  className={blk('RequirementsIcon')}
+                  title={t('Save the current value')}
+                  size='lg'
+                  onClick={() => {
+                    if (currPeriodCellCoords) {
+                      const [x, y] = currPeriodCellCoords;
+                      const currValue = Number(requirementsValue);
+
+                      updateEntityHeatmap(entityType, entity.name, x, y, 'normal', currValue);
+                      setEntity(fetchEntity());
+                    }
+                  }}
+                />
+              </div>
+            </section>
+            <section className={blk('InfoSubsection')}>
+              <h2 className={blk('SubsectionHeading')}>{t('Success Rate')}</h2>
+              <div className={blk('SubsectionContent')}>
+                <span className={blk('TargetSRLabel')}>
+                  {t('Target')} <Badge bg='info'>{entity.successRate}</Badge>
+                </span>
+                <span>
+                  {t('Current')}{' '}
+                  <Badge
+                    bg={currentSR > -1 && currentSR < entity.successRate ? 'danger' : 'success'}
+                  >
+                    {currentSR === -1 ? 0 : currentSR}
+                  </Badge>
+                </span>
+              </div>
+            </section>
+          </div>
+          <div className={blk('ActionButtons')}>
+            <Button
+              variant='warning'
+              onClick={() => setModalParams(() => getWarningModalParams(entity.name))}
+            >
+              {t('Reset Progress')}
+            </Button>
+            <Button
+              variant='danger'
+              onClick={() => setModalParams(() => getDangerModalParams(entity.name))}
+            >
+              {t(`delete-${entityType}`)}
+            </Button>
+          </div>
+        </section>
+        <section className={blk('HeatmapSection')}>
+          <header className={blk('HeatmapSectionHeader')}>
+            <h2 className={blk('SectionHeading')}>{entity.name}</h2>
+            <FontAwesomeIcon
+              icon={faPenToSquare}
+              className={blk('EditIcon')}
+              size='lg'
+              onClick={() => setEditModalVisible(true)}
+            />
+          </header>
+          <Heatmap
+            className={blk('Heatmap')}
+            heatmapState={heatmap}
+            onClick={(x, y) => setActiveCellCoords({ x, y })}
+            onClickPopover={heatmapCellPopover}
+            bgColor={entityHeatmapColor}
+          />
+        </section>
+      </Container>
+      {modalParams && <DefaultModal {...modalParams} />}
+      <EditModal
+        entityType={entityType}
+        entity={entity}
+        modalType='edit-entity'
+        title={t(`edit-${entityType}`)}
+        visible={editModalVisible}
+        handleCancel={() => setEditModalVisible(false)}
+        handleEdit={handleEditEntity}
+      />
+    </>
+  ) : null;
 };

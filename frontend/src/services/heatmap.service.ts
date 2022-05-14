@@ -1,4 +1,4 @@
-import { ENTITY_TYPES, IEntityType } from '../components/App/App.types';
+import { IEntityType } from '../components/App/App.types';
 import { IHeatmapCellParams, IHeatmapCellStatus } from '../components/common/Heatmap/Heatmap.types';
 import { getHeatmapCellTitle } from '../components/helpers';
 import { ILanguage } from '../i18n/config';
@@ -20,10 +20,10 @@ export function updateEntityHeatmap(
   let updated = false;
 
   for (let i = 0; i < allEntities.length && !updated; i++) {
-    const curr = allEntities[i];
+    const entity = allEntities[i];
 
-    if (curr.userEmail === userEmail && curr.name === name && value !== undefined) {
-      const hm = curr.heatmap[x][y];
+    if (entity.userEmail === userEmail && entity.name === name && value !== undefined) {
+      const hm = entity.heatmap[x][y];
 
       hm.status = status;
       hm.currValue = value;
@@ -43,29 +43,29 @@ export function updateEntityHeatmap(
   return { success: true };
 }
 
-export function translateEntityHeatmaps(lang: ILanguage) {
+export function getTranslatedEntityHeatmap(lang: ILanguage, entityType: IEntityType, name: string) {
   const userEmail = getCurrentUserEmail();
+  const allEntities = getAllEntities(entityType);
 
-  for (const entityType of ENTITY_TYPES) {
-    const allEntities = getAllEntities(entityType);
+  for (let i = 0; i < allEntities.length; i++) {
+    const entity = allEntities[i];
 
-    for (let i = 0; i < allEntities.length; i++) {
-      const entity = allEntities[i];
+    if (entity.userEmail === userEmail && entity.name === name) {
+      const [rows, cols] = [entity.heatmap.length, entity.heatmap[0].length];
 
-      if (entity.userEmail === userEmail) {
-        const [rows, cols] = [entity.heatmap.length, entity.heatmap[0].length];
-
-        for (let x = 0; x < rows; x++) {
-          for (let y = 0; y < cols; y++) {
-            const { startTime, entityFrequency, heatmap } = entity;
-            heatmap[x][y].title = getHeatmapCellTitle(lang, startTime, entityFrequency, cols, x, y);
-          }
+      for (let x = 0; x < rows; x++) {
+        for (let y = 0; y < cols; y++) {
+          const { startTime, entityFrequency, heatmap } = entity;
+          heatmap[x][y].title = getHeatmapCellTitle(lang, startTime, entityFrequency, cols, x, y);
         }
       }
-    }
 
-    localStorage.setItem(entityMapper[entityType], JSON.stringify(allEntities));
+      localStorage.setItem(entityMapper[entityType], JSON.stringify(allEntities));
+      return entity.heatmap;
+    }
   }
+
+  return null;
 }
 
 export function getCurrentHeatmapCell(type: IEntityType, name: string): [number, number] | null {

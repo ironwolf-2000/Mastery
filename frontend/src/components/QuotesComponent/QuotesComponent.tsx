@@ -1,25 +1,32 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@bem-react/classname';
 
-import motivationMessages from '../../data/entitiesMotivationMessages.json';
+import motivationQuotesEn from '../../data/motivation-quotes-en.json';
+import motivationQuotesRu from '../../data/motivation-quotes-ru.json';
+import { LanguageContext } from '../App';
 import { nextRandomInt } from '../../utils';
 import { IMotivationMessageParams, IQuotesComponentProps } from './QuotesComponent.types';
 
 import './QuotesComponent.scss';
 
 const blk = cn('QuotesComponent');
+const motivationQuotes = {
+  en: motivationQuotesEn,
+  ru: motivationQuotesRu,
+};
 
 export const QuotesComponent = ({ entityType }: IQuotesComponentProps) => {
   const { t } = useTranslation();
+  const lang = useContext(LanguageContext);
 
-  const allMessages: IMotivationMessageParams[] = useMemo(
-    () => motivationMessages[`${entityType}s`],
-    [entityType]
+  const allQuotes: IMotivationMessageParams[] = useMemo(
+    () => motivationQuotes[lang][`${entityType}s`],
+    [entityType, lang]
   );
 
   const [count, setCount] = useState(1);
-  const [messageId, setMessageId] = useState(Math.floor(Math.random() * allMessages.length));
+  const [quoteId, setQuoteId] = useState(Math.floor(Math.random() * allQuotes.length));
 
   const [fadeIn, setFadeIn] = useState(true);
 
@@ -31,21 +38,21 @@ export const QuotesComponent = ({ entityType }: IQuotesComponentProps) => {
     const interval = setInterval(() => {
       setFadeIn(true);
       setCount(count + 1);
-      setMessageId(nextRandomInt(0, allMessages.length - 1, messageId));
+      setQuoteId(nextRandomInt(0, allQuotes.length - 1, quoteId));
 
       setTimeout(() => setFadeIn(false), 57000);
     }, 60000);
 
     return () => clearInterval(interval);
-  }, [allMessages, count, messageId]);
+  }, [allQuotes, count, quoteId]);
 
-  return (
+  return allQuotes.length ? (
     <article className={blk({ fadeIn, fadeOut: !fadeIn })}>
       <header className={blk('Header')}>
         {t('Quote')} {count}
       </header>
-      <p className={blk('Content')}>“{allMessages[messageId].text}”</p>
-      <footer className={blk('Footer')}>{allMessages[messageId].author}</footer>
+      <p className={blk('Content')}>“{allQuotes[quoteId].text}”</p>
+      <footer className={blk('Footer')}>{allQuotes[quoteId].author}</footer>
     </article>
-  );
+  ) : null;
 };
