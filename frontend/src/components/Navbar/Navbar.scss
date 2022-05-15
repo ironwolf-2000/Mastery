@@ -11,6 +11,12 @@
     font-size: 1.1rem;
   }
 
+  &-UserName {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+  }
+
   &-UserIcon {
     color: var(--bs-gray-600);
 

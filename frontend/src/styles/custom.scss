@@ -1,0 +1,18 @@
+$theme-colors: (
+  'danger': #dc3545,
+  'dark': #343a40,
+  'info': #c5d6d8,
+  'light': #f8f9fa,
+  'primary': #edcf8e,
+  'secondary': #6c757d,
+  'success': #28a745,
+  'warning': #ffc107,
+);
+
+@import '~bootstrap/scss/bootstrap';
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #edcf8e;
+  box-shadow: 0 0 0 0.2rem rgba(237, 207, 142, 0.5);
+}

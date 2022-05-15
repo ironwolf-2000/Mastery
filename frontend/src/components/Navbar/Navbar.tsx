@@ -29,7 +29,7 @@ export const Navbar = ({ user, onUserOptionsClick }: INavbarProps) => {
     <>
       <BSNavbar bg='light' variant='light' fixed='top' className={blk()}>
         <Container>
-          <BSNavbar.Brand className={blk('Brand')} as={Link} to='/home'>
+          <BSNavbar.Brand className={blk('Brand')} as={Link} to={user ? '/home' : '/'}>
             Mastery
           </BSNavbar.Brand>
           <Nav>
@@ -51,6 +51,9 @@ export const Navbar = ({ user, onUserOptionsClick }: INavbarProps) => {
               <Dropdown.Menu className={blk('DropdownMenu')}>
                 {user ? (
                   <>
+                    <span className={blk('UserName')}>
+                      {user.firstName} {user.lastName}
+                    </span>
                     <Dropdown.Item className={blk('DropdownItem')} onClick={onUserOptionsClick}>
                       {t('Options')}
                     </Dropdown.Item>
