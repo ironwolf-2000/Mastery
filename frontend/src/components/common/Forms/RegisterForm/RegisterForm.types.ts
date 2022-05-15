@@ -1,4 +1,4 @@
-import { ILanguage } from '../../i18n/config';
+import { ILanguage } from '../../../../i18n/config';
 
 export interface IUser {
   firstName: string;

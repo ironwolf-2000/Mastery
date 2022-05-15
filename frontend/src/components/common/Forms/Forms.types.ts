@@ -1,6 +1,6 @@
 import { ILanguage } from '../../../i18n/config';
 import { IEntityParams, IEntityType } from '../../App/App.types';
-import { IUser } from '../../RegisterForm/RegisterForm.types';
+import { IUser } from './RegisterForm/RegisterForm.types';
 
 export interface ICreateParams {
   type: IEntityType;

@@ -1,5 +1,5 @@
 import { IEntityParams, IEntityType } from '../../App/App.types';
-import { IUser } from '../../RegisterForm/RegisterForm.types';
+import { IUser } from '../../common/Forms/RegisterForm/RegisterForm.types';
 import { ICreateParams, IEditParams, IUserOptionsParams } from '../Forms/Forms.types';
 
 interface IBaseModalProps {

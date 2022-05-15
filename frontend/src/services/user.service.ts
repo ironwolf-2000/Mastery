@@ -1,6 +1,6 @@
 import i18n, { ILanguage } from '../i18n/config';
-import { IUser } from '../components/RegisterForm/RegisterForm.types';
-import { ILoginUser } from '../components/LoginForm/LoginForm.types';
+import { IUser } from '../components/common/Forms/RegisterForm/RegisterForm.types';
+import { ILoginUser } from '../components/common/Forms/LoginForm/LoginForm.types';
 import { ICRUDResponse } from './services.types';
 
 // TODO: Replace localStorage with PostgreSQL / MySQL

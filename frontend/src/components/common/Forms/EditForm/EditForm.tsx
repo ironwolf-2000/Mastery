@@ -1,10 +1,10 @@
+import { WheelEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@bem-react/classname';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { FloatingLabel, Form as BSForm, Button } from 'react-bootstrap';
 
-import i18n from '../../../../i18n/config';
 import { MyErrorMessage } from '../ErrorMessage';
 import { IEditFormProps, IEditParams } from '../Forms.types';
 import { HintComponent } from '../../HintComponent/HintComponent';
@@ -13,27 +13,25 @@ import './EditForm.scss';
 
 const blk = cn('EditForm');
 
-export const editValidationSchema = {
-  name: Yup.string()
-    .max(20, i18n.t('The name must be 20 characters or less.'))
-    .required(i18n.t('The name cannot be empty.')),
-  motivation: Yup.string().max(
-    80,
-    i18n.t('Your motivation message must not exceed 80 characters.')
-  ),
-  requirementsText: Yup.string().max(
-    40,
-    i18n.t('The requirements message must not exceed 40 characters.')
-  ),
-  requirementsMinValue: Yup.number()
-    .required(i18n.t('You must specify the minimum value for your requirements.'))
-    .min(1, i18n.t('The minimum required value must be a positive integer.'))
-    .max(999_999, i18n.t('The specified value is too big.')),
-};
-
 export const EditForm = ({ type, entity, handleCancel, handleSubmit }: IEditFormProps) => {
   const { name, motivation, requirementsText, requirementsMinValue } = entity;
+
   const { t } = useTranslation();
+
+  const editValidationSchema = {
+    name: Yup.string()
+      .max(20, t('The name must be 20 characters or less.'))
+      .required(t('The name cannot be empty.')),
+    motivation: Yup.string().max(80, t('Your motivation message must not exceed 80 characters.')),
+    requirementsText: Yup.string().max(
+      40,
+      t('The requirements message must not exceed 40 characters.')
+    ),
+    requirementsMinValue: Yup.number()
+      .required(t('You must specify the minimum value for your requirements.'))
+      .min(1, t('The minimum required value must be a positive integer.'))
+      .max(999_999, t('The specified value is too big.')),
+  };
 
   const initialValues: IEditParams = {
     name,
@@ -83,6 +81,7 @@ export const EditForm = ({ type, entity, handleCancel, handleSubmit }: IEditForm
                   <BSForm.Control
                     type='number'
                     placeholder={t('e.g. 24')}
+                    onWheel={(e: WheelEvent<HTMLInputElement>) => e.currentTarget.blur()}
                     {...getFieldProps('requirementsMinValue')}
                   />
                 </div>

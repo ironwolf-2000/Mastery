@@ -1,36 +1,46 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, WheelEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@bem-react/classname';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { FloatingLabel, Form as BSForm, Button } from 'react-bootstrap';
 
-import i18n from '../../../../i18n/config';
 import { ENTITY_FREQUENCIES } from '../../../App/App.constants';
 import { MyErrorMessage } from '../ErrorMessage';
 import { ICreateFormProps, ICreateParams } from '../Forms.types';
 import { HintComponent } from '../../HintComponent/HintComponent';
 import { DEFAULT_SUCCESS_RATE } from '../../../../services/entity.service';
-import { editValidationSchema } from '../EditForm/EditForm';
 
 import './CreateForm.scss';
 
 const blk = cn('CreateForm');
 
-const createValidationSchema = {
-  entityName: editValidationSchema.name,
-  motivationTextarea: editValidationSchema.motivation,
-  requirementsText: editValidationSchema.requirementsText,
-  requirementsMinValue: editValidationSchema.requirementsMinValue,
-  entityFrequency: Yup.number(),
-  successRate: Yup.number()
-    .min(10, i18n.t('Success Rate must be at least 10%'))
-    .max(100, i18n.t('Success Rate cannot be greater than 100%')),
-};
-
 export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProps) => {
   const { t } = useTranslation();
+
   const [applySR, setApplySR] = useState<boolean>(false);
+
+  const createValidationSchema = {
+    entityName: Yup.string()
+      .max(20, t('The name must be 20 characters or less.'))
+      .required(t('The name cannot be empty.')),
+    motivationTextarea: Yup.string().max(
+      80,
+      t('Your motivation message must not exceed 80 characters.')
+    ),
+    requirementsText: Yup.string().max(
+      40,
+      t('The requirements message must not exceed 40 characters.')
+    ),
+    requirementsMinValue: Yup.number()
+      .required(t('You must specify the minimum value for your requirements.'))
+      .min(1, t('The minimum required value must be a positive integer.'))
+      .max(999_999, t('The specified value is too big.')),
+    entityFrequency: Yup.number(),
+    successRate: Yup.number()
+      .min(10, t('Success Rate must be at least 10%'))
+      .max(100, t('Success Rate cannot be greater than 100%')),
+  };
 
   const initialValues: ICreateParams = useMemo(
     () => ({
@@ -98,6 +108,7 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
                   <BSForm.Control
                     type='number'
                     placeholder={t('e.g. 24')}
+                    onWheel={(e: WheelEvent<HTMLInputElement>) => e.currentTarget.blur()}
                     {...getFieldProps('requirementsMinValue')}
                   />
                 </div>
@@ -123,6 +134,7 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
                       className={blk('SRInputField')}
                       type='number'
                       placeholder={t('e.g. 90')}
+                      onWheel={(e: WheelEvent<HTMLInputElement>) => e.currentTarget.blur()}
                       {...getFieldProps('successRate')}
                     />
                   </div>

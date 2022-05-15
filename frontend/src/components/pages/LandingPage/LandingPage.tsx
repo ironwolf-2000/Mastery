@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeartPulse, faGraduationCap, faFaceSmile } from '@fortawesome/free-solid-svg-icons';
 import { Button } from 'react-bootstrap';
 
-import { IUser } from '../../RegisterForm/RegisterForm.types';
+import { IUser } from '../../common/Forms/RegisterForm/RegisterForm.types';
 
 import './LandingPage.scss';
 

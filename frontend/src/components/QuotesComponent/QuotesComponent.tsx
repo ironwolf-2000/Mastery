@@ -20,10 +20,9 @@ export const QuotesComponent = ({ entityType }: IQuotesComponentProps) => {
   const { t } = useTranslation();
   const lang = useContext(LanguageContext);
 
-  const allQuotes: IMotivationMessageParams[] = useMemo(
-    () => motivationQuotes[lang][`${entityType}s`],
-    [entityType, lang]
-  );
+  const allQuotes: IMotivationMessageParams[] = useMemo(() => {
+    return motivationQuotes[lang][`${entityType}s`];
+  }, [entityType, lang]);
 
   const [count, setCount] = useState(1);
   const [quoteId, setQuoteId] = useState(Math.floor(Math.random() * allQuotes.length));

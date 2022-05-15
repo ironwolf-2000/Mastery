@@ -8,15 +8,14 @@ import { Habits, HabitsDashboard } from '../pages/HabitsPage';
 import { Skills, SkillsDashboard } from '../pages/SkillsPage';
 import { Preferences, PreferencesDashboard } from '../pages/PreferencesPage';
 import { LandingPage } from '../pages/LandingPage';
-import { LoginForm } from '../LoginForm';
+import { LoginForm, RegisterForm } from '../common/Forms';
 import { Navbar } from '../Navbar';
 import { NotFound } from '../pages/NotFoundPage';
-import { RegisterForm } from '../RegisterForm';
 import { UserHomePage } from '../pages/UserHomePage';
 import { ProtectedRoutes, FormModal as UserOptionsModal } from '../common';
 
 import { changeCurrentUserLanguage, getCurrentUser } from '../../services/user.service';
-import { IUser } from '../RegisterForm/RegisterForm.types';
+import { IUser } from '../common/Forms/RegisterForm/RegisterForm.types';
 import { DEFAULT_LANGUAGE, ILanguage } from '../../i18n/config';
 import { IUserOptionsParams } from '../common/Forms/Forms.types';
 

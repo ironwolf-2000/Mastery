@@ -9,8 +9,8 @@ import { Button, Form as BSForm } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
 import { ILoginUser } from './LoginForm.types';
-import { login } from '../../services/user.service';
-import { MyErrorMessage } from '../common/Forms/ErrorMessage';
+import { login } from '../../../../services/user.service';
+import { MyErrorMessage } from '../ErrorMessage';
 
 import './LoginForm.scss';
 
