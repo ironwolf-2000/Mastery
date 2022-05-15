@@ -47,6 +47,10 @@ export const EntitiesPage = ({
   }, [lang, entityType]);
 
   useEffect(() => {
+    document.title = t(`${entityType}s`);
+  }, [t, entityType]);
+
+  useEffect(() => {
     updatePageElements();
     setLoading(false);
   }, [updatePageElements]);

@@ -28,6 +28,7 @@ export const UserHomePage = ({ user }: IUserHomePageProps) => {
       heatmaps[entityType] = getOverallEntityHeatmap(lang, entityType, [3, 2]);
     }
 
+    document.title = 'Mastery';
     setOverallEntitiesHeatmap(heatmaps);
     setLoading(false);
   }, [lang]);

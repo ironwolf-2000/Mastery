@@ -114,6 +114,7 @@
   "successully-reset-preference": "Прогресс предпочтения успешно сброшен.",
   "successully-reset-skill": "Прогресс навыка успешно сброшен.",
   "Target": "Цель",
+  "The description must not exceed 80 characters.": "Описание не должно превышать 80 символов.",
   "The minimum required value must be a positive integer.": "Минимальное требуемое значение должно быть натуральным числом.",
   "The name cannot be empty.": "Имя не может быть пустым.",
   "The name must be 20 characters or less.": "Имя должно состоять не более чем из 20 символов.",

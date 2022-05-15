@@ -1,5 +1,5 @@
-import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useCallback, useMemo, useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@bem-react/classname';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -111,6 +111,7 @@ export const Dashboard = ({
   useEffect(() => {
     if (entity) {
       setHeatmap(getTranslatedEntityHeatmap(lang, entityType, entity.name));
+      document.title = entity.name;
     }
   }, [entity, entityType, lang]);
 
@@ -290,22 +291,24 @@ export const Dashboard = ({
                 />
               </div>
             </section>
-            <section className={blk('InfoSubsection')}>
-              <h2 className={blk('SubsectionHeading')}>{t('Success Rate')}</h2>
-              <div className={blk('SubsectionContent')}>
-                <span className={blk('TargetSRLabel')}>
-                  {t('Target')} <Badge bg='info'>{entity.successRate}</Badge>
-                </span>
-                <span>
-                  {t('Current')}{' '}
-                  <Badge
-                    bg={currentSR > -1 && currentSR < entity.successRate ? 'danger' : 'success'}
-                  >
-                    {currentSR === -1 ? 0 : currentSR}
-                  </Badge>
-                </span>
-              </div>
-            </section>
+            {entityType !== 'preference' && (
+              <section className={blk('InfoSubsection')}>
+                <h2 className={blk('SubsectionHeading')}>{t('Success Rate')}</h2>
+                <div className={blk('SubsectionContent')}>
+                  <span className={blk('TargetSRLabel')}>
+                    {t('Target')} <Badge bg='info'>{entity.successRate}</Badge>
+                  </span>
+                  <span>
+                    {t('Current')}{' '}
+                    <Badge
+                      bg={currentSR > -1 && currentSR < entity.successRate ? 'danger' : 'success'}
+                    >
+                      {currentSR === -1 ? 0 : currentSR}
+                    </Badge>
+                  </span>
+                </div>
+              </section>
+            )}
           </div>
           <div className={blk('ActionButtons')}>
             <Button

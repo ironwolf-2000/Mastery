@@ -26,7 +26,9 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
       .required(t('The name cannot be empty.')),
     motivationTextarea: Yup.string().max(
       80,
-      t('Your motivation message must not exceed 80 characters.')
+      type !== 'preference'
+        ? t('Your motivation message must not exceed 80 characters.')
+        : t('The description must not exceed 80 characters.')
     ),
     requirementsText: Yup.string().max(
       40,
@@ -75,7 +77,10 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
                 <MyErrorMessage name='entityName' />
               </BSForm.Group>
 
-              <FloatingLabel label={t('Identify a motivator')} className={blk('FloatingLabel')}>
+              <FloatingLabel
+                label={type !== 'preference' ? t('Identify a motivator') : t('Short description')}
+                className={blk('FloatingLabel')}
+              >
                 <BSForm.Control
                   className={blk('MotivationTextarea')}
                   as='textarea'
@@ -116,15 +121,17 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
                 <MyErrorMessage name='requirementsMinValue' />
               </BSForm.Group>
 
-              <BSForm.Group className={blk('SRSection')}>
-                <BSForm.Check
-                  type='checkbox'
-                  label={t('Apply success rate')}
-                  checked={applySR}
-                  onChange={() => setApplySR(!applySR)}
-                />
-                <HintComponent tooltipMessage={t(`sr-tooltip-${type}`)} />
-              </BSForm.Group>
+              {type !== 'preference' && (
+                <BSForm.Group className={blk('SRSection')}>
+                  <BSForm.Check
+                    type='checkbox'
+                    label={t('Apply success rate')}
+                    checked={applySR}
+                    onChange={() => setApplySR(!applySR)}
+                  />
+                  <HintComponent tooltipMessage={t(`sr-tooltip-${type}`)} />
+                </BSForm.Group>
+              )}
 
               {applySR && (
                 <BSForm.Group className='mt-3'>

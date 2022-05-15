@@ -114,6 +114,7 @@
   "successully-reset-preference": "The progress of the preference has been successfully reset.",
   "successully-reset-skill": "The progress of the skill has been successfully reset.",
   "Target": "Target",
+  "The description must not exceed 80 characters.": "The description must not exceed 80 characters.",
   "The minimum required value must be a positive integer.": "The minimum required value must be a positive integer.",
   "The name cannot be empty.": "The name cannot be empty.",
   "The name must be 20 characters or less.": "The name must be 20 characters or less.",
