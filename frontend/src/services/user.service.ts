@@ -3,8 +3,6 @@ import { IUser } from '../components/common/Forms/RegisterForm/RegisterForm.type
 import { ILoginUser } from '../components/common/Forms/LoginForm/LoginForm.types';
 import { ICRUDResponse } from './services.types';
 
-// TODO: Replace localStorage with PostgreSQL / MySQL
-
 function getAllUsers(): IUser[] {
   return JSON.parse(localStorage.getItem('users') ?? '[]');
 }

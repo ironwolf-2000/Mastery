@@ -30,7 +30,6 @@ export interface IHeatmapRowProps {
   children: ReactNode;
 }
 
-//TODO: Add comments for each day
 export interface IHeatmapProps {
   className?: string;
   heatmapState: IHeatmapCellParams[][];
