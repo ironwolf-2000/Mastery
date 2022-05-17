@@ -11,12 +11,12 @@ export const blk = cn('Heatmap');
 
 const cellSizeMapper = (hmSize: number) => {
   const sizeMapper = [
-    [2, 2.5],
-    [4, 2.25],
-    [6, 2],
-    [8, 1.75],
-    [10, 1.5],
-    [20, 1.25],
+    [2, 3],
+    [4, 2.5],
+    [6, 2.25],
+    [8, 2],
+    [10, 1.75],
+    [20, 1.5],
   ];
 
   for (const [hmRows, size] of sizeMapper) {

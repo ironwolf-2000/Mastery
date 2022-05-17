@@ -13,7 +13,8 @@
   }
 
   &-ImageContainer {
-    max-width: 70vmin;
+    min-width: 10vw;
+    max-width: 30vw;
   }
 
   &-Image {
@@ -44,6 +45,10 @@
 
   &-Tooltip.tooltip.show {
     opacity: 0.8;
+  }
+
+  &-EntityLinksBlock {
+    margin-bottom: 2rem;
   }
 
   &-EntityLink {
