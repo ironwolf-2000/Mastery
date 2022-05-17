@@ -106,12 +106,12 @@ export const RegisterForm = () => {
                   <small>{t('Password must be at least 6 characters long.')}</small>
                 </BSForm.Group>
                 <div className={blk('BottomSection')}>
-                  <Button variant='primary' type='submit' disabled={isSubmitDisabled}>
-                    {t('Register')}
-                  </Button>
                   <Link to='/login' className={blk('SignInLabel')}>
                     {t('Log in instead')} <FontAwesomeIcon icon={faArrowRightToBracket} />
                   </Link>
+                  <Button variant='primary' type='submit' disabled={isSubmitDisabled}>
+                    {t('Register')}
+                  </Button>
                 </div>
               </BSForm>
             );

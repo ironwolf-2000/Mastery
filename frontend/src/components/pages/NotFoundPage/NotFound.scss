@@ -6,11 +6,8 @@
   align-items: center;
   background-color: white;
 
-  &-ImageContainer {
-    max-width: 60vmin;
-  }
-
   &-Image {
-    width: 100%;
+    width: 60vw;
+    margin-bottom: 3vw;
   }
 }

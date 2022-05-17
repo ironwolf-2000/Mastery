@@ -13,10 +13,6 @@ export function getCurrentUserEmail(): string | null {
 
 export function getCurrentUser(): IUser | null {
   const currentUserEmail = getCurrentUserEmail();
-  if (!currentUserEmail) {
-    return null;
-  }
-
   const users = getAllUsers();
   return users.find(u => u.email === currentUserEmail) ?? null;
 }

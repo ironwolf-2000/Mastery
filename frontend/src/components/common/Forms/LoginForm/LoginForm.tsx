@@ -75,12 +75,12 @@ export const LoginForm = () => {
                   <MyErrorMessage name='password' />
                 </BSForm.Group>
                 <div className={blk('BottomSection')}>
+                  <Link to='/register' className={blk('SignInLabel')}>
+                    {t('Register instead')} <FontAwesomeIcon icon={faUserPlus} />
+                  </Link>
                   <Button variant='primary' type='submit' disabled={isSubmitDisabled}>
                     {t('Log in')}
                   </Button>
-                  <Link to='/signup' className={blk('SignInLabel')}>
-                    {t('Register instead')} <FontAwesomeIcon icon={faUserPlus} />
-                  </Link>
                 </div>
               </BSForm>
             );

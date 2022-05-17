@@ -1,37 +1,113 @@
 .LandingPage {
   min-height: 100%;
-  padding: 4rem 6rem;
+  padding: 4rem 4rem 2rem;
 
-  &-Heading {
+  &-Header {
+    margin: 5rem 0;
+  }
+
+  &-HeaderTitle {
     text-align: center;
     margin-bottom: 1rem;
   }
 
-  &-SecondaryText {
+  &-HeaderSubtext {
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     font-style: italic;
     font-weight: 300;
     opacity: 0.8;
   }
 
-  &-IntroSections {
+  &-Entity {
+    padding: 0 5%;
     display: flex;
     justify-content: space-between;
-    margin-top: 5rem;
+    align-items: center;
+    gap: 3rem;
+    margin-top: 6rem;
   }
 
-  &-Section {
-    text-align: center;
+  &-EntityContent {
+    width: 50%;
+
+    &_second {
+      order: 2;
+    }
   }
 
-  &-SectionHeading {
+  &-EntityTitle {
     margin-bottom: 1rem;
     font-weight: 400;
   }
 
-  &-RegisterSection {
+  &-EntityImage {
+    width: 40%;
+    max-width: 600px;
+    border-radius: 2rem;
+    overflow: hidden;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  }
+
+  &-ActionButtons {
     margin-top: 5rem;
     text-align: center;
+  }
+
+  &-Button.btn {
+    margin: 0 1.5rem;
+    border-radius: 2rem;
+    padding: 0.5rem 1.5rem;
+    font-size: 1.5rem;
+    transition: transform 0.3s;
+
+    &:hover {
+      transform: translateY(-0.1rem) scale(1.05);
+    }
+  }
+
+  &-Footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border-light);
+
+    &:last-child {
+      text-align: center;
+    }
+  }
+
+  &-LanguageIcon {
+    padding: 0 0.4rem;
+    width: 3.5rem;
+    opacity: 0.5;
+    cursor: pointer;
+    border: 0.1rem dashed transparent;
+    transition: 0.2s;
+
+    &_active {
+      opacity: 1;
+    }
+
+    &:focus,
+    &:hover {
+      border-color: var(--color-hover-dark);
+    }
+  }
+
+  &-SocialMediaLink {
+    opacity: 0.7;
+    transition: opacity 0.3s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &-SocialMediaIcon {
+    margin: 1rem;
+    width: 2rem;
   }
 }

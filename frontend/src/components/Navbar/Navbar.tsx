@@ -71,7 +71,7 @@ export const Navbar = ({ user, onUserOptionsClick }: INavbarProps) => {
                       {t('Log in')}
                     </Dropdown.Item>
                     <Dropdown.Divider className={blk('DropdownDivider')} />
-                    <Dropdown.Item className={blk('DropdownItem')} as={Link} to='/signup'>
+                    <Dropdown.Item className={blk('DropdownItem')} as={Link} to='/register'>
                       {t('Register')}
                     </Dropdown.Item>
                   </>

@@ -86,11 +86,16 @@ export const App = () => {
               <Route path='/preferences' element={<Preferences />} />
             </Route>
 
-            <Route path='/' element={<LandingPage user={user} />} />
             <Route
-              path='/signup'
-              element={!user ? <RegisterForm /> : <Navigate to='/home' replace />}
+              path='/'
+              element={
+                <LandingPage
+                  user={user}
+                  changeLanguage={lang => i18n.changeLanguage(lang, () => setLanguage(lang))}
+                />
+              }
             />
+            <Route path='/register' element={<RegisterForm />} />
             <Route
               path='/login'
               element={!user ? <LoginForm /> : <Navigate to='/home' replace />}
