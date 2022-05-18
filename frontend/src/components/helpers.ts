@@ -12,14 +12,15 @@ export function getHeatmapCellTitle(
   frequency: number,
   cols: number,
   x: number,
-  y: number
+  y: number,
+  value = 0
 ) {
   return (
-    `${getDateByDayDiff(lang, startTime, frequency * (x * cols + y))}` +
+    getDateByDayDiff(lang, startTime, frequency * (x * cols + y)) +
     (frequency > 1
       ? ` - ${getDateByDayDiff(lang, startTime, frequency * (x * cols + y + 1) - 1)}`
       : '') +
-    ': 0'
+    `: ${value}`
   );
 }
 

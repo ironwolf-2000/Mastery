@@ -56,7 +56,15 @@ export function getTranslatedEntityHeatmap(lang: ILanguage, entityType: IEntityT
       for (let x = 0; x < rows; x++) {
         for (let y = 0; y < cols; y++) {
           const { startTime, entityFrequency, heatmap } = entity;
-          heatmap[x][y].title = getHeatmapCellTitle(lang, startTime, entityFrequency, cols, x, y);
+          heatmap[x][y].title = getHeatmapCellTitle(
+            lang,
+            startTime,
+            entityFrequency,
+            cols,
+            x,
+            y,
+            heatmap[x][y].currValue
+          );
         }
       }
 

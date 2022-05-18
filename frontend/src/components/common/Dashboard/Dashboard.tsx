@@ -183,16 +183,18 @@ export const Dashboard = ({
           status: 'normal',
           icon: faCircleXmark,
         } as const,
-      ].map(({ color, title, value, status, icon }) => (
-        <FontAwesomeIcon
-          key={title}
-          icon={icon}
-          className={blk('PopoverIcon')}
-          color={color}
-          title={title}
-          onClick={() => handleHeatmapClick(status, value)}
-        />
-      ))}
+      ]
+        .slice(0, 3 - Number(entityType === 'preference'))
+        .map(({ color, title, value, status, icon }) => (
+          <FontAwesomeIcon
+            key={title}
+            icon={icon}
+            className={blk('PopoverIcon')}
+            color={color}
+            title={title}
+            onClick={() => handleHeatmapClick(status, value)}
+          />
+        ))}
     </Popover>
   );
 
@@ -208,7 +210,7 @@ export const Dashboard = ({
       setEditModalVisible(false);
       setTimeout(() => {
         if (params.name !== entity.name) {
-          navigate(`/habits/${encodeURIComponent(params.name)}`, { replace: true });
+          navigate(`/${entityType}s/${encodeURIComponent(params.name)}`, { replace: true });
         } else {
           window.location.reload();
         }
