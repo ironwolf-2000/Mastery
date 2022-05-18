@@ -6,14 +6,14 @@ import { toast } from 'react-toastify';
 import { Button, Container, Overlay, Tooltip } from 'react-bootstrap';
 import { faPlus, faHouse } from '@fortawesome/free-solid-svg-icons';
 
-import { createParamsToEntityParams } from '../../helpers';
+import { createParamsToEntityParams, categorizeEntitiesByStatus } from '../../helpers';
 import { getAllUserEntities, addEntity } from '../../../services/entity.service';
 import { getOverallEntityHeatmap } from '../../../services/heatmap.service';
-import { Heatmap, FormModal as CreateModal } from '../../common';
+import { Heatmap, FormModal as CreateModal, HintComponent } from '../../common';
 import { ICreateParams } from '../../common/Forms/Forms.types';
 import { IHeatmapCellParams } from '../../common/Heatmap/Heatmap.types';
 import { QuotesComponent } from '../../QuotesComponent';
-import { IEntityParams } from '../../App/App.types';
+import { IEntityParams, IEntityStatus } from '../../App/App.types';
 import { IEntitiesPageProps } from './EntitiesPage.types';
 import { ControlButton } from '../Buttons';
 import { LanguageContext } from '../../App';
@@ -36,13 +36,12 @@ export const EntitiesPage = ({
   const addButtonRef = useRef(null);
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
-  const [entities, setEntities] = useState<IEntityParams[]>([]);
+  const [entities, setEntities] = useState<Record<IEntityStatus, IEntityParams[]> | null>(null);
   const [overallEntitiesHeatmap, setOverallEntitiesHeatmap] = useState<IHeatmapCellParams[][]>([]);
   const [createModalVisible, setCreateModalVisible] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   const updatePageElements = useCallback(() => {
-    setEntities(getAllUserEntities(entityType));
+    setEntities(categorizeEntitiesByStatus(getAllUserEntities(entityType)));
     setOverallEntitiesHeatmap(getOverallEntityHeatmap(lang, entityType, [2, 3]));
   }, [lang, entityType]);
 
@@ -52,7 +51,6 @@ export const EntitiesPage = ({
 
   useEffect(() => {
     updatePageElements();
-    setLoading(false);
   }, [updatePageElements]);
 
   const handleAddEntity = (params: ICreateParams) => {
@@ -67,9 +65,34 @@ export const EntitiesPage = ({
     }
   };
 
-  const addButtonDisabled = entities.length === 7;
+  const activeCount = entities?.active.length ?? 0;
 
-  return !loading ? (
+  const renderEntityLinks = useCallback(
+    (status: IEntityStatus) => {
+      return (
+        entities && (
+          <div>
+            {entities[status].map(entity => {
+              const encodedName = encodeURIComponent(entity.name);
+              return (
+                <Button
+                  key={encodedName}
+                  className={blk('EntityLink', { [entity.entityType]: true })}
+                  variant='outline-secondary'
+                  onClick={() => navigate(`${redirectPath}/${encodedName}`)}
+                >
+                  {entity.name}
+                </Button>
+              );
+            })}
+          </div>
+        )
+      );
+    },
+    [entities, navigate, redirectPath]
+  );
+
+  return entities ? (
     <>
       <Container className={blk('', [className])}>
         <section className={blk('ManageEntitiesSection')}>
@@ -81,8 +104,8 @@ export const EntitiesPage = ({
             />
             <span
               ref={addButtonRef}
-              onMouseEnter={addButtonDisabled ? () => setTooltipVisible(true) : undefined}
-              onMouseLeave={addButtonDisabled ? () => setTooltipVisible(false) : undefined}
+              onMouseEnter={activeCount >= 7 ? () => setTooltipVisible(true) : undefined}
+              onMouseLeave={activeCount >= 7 ? () => setTooltipVisible(false) : undefined}
             >
               <ControlButton
                 className={blk('ControlButton', { [entityType]: true })}
@@ -98,24 +121,9 @@ export const EntitiesPage = ({
               )}
             </Overlay>
           </header>
-          {entities.length ? (
+          {activeCount ? (
             <>
-              <div className={blk('EntityLinksBlock')}>
-                {entities.map(entity => {
-                  const encodedName = encodeURIComponent(entity.name);
-
-                  return (
-                    <Button
-                      key={encodedName}
-                      className={blk('EntityLink', { [entityType]: true })}
-                      variant='outline-secondary'
-                      onClick={() => navigate(`${redirectPath}/${encodedName}`)}
-                    >
-                      {entity.name}
-                    </Button>
-                  );
-                })}
-              </div>
+              <div className={blk('EntitiesByStatusSection')}>{renderEntityLinks('active')}</div>
               {entityType !== 'preference' && (
                 <div className={blk('QuotesComponentWrapper')}>
                   <QuotesComponent entityType={entityType} />
@@ -134,9 +142,24 @@ export const EntitiesPage = ({
               </div>
             </>
           )}
+          {entities.completed.length > 0 && (
+            <section className={blk('EntitiesByStatusSection')}>
+              <h2 className={blk('SubsectionHeading')}>{t(`Completed ${entityType}s`)}</h2>
+              {renderEntityLinks('completed')}
+            </section>
+          )}
+          {entities.failed.length > 0 && (
+            <section className={blk('EntitiesByStatusSection')}>
+              <h2 className={blk('SubsectionHeading')}>{t(`Failed ${entityType}s`)}</h2>
+              {renderEntityLinks('failed')}
+            </section>
+          )}
         </section>
         <section className={blk('HeatmapSection')}>
-          <h2 className={blk('HeatmapSectionHeading')}>{t('Overall Progress')}</h2>
+          <h2 className={blk('SectionHeading')}>
+            {t('Overall Progress')}
+            <HintComponent tooltipMessage={t(`overall-heatmap-hint-${entityType}s`)} />
+          </h2>
           <Heatmap heatmapState={overallEntitiesHeatmap} bgColor={entityHeatmapColor} />
         </section>
       </Container>

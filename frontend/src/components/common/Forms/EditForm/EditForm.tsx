@@ -13,15 +13,16 @@ import './EditForm.scss';
 
 const blk = cn('EditForm');
 
-export const EditForm = ({ type, entity, handleCancel, handleSubmit }: IEditFormProps) => {
-  const { name, motivation, requirementsText, requirementsMinValue } = entity;
+export const EditForm = ({ entity, handleCancel, handleSubmit }: IEditFormProps) => {
+  const { entityType, name, motivation, requirementsText, requirementsMinValue } = entity;
 
   const { t } = useTranslation();
 
   const editValidationSchema = {
     name: Yup.string()
       .max(20, t('The name must be 20 characters or less.'))
-      .required(t('The name cannot be empty.')),
+      .required(t('The name cannot be empty.'))
+      .matches(/^[^%]+$/, t('You can\'t use "%" sign in the name.')),
     motivation: Yup.string().max(80, t('Your motivation message must not exceed 80 characters.')),
     requirementsText: Yup.string().max(
       40,
@@ -47,14 +48,14 @@ export const EditForm = ({ type, entity, handleCancel, handleSubmit }: IEditForm
         validationSchema={Yup.object(editValidationSchema)}
         onSubmit={handleSubmit}
       >
-        {({ handleSubmit, getFieldProps }) => {
+        {({ errors, handleSubmit, getFieldProps }) => {
           return (
             <BSForm className={blk()} onSubmit={handleSubmit}>
               <BSForm.Group className='mb-3'>
-                <BSForm.Label>{t(`change-name-${type}`)}</BSForm.Label>
+                <BSForm.Label>{t(`change-name-${entityType}`)}</BSForm.Label>
                 <BSForm.Control
                   type='text'
-                  placeholder={t(`name-for-${type}`)}
+                  placeholder={t(`name-for-${entityType}`)}
                   {...getFieldProps('name')}
                 />
                 <MyErrorMessage name='name' />
@@ -71,7 +72,7 @@ export const EditForm = ({ type, entity, handleCancel, handleSubmit }: IEditForm
 
               <BSForm.Group className={blk('RequirementsSection')}>
                 <BSForm.Label>{t('Requirements')}</BSForm.Label>
-                <HintComponent tooltipMessage={t(`min-conditions-for-${type}`)} />
+                <HintComponent tooltipMessage={t(`min-conditions-for-${entityType}`)} />
                 <div className={blk('RequirementsControlFields')}>
                   <BSForm.Control
                     type='text'
@@ -93,7 +94,7 @@ export const EditForm = ({ type, entity, handleCancel, handleSubmit }: IEditForm
                 <Button variant='secondary' onClick={handleCancel}>
                   {t('Cancel')}
                 </Button>
-                <Button variant='primary' type='submit'>
+                <Button variant='primary' type='submit' disabled={Object.keys(errors).length > 0}>
                   {t('Save')}
                 </Button>
               </div>

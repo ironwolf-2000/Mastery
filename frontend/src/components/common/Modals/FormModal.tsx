@@ -19,14 +19,13 @@ export const FormModal = ({ visible, title, handleCancel, ...props }: IFormModal
         <Modal.Body>
           {isCreateModalType(props) && (
             <CreateForm
-              type={props.entityType}
+              entityType={props.entityType}
               handleCancel={handleCancel}
               handleSubmit={props.handleCreate}
             />
           )}
           {isEditModalType(props) && (
             <EditForm
-              type={props.entityType}
               entity={props.entity}
               handleCancel={handleCancel}
               handleSubmit={props.handleEdit}

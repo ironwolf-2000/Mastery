@@ -31,6 +31,7 @@
     flex-grow: 1;
     display: flex;
     align-items: center;
+    margin-bottom: 3rem;
   }
 
   &-Header {
@@ -47,8 +48,8 @@
     opacity: 0.8;
   }
 
-  &-EntityLinksBlock {
-    margin-bottom: 2rem;
+  &-EntitiesByStatusSection {
+    margin-bottom: 3rem;
   }
 
   &-EntityLink {
@@ -60,9 +61,14 @@
     @include entity-button-colors;
   }
 
-  &-HeatmapSectionHeading {
+  &-SectionHeading {
     @extend %Heading2Styles;
     text-align: center;
     margin-bottom: 1.5rem;
+  }
+
+  &-SubsectionHeading {
+    @extend %Heading3Styles;
+    margin-bottom: 1rem;
   }
 }

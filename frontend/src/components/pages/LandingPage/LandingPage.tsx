@@ -150,7 +150,7 @@ export const LandingPage = ({ user, changeLanguage }: ILandingPageProps) => {
               );
             })}
           </div>
-          <span>&copy; Mastery 2022. All rights reserved.</span>
+          <span>&copy; Mastery 2022. {t('All rights reserved.')}</span>
         </div>
       </footer>
     </div>

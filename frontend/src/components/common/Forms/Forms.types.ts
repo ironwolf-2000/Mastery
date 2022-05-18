@@ -3,7 +3,7 @@ import { IEntityParams, IEntityType } from '../../App/App.types';
 import { IUser } from './RegisterForm/RegisterForm.types';
 
 export interface ICreateParams {
-  type: IEntityType;
+  entityType: IEntityType;
   entityName: string;
   motivationTextarea: string;
   entityFrequency: number;
@@ -24,12 +24,12 @@ export interface IUserOptionsParams {
 }
 
 export interface ICreateFormProps {
-  type: IEntityType;
+  entityType: IEntityType;
   handleCancel: () => void;
   handleSubmit: (params: ICreateParams) => void;
 }
 
-export interface IEditFormProps extends Pick<ICreateFormProps, 'type' | 'handleCancel'> {
+export interface IEditFormProps extends Pick<ICreateFormProps, 'handleCancel'> {
   entity: IEntityParams;
   handleSubmit: (params: IEditParams) => void;
 }

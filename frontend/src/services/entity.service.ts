@@ -137,7 +137,7 @@ export function resetEntity(lang: ILanguage, type: IEntityType, name: string) {
 }
 
 export function getCurrentEntitySuccessRate(entity: IEntityParams | null): number {
-  if (entity === null) return DEFAULT_SUCCESS_RATE;
+  if (!entity || entity.entityType === 'preference') return DEFAULT_SUCCESS_RATE;
 
   let [totalValue, totalDays] = [0, 0];
   const targetValue = entity.requirementsMinValue;

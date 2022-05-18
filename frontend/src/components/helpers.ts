@@ -1,7 +1,8 @@
 import i18n, { ILanguage } from '../i18n/config';
+import { getCurrentEntitySuccessRate } from '../services/entity.service';
 import { getCurrentUserEmail } from '../services/user.service';
 import { daysToMs, getDateByDayDiff, truncateDateTime } from '../utils';
-import { IEntityParams } from './App/App.types';
+import { IEntityParams, IEntityStatus } from './App/App.types';
 import { ICreateParams, IEditParams } from './common/Forms/Forms.types';
 import { IHeatmapInitializerProps, IHeatmapCellParams } from './common/Heatmap/Heatmap.types';
 
@@ -84,6 +85,7 @@ export function createParamsToEntityParams(lang: ILanguage, params: ICreateParam
     requirementsText,
     requirementsMinValue,
     successRate,
+    entityType,
   } = params;
 
   const heatmapSize = frequencyToHeatmapSizeMapper(entityFrequency);
@@ -106,6 +108,7 @@ export function createParamsToEntityParams(lang: ILanguage, params: ICreateParam
     successRate,
     heatmap,
     startTime,
+    entityType,
   };
 }
 
@@ -127,4 +130,27 @@ export function entityFrequencyToLabel(frequency: number) {
   if (frequency === 1) return i18n.t('daily');
 
   return i18n.t('every {{frequency}} days', { frequency });
+}
+
+export function categorizeEntitiesByStatus(
+  entities: IEntityParams[]
+): Record<IEntityStatus, IEntityParams[]> {
+  const nowTime = Date.now();
+  const active: IEntityParams[] = [];
+  const completed: IEntityParams[] = [];
+  const failed: IEntityParams[] = [];
+
+  entities.forEach(entity => {
+    const [startTime, endTime] = [entity.startTime, getEntityEndTime(entity)];
+
+    if (startTime < nowTime && nowTime < endTime) {
+      active.push(entity);
+    } else if (getCurrentEntitySuccessRate(entity) >= entity.successRate) {
+      completed.push(entity);
+    } else {
+      failed.push(entity);
+    }
+  });
+
+  return { active, completed, failed };
 }

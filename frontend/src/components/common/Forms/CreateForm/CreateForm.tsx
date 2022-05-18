@@ -15,7 +15,7 @@ import './CreateForm.scss';
 
 const blk = cn('CreateForm');
 
-export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProps) => {
+export const CreateForm = ({ entityType, handleCancel, handleSubmit }: ICreateFormProps) => {
   const { t } = useTranslation();
 
   const [applySR, setApplySR] = useState<boolean>(false);
@@ -23,10 +23,11 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
   const createValidationSchema = {
     entityName: Yup.string()
       .max(20, t('The name must be 20 characters or less.'))
-      .required(t('The name cannot be empty.')),
+      .required(t('The name cannot be empty.'))
+      .matches(/^[^%]+$/, t('You can\'t use "%" sign in the name.')),
     motivationTextarea: Yup.string().max(
       80,
-      type !== 'preference'
+      entityType !== 'preference'
         ? t('Your motivation message must not exceed 80 characters.')
         : t('The description must not exceed 80 characters.')
     ),
@@ -46,7 +47,7 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
 
   const initialValues: ICreateParams = useMemo(
     () => ({
-      type,
+      entityType,
       entityName: '',
       motivationTextarea: '',
       entityFrequency: 1,
@@ -54,7 +55,7 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
       requirementsMinValue: 10,
       successRate: DEFAULT_SUCCESS_RATE,
     }),
-    [type]
+    [entityType]
   );
 
   return (
@@ -64,21 +65,23 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
         validationSchema={Yup.object(createValidationSchema)}
         onSubmit={handleSubmit}
       >
-        {({ handleSubmit, getFieldProps }) => {
+        {({ errors, handleSubmit, getFieldProps }) => {
           return (
             <BSForm className={blk()} onSubmit={handleSubmit}>
               <BSForm.Group className='mb-3'>
-                <BSForm.Label>{t(`give-name-${type}`)}</BSForm.Label>
+                <BSForm.Label>{t(`give-name-${entityType}`)}</BSForm.Label>
                 <BSForm.Control
                   type='text'
-                  placeholder={t(`name-for-${type}`)}
+                  placeholder={t(`name-for-${entityType}`)}
                   {...getFieldProps('entityName')}
                 />
                 <MyErrorMessage name='entityName' />
               </BSForm.Group>
 
               <FloatingLabel
-                label={type !== 'preference' ? t('Identify a motivator') : t('Short description')}
+                label={
+                  entityType !== 'preference' ? t('Identify a motivator') : t('Short description')
+                }
                 className={blk('FloatingLabel')}
               >
                 <BSForm.Control
@@ -103,7 +106,7 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
 
               <BSForm.Group className={blk('RequirementsSection')}>
                 <BSForm.Label>{t('Requirements')}</BSForm.Label>
-                <HintComponent tooltipMessage={t(`min-conditions-for-${type}`)} />
+                <HintComponent tooltipMessage={t(`min-conditions-for-${entityType}`)} />
                 <div className={blk('RequirementsControlFields')}>
                   <BSForm.Control
                     type='text'
@@ -121,7 +124,7 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
                 <MyErrorMessage name='requirementsMinValue' />
               </BSForm.Group>
 
-              {type !== 'preference' && (
+              {entityType !== 'preference' && (
                 <BSForm.Group className={blk('SRSection')}>
                   <BSForm.Check
                     type='checkbox'
@@ -129,14 +132,14 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
                     checked={applySR}
                     onChange={() => setApplySR(!applySR)}
                   />
-                  <HintComponent tooltipMessage={t(`sr-tooltip-${type}`)} />
+                  <HintComponent tooltipMessage={t(`sr-tooltip-${entityType}`)} />
                 </BSForm.Group>
               )}
 
               {applySR && (
                 <BSForm.Group className='mt-3'>
                   <div className={blk('SRInputContainer')}>
-                    <BSForm.Label>{t(`sr-determine-${type}`)}</BSForm.Label>
+                    <BSForm.Label>{t(`sr-determine-${entityType}`)}</BSForm.Label>
                     <BSForm.Control
                       className={blk('SRInputField')}
                       type='number'
@@ -153,7 +156,7 @@ export const CreateForm = ({ type, handleCancel, handleSubmit }: ICreateFormProp
                 <Button variant='secondary' onClick={handleCancel}>
                   {t('Cancel')}
                 </Button>
-                <Button variant='primary' type='submit'>
+                <Button variant='primary' type='submit' disabled={Object.keys(errors).length > 0}>
                   {t('Create')}
                 </Button>
               </div>

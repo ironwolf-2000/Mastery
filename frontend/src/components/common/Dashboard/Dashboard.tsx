@@ -79,8 +79,8 @@ export const Dashboard = ({
   const currPeriodCellCoords = useMemo(() => {
     if (!entity) return null;
 
-    return getCurrentHeatmapCell(entityType, entity.name);
-  }, [entity, entityType]);
+    return getCurrentHeatmapCell(entity.entityType, entity.name);
+  }, [entity]);
 
   const fetchEntity = useCallback(() => {
     if (encodedName == null) return null;
@@ -95,7 +95,7 @@ export const Dashboard = ({
     (status: IHeatmapCellStatus, currValue?: number) => {
       if (entity && activeCellCoords && currValue !== undefined) {
         updateEntityHeatmap(
-          entityType,
+          entity.entityType,
           entity.name,
           activeCellCoords.x,
           activeCellCoords.y,
@@ -105,7 +105,7 @@ export const Dashboard = ({
         setEntity(fetchEntity());
       }
     },
-    [entity, activeCellCoords, entityType, fetchEntity]
+    [entity, activeCellCoords, fetchEntity]
   );
 
   useEffect(() => {
