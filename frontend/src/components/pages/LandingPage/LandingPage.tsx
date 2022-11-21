@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@bem-react/classname';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +10,7 @@ import { ImageWithFallback } from '../../common';
 import { LanguageContext } from '../../App';
 
 import './LandingPage.scss';
+import { registerAnonymousIfNew } from '../../../services/user.service';
 
 const habitsSrc = require('../../../assets/landing-page-habits.webp');
 const habitsFallback = require('../../../assets/landing-page-habits.jpg');
@@ -29,6 +30,10 @@ export const LandingPage = ({ user, changeLanguage }: ILandingPageProps) => {
   const lang = useContext(LanguageContext);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    registerAnonymousIfNew();
+  }, []);
 
   const entityData = [
     {

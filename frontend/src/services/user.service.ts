@@ -17,6 +17,21 @@ export function getCurrentUser(): IUser | null {
   return users.find(u => u.email === currentUserEmail) ?? null;
 }
 
+export function registerAnonymousIfNew(): void {
+  if (!localStorage.getItem('users')) {
+    const anonymousUser: IUser = {
+      firstName: 'Anonymous',
+      lastName: 'Anonymous',
+      email: 'anonymous@gmail.com',
+      password: 'anonymous',
+      language: 'en',
+    };
+
+    localStorage.setItem('users', JSON.stringify([anonymousUser]));
+    localStorage.setItem('currentUserEmail', anonymousUser.email);
+  }
+}
+
 export function register(user: IUser): ICRUDResponse {
   const users = getAllUsers();
   if (users.some(u => u.email === user.email)) {

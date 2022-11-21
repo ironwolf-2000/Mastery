@@ -27,8 +27,8 @@ export const LoginForm = () => {
   });
 
   const initialValues: ILoginUser = {
-    email: '',
-    password: '',
+    email: 'anonymous@gmail.com',
+    password: 'anonymous',
   };
 
   const handleSubmit = (user: ILoginUser) => {
